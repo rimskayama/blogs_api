@@ -10,9 +10,9 @@ export const errorsValidationMiddleware = (req: Request, res: Response, next: Ne
         };
     };
 
-    const errors = validationResult(req).formatWith(errorFormatter);
-    if (!errors.isEmpty()) {
-        res.status(400).json({ errorsMessages: errors.array() });
+    const result = validationResult(req).formatWith(errorFormatter);
+    if (!result.isEmpty()) {
+        res.status(400).json({ errorsMessages: result.array() });
     } else {
         next()
     }
