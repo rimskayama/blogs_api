@@ -23,5 +23,7 @@ export const blogWebsiteUrlValidationMiddleware = body("websiteUrl")
 
     .isLength({min: 3, max: 100})
     .withMessage("websiteUrl length should be minimum 3 and maximum 100 symbols")
+    .bail()
+
     .matches(websiteUrlPattern)
     .withMessage("Website URL must be in correct format")
