@@ -3,7 +3,7 @@ import {postsRepository} from "../repositories/posts-repository";
 import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
 import {
-    checkBlogIdMiddleware,
+    blogIdValidationMiddleware,
     postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
@@ -30,7 +30,7 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
 //POST
 postsRouter.post("/",
     basicAuthMiddleware,
-    checkBlogIdMiddleware,
+    blogIdValidationMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -46,7 +46,7 @@ postsRouter.post("/",
 //PUT
 postsRouter.put("/:id",
     basicAuthMiddleware,
-    checkBlogIdMiddleware,
+    blogIdValidationMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,

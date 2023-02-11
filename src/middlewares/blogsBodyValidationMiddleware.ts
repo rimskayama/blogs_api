@@ -3,6 +3,7 @@ const websiteUrlPattern =
     /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
 
 export const blogNameValidationMiddleware = body("name")
+    .trim()
     .exists()
     .withMessage("name is required")
     .bail()

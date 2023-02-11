@@ -1,4 +1,6 @@
 import {body} from "express-validator";
+import {blogs} from "../repositories/dataBase/blogs-DB";
+import {blogsRepository} from "../repositories/blogs-repository";
 
 export const postTitleValidationMiddleware = body("title")
     .exists()
@@ -39,11 +41,10 @@ export const postContentValidationMiddleware = body("content")
     .isLength({min: 1, max: 1000})
     .withMessage("content length should be minimum 1 and maximum 100 symbols")
 
-export const checkBlogIdMiddleware = body("blogId")
+export const blogIdValidationMiddleware = body("blogId")
     .exists()
     .withMessage("blog Id is required")
     .bail()
-    
+
     .isString()
     .withMessage("type of blog Id must be string")
-
