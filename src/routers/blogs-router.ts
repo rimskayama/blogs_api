@@ -53,7 +53,7 @@ blogsRouter.put("/:id",
     if (updatedBlog) {
         res.sendStatus(204);
     } else {
-        res.status(400).send('error');
+        res.status(404).send('Not Found');
     }
 
 })

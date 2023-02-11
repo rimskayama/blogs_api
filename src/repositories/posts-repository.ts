@@ -24,13 +24,14 @@ export const postsRepository = {
         posts.push(newPost);
         return newPost
     },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
         let updatedPost = posts.find(p => p.id === id);
         if (updatedPost) {
             updatedPost.title = title;
             updatedPost.shortDescription = shortDescription;
             updatedPost.content = content;
-            updatedPost.blogId = blogId
+            updatedPost.blogId = blogId;
+            updatedPost.blogName = blogName
 
         }
         return updatedPost

@@ -19,7 +19,9 @@ export const postContentValidationMiddleware = body("content")
     .withMessage("content length should be maximum 100 symbols")
 
 export const checkBlogIdMiddleware = body("blogId")
-    .exists()
     .trim()
+    .exists()
     .withMessage("blog should exist")
+    .isString()
+    .withMessage("type of blog Id must be string")
 
