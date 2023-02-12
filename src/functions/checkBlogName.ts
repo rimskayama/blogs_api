@@ -4,7 +4,11 @@ import {randomNumber} from "../repositories/randomNumber";
 
 export const checkBlogName = (req:Request) => {
     const blogToFind = blogsRepository.findBlogs().find((blog) => blog.id === req.body.blogId)
+    let blogName;
     if (blogToFind) {
-        return blogToFind.name
-    } else return randomNumber(0,999999);
+        blogName = blogToFind.name
+        return blogName
+    } else
+        blogName = '12546'
+        return blogName;
 }
