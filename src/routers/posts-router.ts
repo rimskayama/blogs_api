@@ -56,13 +56,15 @@ postsRouter.put("/:id",
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
     errorsValidationMiddleware,
+
     (req: Request, res: Response) => {
         const updatedPost = postsRepository.updatePost(
-            req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.body.blogName)
+            req.params.id, req.body.title, req.body.shortDescription,
+            req.body.content, req.body.blogId, checkBlogName(req))
         if (updatedPost) {
             res.sendStatus(204);
         } else {
-            res.status(400).send('error');
+            res.status(404).send('Not found');
         }
 
     })
