@@ -10,7 +10,12 @@ export const postsRepository = {
         } else return posts
     },
     findPostById(id: string) {
-        return posts.find(b => b.id === id);
+        if (id) {
+            return posts.find(b => b.id === id);
+        } else {
+            return posts;
+        }
+
     },
     createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
         const newPost : postsType = {

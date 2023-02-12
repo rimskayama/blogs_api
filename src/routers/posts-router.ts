@@ -9,6 +9,7 @@ import {
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
+import {checkBlogName} from "../functions/checkBlogName";
 
 
 export const postsRouter = Router({})
@@ -40,7 +41,8 @@ postsRouter.post("/",
     (req: Request, res: Response) => {
 
         const newPost = postsRepository.createPost(
-            req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.body.blogName);
+            req.body.title, req.body.shortDescription,
+            req.body.content, req.body.blogId, checkBlogName(req));
         console.log('new', newPost)
         res.status(201).json(newPost)
     })
