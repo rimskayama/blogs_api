@@ -48,3 +48,11 @@ export const blogIdValidationMiddleware = body("blogId")
 
     .isString()
     .withMessage("type of blog Id must be string")
+
+export const blogIdCheckMiddleware = body("blogId").custom((value, { req }) => {
+    const allBlogs = blogsRepository.findBlogs(req.body.blogId);
+    const foundedId = blogs.filter(
+        (id, index) => req.body.blogId === allBlogs[index].id
+    );
+    return foundedId.length > 0;
+});

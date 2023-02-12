@@ -3,7 +3,6 @@ const websiteUrlPattern =
     /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
 
 export const blogNameValidationMiddleware = body("name")
-    .trim()
     .exists()
     .withMessage("name is required")
     .bail()
@@ -13,7 +12,7 @@ export const blogNameValidationMiddleware = body("name")
     .bail()
 
     .trim()
-    .isLength({min: 1, max: 15,})
+    .isLength({min: 1, max: 15})
     .withMessage("Name length should be minimum 1 and maximum 15 symbols");
 
 
@@ -27,10 +26,7 @@ export const blogDescriptionValidationMiddleware = body("description")
     .bail()
 
     .trim()
-    .isLength({
-        min: 1,
-        max: 500,
-    })
+    .isLength({min: 1, max: 500})
     .withMessage("description length should be minimum 1 and maximum 500 symbols");
 
 export const blogWebsiteUrlValidationMiddleware = body("websiteUrl")
