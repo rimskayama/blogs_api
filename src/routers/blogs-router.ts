@@ -12,7 +12,7 @@ export const blogsRouter = Router({})
 
 //GET
 blogsRouter.get("/", (req: Request, res: Response) => {
-    const allBlogs = blogsRepository.findBlogs(req.body.name)
+    const allBlogs = blogsRepository.findBlogs()
     res.status(200).json(allBlogs)
 })
 
