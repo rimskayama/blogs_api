@@ -3,11 +3,8 @@ import {blogsType} from "./dataBase/blogs-DB";
 import {randomNumber} from "./randomNumber";
 
 export const blogsRepository = {
-    findBlogs(name: string) {
-        if (name) {
-            let allBlogs = blogs.filter(b => b.name.indexOf(name) > -1)
-            return allBlogs;
-        } else return blogs
+    findBlogs() {
+        return blogs
     },
     findBlogById(id: string) {
         return blogs.find(b => b.id === id);
