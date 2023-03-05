@@ -46,7 +46,7 @@ export const blogsRepository  = {
             isMembership: newBlog.isMembership
         }
     },
-    async updateBlog(_id: ObjectId, name: string, description: string, websiteUrl: string, isMembership: boolean): Promise<blogViewModelWithId | boolean> {
+    async updateBlog(_id: ObjectId, name: string, description: string, websiteUrl: string, isMembership: boolean | false): Promise<blogViewModelWithId | boolean> {
 
         const updatedBlog = await blogsCollection.updateOne({_id}, {
             $set:
