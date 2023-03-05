@@ -11,7 +11,6 @@ import {
 import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {checkBlogName} from "../functions/checkBlogName";
 
-
 export const postsRouter = Router({})
 
 //GET
@@ -19,7 +18,6 @@ postsRouter.get("/", (req: Request, res: Response) => {
     const allPosts = postsRepository.findPosts(req.body.name)
     res.status(200).json(allPosts)
 })
-
 
 //GET WITH URI
 postsRouter.get("/:id", (req: Request, res: Response) => {
