@@ -1,6 +1,4 @@
 import {body} from "express-validator";
-import {blogsCollection} from "../repositories/db";
-import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
 export const postTitleValidationMiddleware = body("title")
     .exists()
