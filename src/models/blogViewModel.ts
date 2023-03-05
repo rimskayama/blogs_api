@@ -6,7 +6,7 @@ export type blogViewModel =
         description: string;
         websiteUrl: string;
         createdAt?: string;
-        isMembership?: boolean;
+        isMembership: boolean | false;
 }
 
 export type withMongoId = {
