@@ -1,7 +1,7 @@
-import {posts} from "./dataBase/posts-DB";
-import {postsType} from "./dataBase/posts-DB";
-import {randomNumber} from "./randomNumber";
+import {postViewModel, postViewModelWithId} from "../../models/postViewModel";
+import {randomNumber} from "../../functions/randomNumber";
 
+const posts : postViewModelWithId[] = []
 export const postsRepository = {
     findPosts(name: string) {
         if (name) {
@@ -18,13 +18,14 @@ export const postsRepository = {
 
     },
     createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
-        const newPost : postsType = {
+        const newPost : postViewModelWithId = {
             id: randomNumber(0,999999),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blogName
+            blogName: blogName,
+            createdAt: (new Date()).toISOString(),
         }
         posts.push(newPost);
         return newPost

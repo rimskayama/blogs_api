@@ -1,6 +1,6 @@
 import {body} from "express-validator";
-import {blogs} from "../repositories/dataBase/blogs-DB";
-import {blogsRepository} from "../repositories/blogs-repository";
+import {blogsCollection} from "../repositories/db";
+import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
 export const postTitleValidationMiddleware = body("title")
     .exists()
@@ -48,12 +48,3 @@ export const blogIdValidationMiddleware = body("blogId")
 
     .isString()
     .withMessage("type of blog Id must be string")
-
-export const blogIdCheckMiddleware = body("blogId").custom((value, { req }) => {
-    const allBlogs = blogsRepository.findBlogs();
-    const idToFind = req.body.blogId;
-    const foundedId = blogs.filter(
-        (id, index) => idToFind === allBlogs[index].id
-    );
-    return foundedId.length > 0;
-});

@@ -2,7 +2,7 @@
 exports.__esModule = true;
 exports.blogsRouter = void 0;
 var express_1 = require("express");
-var blogs_repository_1 = require("../repositories/blogs-repository");
+var blogs_repository_1 = require("../repositories/mongodb/blogs-repository-mongodb");
 exports.blogsRouter = (0, express_1.Router)({});
 //GET
 exports.blogsRouter.get("/", function (req, res) {

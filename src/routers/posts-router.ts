@@ -1,14 +1,14 @@
 import {Request, Response, Router} from 'express'
-import {postsRepository} from "../repositories/posts-repository";
+import {postsRepository} from "../repositories/memory/posts-repository-memory";
 import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
 import {
-    blogIdCheckMiddleware,
     blogIdValidationMiddleware,
     postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
+import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {checkBlogName} from "../functions/checkBlogName";
 
 
@@ -38,11 +38,11 @@ postsRouter.post("/",
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
     errorsValidationMiddleware,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
 
         const newPost = postsRepository.createPost(
             req.body.title, req.body.shortDescription,
-            req.body.content, req.body.blogId, checkBlogName(req));
+            req.body.content, req.body.blogId, await checkBlogName(req));
         console.log('new', newPost)
         res.status(201).json(newPost)
     })
@@ -57,10 +57,10 @@ postsRouter.put("/:id",
     postContentValidationMiddleware,
     errorsValidationMiddleware,
 
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
         const updatedPost = postsRepository.updatePost(
             req.params.id, req.body.title, req.body.shortDescription,
-            req.body.content, req.body.blogId, checkBlogName(req))
+            req.body.content, req.body.blogId, await checkBlogName(req))
         if (updatedPost) {
             res.sendStatus(204);
         } else {

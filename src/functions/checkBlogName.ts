@@ -1,9 +1,11 @@
 import {Request} from 'express'
-import {blogsRepository} from "../repositories/blogs-repository";
-import {randomNumber} from "../repositories/randomNumber";
+import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
+import {blogModelWithMongoId, blogViewModelWithId} from "../models/blogViewModel";
 
-export const checkBlogName = (req:Request) => {
-    const blogToFind = blogsRepository.findBlogs().find((blog) => blog.id === req.body.blogId)
+
+export const checkBlogName = async (req:Request) => {
+    const blogs = await blogsRepository.findBlogs()
+    const blogToFind = blogs.find((blog : blogViewModelWithId) => blog.id === req.body.blogId)
     let blogName;
     if (blogToFind) {
         blogName = blogToFind.name

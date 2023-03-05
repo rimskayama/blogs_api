@@ -1,12 +1,14 @@
 import { Request, Response, Router } from "express";
+import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
+import {postsRepository} from "../repositories/mongodb/posts-repository-mongodb";
+
 export const testingRouter = Router({});
-import {blogs} from "../repositories/dataBase/blogs-DB";
-import {posts} from "../repositories/dataBase/posts-DB";
 
+// DELETE ALL
+testingRouter.delete("/all-data",
+    async (req: Request, res: Response) => {
+    const deleteBlogs = await blogsRepository.deleteAll();
+    const deletePosts = await postsRepository.deleteAll();
+    res.sendStatus(204);
 
-testingRouter.delete("/all-data", (req: Request, res: Response) => {
-        blogs.splice(0, blogs.length);
-        posts.splice(0, blogs.length);
-    res.sendStatus(204)
-});
-
+})
