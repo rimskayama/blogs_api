@@ -6,7 +6,7 @@ import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
-import {blogIdCheckMiddleware} from "../functions/checkBlogId";
+//import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {checkBlogName} from "../functions/checkBlogName";
 
 export const postsRouter = Router({})
