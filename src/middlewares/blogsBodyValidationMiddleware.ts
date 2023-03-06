@@ -40,8 +40,3 @@ export const blogWebsiteUrlValidationMiddleware = body("websiteUrl")
 
     .matches(websiteUrlPattern)
     .withMessage("website URL must be in correct format")
-
-export const membershipValidationMiddleware = body("isMemberShip")
-    .isBoolean()
-    .withMessage("type must be boolean")
-    .bail()
