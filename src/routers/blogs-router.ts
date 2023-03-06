@@ -7,7 +7,6 @@ import {
 } from "../middlewares/blogsBodyValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
 import {ObjectId} from "mongodb";
-import {membershipValidationMiddleware} from "../middlewares/blogsBodyValidationMiddleware";
 
 
 export const blogsRouter = Router({})
