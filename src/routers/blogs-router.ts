@@ -33,7 +33,6 @@ blogsRouter.post("/",
     blogNameValidationMiddleware,
     blogDescriptionValidationMiddleware,
     blogWebsiteUrlValidationMiddleware,
-    membershipValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
@@ -49,7 +48,6 @@ blogsRouter.put("/:id",
     blogNameValidationMiddleware,
     blogDescriptionValidationMiddleware,
     blogWebsiteUrlValidationMiddleware,
-    membershipValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
     const updatedBlog = await blogsRepository.updateBlog(
