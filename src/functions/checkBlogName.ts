@@ -1,6 +1,6 @@
 import {Request} from 'express'
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
-import {blogModelWithMongoId, blogViewModelWithId} from "../models/blogViewModel";
+import {blogViewModelWithId} from "../models/blogViewModel";
 
 
 export const checkBlogName = async (req:Request) => {
