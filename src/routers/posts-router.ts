@@ -6,7 +6,7 @@ import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
-//import {blogIdCheckMiddleware} from "../functions/checkBlogId";
+import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {checkBlogName} from "../functions/checkBlogName";
 
 export const postsRouter = Router({})
@@ -28,7 +28,7 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
 //POST
 postsRouter.post("/",
     basicAuthMiddleware,
-    //blogIdCheckMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -45,7 +45,7 @@ postsRouter.post("/",
 //PUT
 postsRouter.put("/:id",
     basicAuthMiddleware,
-    //blogIdCheckMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,

@@ -1,13 +1,11 @@
-/*import {body} from "express-validator";
-import {ObjectId} from "mongodb";
+import {body} from "express-validator";
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
 export const blogIdCheckMiddleware = body("blogId").custom(async (value) => {
-    const result = await blogsRepository.findBlogById(new ObjectId(value));
-    if (!result) {
+    const blogs = await blogsRepository.findBlogs();
+    const result = blogs.filter((el) => el.id === value);
+    if (result.length < 1) {
         throw new Error("ID not found");
     }
-    return true;
 });
-*/
 
