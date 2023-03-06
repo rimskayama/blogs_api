@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+/*import {body} from "express-validator";
 import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
@@ -9,4 +9,5 @@ export const blogIdCheckMiddleware = body("blogId").custom(async (value) => {
     }
     return true;
 });
+*/
 
