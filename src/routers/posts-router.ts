@@ -2,13 +2,11 @@ import {Request, Response, Router} from 'express'
 import {postsRepository} from "../repositories/memory/posts-repository-memory";
 import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
-import {
-    blogIdValidationMiddleware,
-    postContentValidationMiddleware,
+import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
-//import {blogIdCheckMiddleware} from "../functions/checkBlogId";
+import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {checkBlogName} from "../functions/checkBlogName";
 
 export const postsRouter = Router({})
@@ -30,8 +28,7 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
 //POST
 postsRouter.post("/",
     basicAuthMiddleware,
-    blogIdValidationMiddleware,
-    //blogIdCheckMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -48,8 +45,7 @@ postsRouter.post("/",
 //PUT
 postsRouter.put("/:id",
     basicAuthMiddleware,
-    blogIdValidationMiddleware,
-    //blogIdCheckMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -70,8 +66,6 @@ postsRouter.put("/:id",
 //DELETE
 postsRouter.delete("/:id",
     basicAuthMiddleware,
-    blogIdValidationMiddleware,
-    //blogIdCheckMiddleware,
     (req: Request, res: Response) => {
         const isDeleted = postsRepository.deletePost(req.params.id);
         (isDeleted) ? res.sendStatus(204) : res.sendStatus(404);
