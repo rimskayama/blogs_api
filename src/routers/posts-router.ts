@@ -53,10 +53,10 @@ postsRouter.put("/:id",
     errorsValidationMiddleware,
 
     async (req: Request, res: Response) => {
-        const updatedPost = await postsService.updatePost(
+        const isUpdated = await postsService.updatePost(
             new ObjectId(req.params.id), req.body.title, req.body.shortDescription,
             req.body.content, req.body.blogId)
-        if (updatedPost) {
+        if (isUpdated) {
             res.sendStatus(204);
         } else {
             res.status(404).send('Not found');

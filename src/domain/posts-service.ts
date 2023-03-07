@@ -31,8 +31,8 @@ export const postsService = {
 
     async updatePost(_id: ObjectId, title: string, shortDescription: string,
                      content: string, blogId: string) {
-        const updatedPost = await postsRepository.updatePost(_id, title, shortDescription, content, blogId);
-        return updatedPost;
+        const isUpdated = await postsRepository.updatePost(_id, title, shortDescription, content, blogId);
+        return isUpdated;
     },
 
     async deletePost(_id: ObjectId) {
