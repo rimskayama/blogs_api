@@ -38,7 +38,7 @@ postsRouter.post("/",
 
         const newPost = await postsService.createPost(
             req.body.title, req.body.shortDescription,
-            req.body.content, req.body.blogId, await checkBlogName(req), req.body.createdAt);
+            req.body.content, req.body.blogId, await checkBlogName(req));
         console.log('new', newPost)
         res.status(201).json(newPost)
     })

@@ -13,7 +13,7 @@ export const postsService = {
         return post;
 
     },
-    async createPost(_id: ObjectId, title: string, shortDescription: string,
+    async createPost(title: string, shortDescription: string,
                      content: string, blogId: string, blogName: string) {
 
         const newPost : postModelWithMongoId = {
