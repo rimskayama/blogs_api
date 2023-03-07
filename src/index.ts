@@ -5,9 +5,11 @@ import {postsRouter} from "./routers/posts-router";
 import {runDB} from "./repositories/db";
 
 export const app = express();
+const port = process.env.PORT || 5000
+
 app.use(express.json());
 
-const port = process.env.PORT || 5000
+
 
 app.use("/blogs", blogsRouter);
 app.use("/testing", testingRouter);

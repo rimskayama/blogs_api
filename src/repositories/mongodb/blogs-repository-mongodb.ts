@@ -26,16 +26,8 @@ export const blogsRepository  = {
     },
 
     async createBlog(
-        _id: ObjectId, name: string, description: string, websiteUrl: string, isMembership: boolean): Promise<blogViewModelWithId> {
+        newBlog : blogModelWithMongoId): Promise<blogViewModelWithId> {
 
-        const newBlog: blogModelWithMongoId = {
-            _id: new ObjectId(),
-            name: name,
-            description: description,
-            websiteUrl: websiteUrl,
-            createdAt: (new Date()).toISOString(),
-            isMembership: isMembership || false,
-        }
         const result = await blogsCollection.insertOne(newBlog)
         return {
             id: newBlog._id.toString(),

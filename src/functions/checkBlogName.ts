@@ -1,10 +1,10 @@
 import {Request} from 'express'
-import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 import {blogViewModelWithId} from "../models/blogViewModel";
+import {blogsService} from "../domain/blogs-service";
 
 
 export const checkBlogName = async (req:Request) => {
-    const blogs = await blogsRepository.findBlogs()
+    const blogs = await blogsService.findBlogs()
     const blogToFind = blogs.find((blog : blogViewModelWithId) => blog.id === req.body.blogId)
     let blogName;
     if (blogToFind) {

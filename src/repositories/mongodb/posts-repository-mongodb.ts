@@ -25,17 +25,8 @@ export const postsRepository = {
         };
 
     },
-    async createPost(_id: ObjectId, title: string, shortDescription: string,
-               content: string, blogId: string, blogName: string) {
-        const newPost : postModelWithMongoId = {
-            _id: new ObjectId(),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId,
-            blogName: blogName,
-            createdAt: (new Date()).toISOString(),
-        }
+    async createPost(newPost : postModelWithMongoId): Promise<postViewModelWithId> {
+
         const result = await postsCollection.insertOne(newPost);
         return {
             id: newPost._id.toString(),
@@ -49,7 +40,7 @@ export const postsRepository = {
     },
 
     async updatePost(_id: ObjectId, title: string, shortDescription: string,
-                     content: string, blogId: string, blogName: string) {
+                     content: string, blogId: string) {
         const updatedPost = await postsCollection.updateOne({_id}, {
             $set:
                 {
@@ -57,7 +48,6 @@ export const postsRepository = {
                     shortDescription: shortDescription,
                     content: content,
                     blogId: blogId,
-                    blogName: blogName,
                 }
         })
 
