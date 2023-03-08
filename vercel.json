@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "ht_02",
+  "name": "blogs_api",
   "builds": [
     {
       "src": "src/index.ts",
