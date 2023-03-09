@@ -8,8 +8,7 @@ export const blogsService  = {
         },
 
         async findBlogById(_id: ObjectId): Promise<blogViewModelWithId | null> {
-            const blog: blogViewModelWithId | null = await blogsRepository.findBlogById(_id);
-            return blog;
+            return await blogsRepository.findBlogById(_id);
     },
 
     async createBlog(_id: ObjectId, name: string, description: string,
@@ -23,20 +22,18 @@ export const blogsService  = {
             createdAt: (new Date()).toISOString(),
             isMembership: isMembership || false,
         }
-        const createdBlog = await blogsRepository.createBlog(newBlog);
-        return createdBlog;
+        return await blogsRepository.createBlog(newBlog);
     },
 
     async updateBlog(_id: ObjectId, name: string, description: string, websiteUrl: string, isMembership: boolean | false):
         Promise<blogViewModelWithId | boolean> {
 
-        const updatedBlog = await blogsRepository.updateBlog(_id, name, description, websiteUrl, isMembership);
-        return updatedBlog;
+        return await blogsRepository.updateBlog(_id, name, description, websiteUrl, isMembership);
+
     },
 
     async deleteBlog(_id: ObjectId) {
-        const deletedBlog = await blogsRepository.deleteBlog(_id);
-        return deletedBlog;
+        return await blogsRepository.deleteBlog(_id);
     },
 
     async deleteAll() {
