@@ -4,13 +4,11 @@ import {ObjectId} from "mongodb";
 
 export const postsService = {
     async findPosts(): Promise<postViewModelWithId[]> {
-        const allPosts = await postsRepository.findPosts();
-        return allPosts;
+        return await postsRepository.findPosts();
     },
 
     async findPostById(_id: ObjectId): Promise<postViewModelWithId | null> {
-        const post = await postsRepository.findPostById(_id);
-        return post;
+        return await postsRepository.findPostById(_id);
 
     },
     async createPost(title: string, shortDescription: string,
@@ -25,19 +23,16 @@ export const postsService = {
             blogName: blogName,
             createdAt: (new Date()).toISOString(),
         }
-        const createdPost = await postsRepository.createPost(newPost);
-        return createdPost;
+        return await postsRepository.createPost(newPost);
     },
 
     async updatePost(_id: ObjectId, title: string, shortDescription: string,
                      content: string, blogId: string) {
-        const isUpdated = await postsRepository.updatePost(_id, title, shortDescription, content, blogId);
-        return isUpdated;
+        return await postsRepository.updatePost(_id, title, shortDescription, content, blogId);
     },
 
     async deletePost(_id: ObjectId) {
-        const deletedPost = await postsRepository.deletePost(_id);
-        return deletedPost;
+        return await postsRepository.deletePost(_id);
     },
 
     async deleteAll() {
