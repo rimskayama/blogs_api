@@ -3,13 +3,6 @@ import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
 export const blogsService  = {
-        async findBlogs(): Promise<blogViewModelWithId[]> {
-            return blogsRepository.findBlogs()
-        },
-
-        async findBlogById(_id: ObjectId): Promise<blogViewModelWithId | null> {
-            return await blogsRepository.findBlogById(_id);
-    },
 
     async createBlog(_id: ObjectId, name: string, description: string,
                      websiteUrl: string, isMembership: boolean): Promise<blogViewModelWithId> {

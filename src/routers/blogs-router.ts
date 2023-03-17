@@ -7,20 +7,21 @@ import {
 } from "../middlewares/blogsBodyValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
 import {ObjectId} from "mongodb";
+import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 
 
 export const blogsRouter = Router({})
 
 //GET ALL
 blogsRouter.get("/", async (req: Request, res: Response) => {
-    const allBlogs = await blogsService.findBlogs()
+    const allBlogs = await blogsQueryRepository.findBlogs()
     res.status(200).json(allBlogs)
 })
 
 
 //GET WITH URI
 blogsRouter.get("/:id", async (req: Request, res: Response) => {
-    let blog = await blogsService.findBlogById(
+    let blog = await blogsQueryRepository.findBlogById(
         new ObjectId(req.params.id))
     if (blog) {
         res.json(blog);
