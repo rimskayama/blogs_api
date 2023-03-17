@@ -9,18 +9,19 @@ import {postContentValidationMiddleware,
 import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {checkBlogName} from "../functions/checkBlogName";
 import {ObjectId} from "mongodb";
+import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 export const postsRouter = Router({})
 
 //GET
 postsRouter.get("/", async (req: Request, res: Response) => {
-    const allPosts = await postsService.findPosts()
+    const allPosts = await postsQueryRepository.findPosts()
     res.status(200).json(allPosts)
 })
 
 //GET WITH URI
 postsRouter.get("/:id", async (req: Request, res: Response) => {
-    let post = await postsService.findPostById(new ObjectId(req.params.id));
+    let post = await postsQueryRepository.findPostById(new ObjectId(req.params.id));
     if (post) {
         res.json(post);
     } else res.sendStatus(404)
@@ -71,5 +72,3 @@ postsRouter.delete("/:id",
         const isDeleted = await postsService.deletePost(new ObjectId(req.params.id));
         (isDeleted) ? res.sendStatus(204) : res.sendStatus(404);
     })
-
-

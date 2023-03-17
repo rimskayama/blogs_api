@@ -3,14 +3,7 @@ import {postsRepository} from "../repositories/mongodb/posts-repository-mongodb"
 import {ObjectId} from "mongodb";
 
 export const postsService = {
-    async findPosts(): Promise<postViewModelWithId[]> {
-        return await postsRepository.findPosts();
-    },
 
-    async findPostById(_id: ObjectId): Promise<postViewModelWithId | null> {
-        return await postsRepository.findPostById(_id);
-
-    },
     async createPost(title: string, shortDescription: string,
                      content: string, blogId: string, blogName: string) {
 
