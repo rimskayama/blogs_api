@@ -2,8 +2,6 @@
 import {blogsCollection} from "../db";
 import {blogModelWithMongoId, blogViewModelWithId, blogViewModel} from "../../models/blogViewModel";
 import {ObjectId} from "mongodb";
-import {blogsMapping, postsMapping} from "../../functions/mapping";
-import {postModelWithMongoId, postViewModelWithId} from "../../models/postViewModel";
 
 export const blogsRepository  = {
 
