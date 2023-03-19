@@ -6,15 +6,18 @@ import {
     blogNameValidationMiddleware, blogWebsiteUrlValidationMiddleware
 } from "../middlewares/blogsBodyValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
-import {ObjectId} from "mongodb";
+import {ObjectId, SortDirection} from "mongodb";
 import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 
 
 export const blogsRouter = Router({})
 
+import {getPagination} from "../functions/pagination";
+
 //GET ALL
 blogsRouter.get("/", async (req: Request, res: Response) => {
-    const allBlogs = await blogsQueryRepository.findBlogs()
+    const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
+    const allBlogs = await blogsQueryRepository.findBlogs(page, limit, sortDirection, sortBy, searchNameTerm, skip)
     res.status(200).json(allBlogs)
 })
 
