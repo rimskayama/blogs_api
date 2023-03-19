@@ -6,8 +6,7 @@ import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
-import {blogIdCheckMiddleware} from "../functions/checkBlogId";
-import {checkBlogName} from "../functions/checkBlogName";
+//import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {ObjectId} from "mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
@@ -30,7 +29,7 @@ postsRouter.get("/:id", async (req: Request, res: Response) => {
 //POST
 postsRouter.post("/",
     basicAuthMiddleware,
-    blogIdCheckMiddleware,
+    //blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -39,7 +38,7 @@ postsRouter.post("/",
 
         const newPost = await postsService.createPost(
             req.body.title, req.body.shortDescription,
-            req.body.content, req.body.blogId, await checkBlogName(req));
+            req.body.content, req.body.blogId, req.body.blogName);
         console.log('new', newPost)
         res.status(201).json(newPost)
     })
@@ -47,7 +46,7 @@ postsRouter.post("/",
 //PUT
 postsRouter.put("/:id",
     basicAuthMiddleware,
-    blogIdCheckMiddleware,
+    //blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
