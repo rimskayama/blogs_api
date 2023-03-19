@@ -1,17 +1,34 @@
 import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blogViewModel";
 import {blogsCollection} from "../db";
-import {blogsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
+import {blogsMapping} from "../../functions/mapping";
 
-import {getPagination} from "../../functions/pagination";
 
 export const blogsQueryRepository = {
     async findBlogs(
         page: number, limit: number, sortDirection: SortDirection,
-        sortBy: string, searchNameTerm: string, skip: number): Promise<blogViewModelWithId[]>
+        sortBy: string, searchNameTerm: string, skip: number)
     {
-        let allBlogs = blogsCollection.find({name : searchNameTerm}, {}).toArray();
-        return blogsMapping(await allBlogs)
+        let allBlogs = await blogsCollection.find(
+            {name: {$regex: searchNameTerm, $options: 'i'}},
+            )
+            .skip(skip)
+            .limit(limit)
+            .sort( {[sortBy]: sortDirection})
+            .toArray()
+
+        const total = await blogsCollection.countDocuments(
+            { name: { $regex: searchNameTerm, $options: 'i' }})
+
+        const pagesCount = Math.ceil(total / limit)
+
+        return {
+            pagesCount: pagesCount,
+            page: page,
+            pageSize: limit,
+            totalCount: total,
+            items: blogsMapping(allBlogs)
+        }
     },
 
     async findBlogById(_id: ObjectId): Promise<blogViewModelWithId | null> {
@@ -27,5 +44,6 @@ export const blogsQueryRepository = {
             createdAt: blog.createdAt,
             isMembership: blog.isMembership
         }
-    }
+    },
+
 }
