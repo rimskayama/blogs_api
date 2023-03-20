@@ -1,4 +1,4 @@
-import {postModelWithMongoId, postViewModelWithId} from "../models/postViewModel";
+import {postModelWithMongoId} from "../models/postViewModel";
 import {postsRepository} from "../repositories/mongodb/posts-repository-mongodb";
 import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
