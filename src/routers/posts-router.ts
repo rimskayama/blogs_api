@@ -7,7 +7,7 @@ import {postContentValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
 //import {blogIdCheckMiddleware} from "../functions/checkBlogId";
-import {ObjectId, SortDirection} from "mongodb";
+import {ObjectId} from "mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 export const postsRouter = Router({})
