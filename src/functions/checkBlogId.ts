@@ -1,8 +1,15 @@
-import {param} from "express-validator";
+import {body, param, query} from "express-validator";
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
+import {ObjectId} from "mongodb";
 
+export const blogIdCheckBody = body("blogId").custom(async (value) => {
+    let foundBlogByName = await blogsRepository.findBlogName(value)
+    if (!foundBlogByName) {
+        throw new Error("ID not found");
+    }
+})
 
-export const blogIdCheckMiddleware = param("blogId").custom(async (value) => {
+export const blogIdCheckQuery = param("blogId").custom(async (value) => {
     let foundBlogByName = await blogsRepository.findBlogName(value)
     if (!foundBlogByName) {
         throw new Error("ID not found");
