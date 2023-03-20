@@ -1,8 +1,9 @@
+
 import {Request} from 'express'
 import {blogViewModelWithId} from "../models/blogViewModel";
 import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 
-
+/*
 export const checkBlogName = async (req:Request) => {
     const blogs = await blogsQueryRepository.findBlogs()
     const blogToFind = blogs.find((blog : blogViewModelWithId) => blog.id === req.body.blogId)
@@ -14,3 +15,4 @@ export const checkBlogName = async (req:Request) => {
         blogName = '12546'
         return blogName;
 }
+*/
