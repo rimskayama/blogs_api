@@ -5,7 +5,7 @@ import {ObjectId} from "mongodb";
 
 export const blogsRepository  = {
 
-    async findBlogName(blogId: ObjectId): Promise<blogModelWithMongoId | null> {
+    async findBlogName(blogId: string): Promise<blogModelWithMongoId | null> {
 
         let foundBlogByName = await blogsCollection.findOne({_id: new ObjectId(blogId)}, {})
 

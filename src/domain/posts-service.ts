@@ -8,7 +8,7 @@ export const postsService = {
     async createPost(title: string, shortDescription: string,
                      content: string, blogId: string) {
 
-        let foundBlogByName = await blogsRepository.findBlogName(new ObjectId(blogId))
+        let foundBlogByName = await blogsRepository.findBlogName(blogId.toString())
 
         if (foundBlogByName) {
             const newPost : postModelWithMongoId = {
@@ -20,15 +20,15 @@ export const postsService = {
                 blogName: foundBlogByName.name,
                 createdAt: (new Date()).toISOString(),
             }
+            return await postsRepository.createPost(newPost);
+        } else return null
 
-        return await postsRepository.createPost(newPost);
-    }
-        },
+    },
 
     async updatePost(_id: ObjectId, title: string, shortDescription: string,
                      content: string, blogId: string) {
 
-        let foundBlogByName = await blogsRepository.findBlogName(new ObjectId(blogId))
+        let foundBlogByName = await blogsRepository.findBlogName(blogId)
 
         if (foundBlogByName) {
             return await postsRepository.updatePost(_id, title, shortDescription, content, blogId);

@@ -6,12 +6,12 @@ import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
-import {blogIdCheckBody, blogIdCheckQuery} from "../functions/checkBlogId";
 import {ObjectId} from "mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
+import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
 // get all
 postsRouter.get("/posts", async (req: Request, res: Response) => {
@@ -32,7 +32,6 @@ postsRouter.get("/posts/:id", async (req: Request, res: Response) => {
 // create post
 postsRouter.post("/posts",
     basicAuthMiddleware,
-    blogIdCheckBody,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -41,15 +40,16 @@ postsRouter.post("/posts",
 
         const newPost = await postsService.createPost(req.body.title, req.body.shortDescription,
             req.body.content, req.body.blogId);
-        console.log('new', newPost)
-        res.status(201).json(newPost)
+
+        if (newPost) {
+            res.status(201).json(newPost)
+        } else return res.sendStatus(404)
     })
 
 // create post for spec blog
 
 postsRouter.post("/blogs/:blogId/posts",
     basicAuthMiddleware,
-    blogIdCheckQuery,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -59,13 +59,16 @@ postsRouter.post("/blogs/:blogId/posts",
     const newPost = await postsService.createPost(
         req.body.title, req.body.shortDescription,
         req.body.content,  req.params.blogId);
-    res.status(201).json(newPost)
+
+    if (newPost) {
+        res.status(201).json(newPost)
+    } else return res.sendStatus(404)
+
 })
 
 // update post
 postsRouter.put("/posts/:id",
     basicAuthMiddleware,
-    blogIdCheckBody,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
