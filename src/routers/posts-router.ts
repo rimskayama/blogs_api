@@ -7,14 +7,17 @@ import {postContentValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
 //import {blogIdCheckMiddleware} from "../functions/checkBlogId";
-import {ObjectId} from "mongodb";
+import {ObjectId, SortDirection} from "mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 export const postsRouter = Router({})
+import {getPagination} from "../functions/pagination";
 
 //GET
 postsRouter.get("/", async (req: Request, res: Response) => {
-    const allPosts = await postsQueryRepository.findPosts()
+
+    const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
+    const allPosts = await postsQueryRepository.findPosts(page, limit, sortDirection, sortBy, skip)
     res.status(200).json(allPosts)
 })
 
