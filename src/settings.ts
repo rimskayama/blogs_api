@@ -8,6 +8,6 @@ export const app = express();
 app.use(express.json());
 
 
-app.use("/blogs", blogsRouter);
-app.use("/testing", testingRouter);
-app.use("/posts", postsRouter);
+app.use("/", blogsRouter);
+app.use("/", testingRouter);
+app.use("/", postsRouter);
