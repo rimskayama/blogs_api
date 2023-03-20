@@ -1,12 +1,11 @@
 import {Request, Response, Router} from 'express'
 import {blogsService} from "../domain/blogs-service";
 import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
-import {
-    blogDescriptionValidationMiddleware,
+import {blogDescriptionValidationMiddleware,
     blogNameValidationMiddleware, blogWebsiteUrlValidationMiddleware
 } from "../middlewares/blogsBodyValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
-import {ObjectId, SortDirection} from "mongodb";
+import {ObjectId} from "mongodb";
 import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 
 
