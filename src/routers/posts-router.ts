@@ -6,6 +6,7 @@ import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
+import {blogIdCheckMiddleware} from "../functions/checkBlogId";
 import {ObjectId} from "mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
@@ -13,7 +14,7 @@ export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
 
 // get all
-postsRouter.get("/", async (req: Request, res: Response) => {
+postsRouter.get("/posts", async (req: Request, res: Response) => {
 
     const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
     const allPosts = await postsQueryRepository.findPosts(page, limit, sortDirection, sortBy, skip)
@@ -21,7 +22,7 @@ postsRouter.get("/", async (req: Request, res: Response) => {
 })
 
 // get with uri
-postsRouter.get("/:id", async (req: Request, res: Response) => {
+postsRouter.get("/posts/:id", async (req: Request, res: Response) => {
     let post = await postsQueryRepository.findPostById(new ObjectId(req.params.id));
     if (post) {
         res.json(post);
@@ -29,16 +30,16 @@ postsRouter.get("/:id", async (req: Request, res: Response) => {
 })
 
 // create post
-postsRouter.post("/",
+postsRouter.post("/posts",
     basicAuthMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-        const newPost = await postsService.createPost(
-            req.body.title, req.body.shortDescription,
+        const newPost = await postsService.createPost(req.body.title, req.body.shortDescription,
             req.body.content, req.body.blogId);
         console.log('new', newPost)
         res.status(201).json(newPost)
@@ -48,22 +49,24 @@ postsRouter.post("/",
 
 postsRouter.post("/blogs/:blogId/posts",
     basicAuthMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-        const newPost = await postsService.createPost(
-            req.body.title, req.body.shortDescription,
-            req.body.content, req.body.blogId);
-        console.log('new', newPost)
-        res.status(201).json(newPost)
+            const newPost = await postsService.createPost(
+                req.body.title, req.body.shortDescription,
+                req.body.content, req.params.blogId);
+            res.status(201).json(newPost)
+
     })
 
 // update post
-postsRouter.put("/:id",
+postsRouter.put("/posts/:id",
     basicAuthMiddleware,
+    blogIdCheckMiddleware,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -82,7 +85,7 @@ postsRouter.put("/:id",
     })
 
 // delete
-postsRouter.delete("/:id",
+postsRouter.delete("/posts/:id",
     basicAuthMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted = await postsService.deletePost(new ObjectId(req.params.id));
