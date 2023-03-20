@@ -13,6 +13,7 @@ import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repo
 export const blogsRouter = Router({})
 
 import {getPagination} from "../functions/pagination";
+import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 //GET ALL
 blogsRouter.get("/", async (req: Request, res: Response) => {
@@ -24,10 +25,22 @@ blogsRouter.get("/", async (req: Request, res: Response) => {
 
 //GET WITH URI
 blogsRouter.get("/:id", async (req: Request, res: Response) => {
-    let blog = await blogsQueryRepository.findBlogById(
-        new ObjectId(req.params.id))
+    let blog = await blogsQueryRepository.findBlogById(new ObjectId(req.params.id))
     if (blog) {
         res.json(blog);
+    } else res.sendStatus(404)
+})
+
+//GET WITH URI
+blogsRouter.get("/blogs/:blogId/posts", async (req: Request, res: Response) => {
+    let findBlog = await blogsQueryRepository.findBlogByBlogId(req.params.blogId);
+
+    const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
+    const blogId = req.params.blogId
+
+    if (findBlog) {
+        let posts = await postsQueryRepository.findPostsByBlogId(blogId, page, limit, sortDirection, sortBy, skip);
+        res.status(200).json(posts);
     } else res.sendStatus(404)
 })
 
