@@ -11,6 +11,7 @@ import {postsQueryRepository} from "../repositories/query-repos/posts-query-repo
 
 export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
+import {blogIdCheck} from "../functions/checkBlogId";
 
 // get all
 postsRouter.get("/posts", async (req: Request, res: Response) => {
@@ -31,6 +32,7 @@ postsRouter.get("/posts/:id", async (req: Request, res: Response) => {
 // create post
 postsRouter.post("/posts",
     basicAuthMiddleware,
+    blogIdCheck,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
@@ -68,6 +70,7 @@ postsRouter.post("/blogs/:blogId/posts",
 // update post
 postsRouter.put("/posts/:id",
     basicAuthMiddleware,
+    blogIdCheck,
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
