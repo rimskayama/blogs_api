@@ -56,12 +56,11 @@ postsRouter.post("/blogs/:blogId/posts",
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-            const newPost = await postsService.createPost(
-                req.body.title, req.body.shortDescription,
-                req.body.content, req.params.blogId);
-            res.status(201).json(newPost)
-
-    })
+    const newPost = await postsService.createPost(
+        req.body.title, req.body.shortDescription,
+        req.body.content,  req.params.blogId);
+    res.status(201).json(newPost)
+})
 
 // update post
 postsRouter.put("/posts/:id",
