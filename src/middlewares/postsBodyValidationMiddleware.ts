@@ -38,11 +38,3 @@ export const postContentValidationMiddleware = body("content")
     .trim()
     .isLength({min: 1, max: 1000})
     .withMessage("content length should be minimum 1 and maximum 100 symbols")
-
-export const idValidation = body('blogId')
-    .exists()
-    .withMessage("blogId is required'")
-    .bail()
-
-    .isString()
-    .withMessage("type of blogId must be string")
