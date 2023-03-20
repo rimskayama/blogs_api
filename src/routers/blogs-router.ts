@@ -15,7 +15,7 @@ import {getPagination} from "../functions/pagination";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 // get all
-blogsRouter.get("/", async (req: Request, res: Response) => {
+blogsRouter.get("/blogs", async (req: Request, res: Response) => {
     const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
     const allBlogs = await blogsQueryRepository.findBlogs(page, limit, sortDirection, sortBy, searchNameTerm, skip)
     res.status(200).json(allBlogs)
@@ -23,7 +23,7 @@ blogsRouter.get("/", async (req: Request, res: Response) => {
 
 
 // get with uri
-blogsRouter.get("/:id", async (req: Request, res: Response) => {
+blogsRouter.get("/blogs/:id", async (req: Request, res: Response) => {
     let blog = await blogsQueryRepository.findBlogById(new ObjectId(req.params.id))
     if (blog) {
         res.json(blog);
@@ -31,7 +31,7 @@ blogsRouter.get("/:id", async (req: Request, res: Response) => {
 })
 
 // get posts with blog id
-blogsRouter.get("/:blogId/posts", async (req: Request, res: Response) => {
+blogsRouter.get("/blogs/:blogId/posts", async (req: Request, res: Response) => {
 
     let checkBlog = await blogsQueryRepository.findBlogByBlogId(req.params.blogId);
 
@@ -45,7 +45,7 @@ blogsRouter.get("/:blogId/posts", async (req: Request, res: Response) => {
 })
 
 // create blog
-blogsRouter.post("/",
+blogsRouter.post("/blogs",
     basicAuthMiddleware,
     blogNameValidationMiddleware,
     blogDescriptionValidationMiddleware,
@@ -60,7 +60,7 @@ blogsRouter.post("/",
 })
 
 // update blog
-blogsRouter.put("/:id",
+blogsRouter.put("/blogs/:id",
     basicAuthMiddleware,
     blogNameValidationMiddleware,
     blogDescriptionValidationMiddleware,
@@ -80,7 +80,7 @@ blogsRouter.put("/:id",
 })
 
 // delete
-blogsRouter.delete("/:id",
+blogsRouter.delete("/blogs/:id",
     basicAuthMiddleware,
     async (req: Request, res: Response) => {
     const result = await blogsService.deleteBlog(new ObjectId(req.params.id));
