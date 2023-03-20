@@ -14,7 +14,7 @@ export const blogsRouter = Router({})
 import {getPagination} from "../functions/pagination";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
-//GET ALL
+// get all
 blogsRouter.get("/", async (req: Request, res: Response) => {
     const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
     const allBlogs = await blogsQueryRepository.findBlogs(page, limit, sortDirection, sortBy, searchNameTerm, skip)
@@ -22,7 +22,7 @@ blogsRouter.get("/", async (req: Request, res: Response) => {
 })
 
 
-//GET WITH URI
+// get with uri
 blogsRouter.get("/:id", async (req: Request, res: Response) => {
     let blog = await blogsQueryRepository.findBlogById(new ObjectId(req.params.id))
     if (blog) {
@@ -30,20 +30,21 @@ blogsRouter.get("/:id", async (req: Request, res: Response) => {
     } else res.sendStatus(404)
 })
 
-//GET WITH URI
-blogsRouter.get("/blogs/:blogId/posts", async (req: Request, res: Response) => {
-    let findBlog = await blogsQueryRepository.findBlogByBlogId(req.params.blogId);
+// get posts with blog id
+blogsRouter.get("/:blogId/posts", async (req: Request, res: Response) => {
+
+    let checkBlog = await blogsQueryRepository.findBlogByBlogId(req.params.blogId);
 
     const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
-    const blogId = req.params.blogId
+    const blogId = req.params.blogId;
 
-    if (findBlog) {
+    if (checkBlog) {
         let posts = await postsQueryRepository.findPostsByBlogId(blogId, page, limit, sortDirection, sortBy, skip);
         res.status(200).json(posts);
     } else res.sendStatus(404)
 })
 
-//POST
+// create blog
 blogsRouter.post("/",
     basicAuthMiddleware,
     blogNameValidationMiddleware,
@@ -58,7 +59,7 @@ blogsRouter.post("/",
         res.status(201).json(newBlog)
 })
 
-//PUT
+// update blog
 blogsRouter.put("/:id",
     basicAuthMiddleware,
     blogNameValidationMiddleware,
@@ -78,7 +79,7 @@ blogsRouter.put("/:id",
 
 })
 
-//DELETE
+// delete
 blogsRouter.delete("/:id",
     basicAuthMiddleware,
     async (req: Request, res: Response) => {
