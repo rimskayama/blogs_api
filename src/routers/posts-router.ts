@@ -2,7 +2,8 @@ import {Request, Response, Router} from 'express'
 import {postsService} from "../domain/posts-service";
 import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuth";
-import {postContentValidationMiddleware,
+import {
+    idValidation, postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/postsBodyValidationMiddleware";
@@ -53,6 +54,7 @@ postsRouter.post("/blogs/:blogId/posts",
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
+    idValidation,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
@@ -72,6 +74,7 @@ postsRouter.put("/posts/:id",
     postTitleValidationMiddleware,
     postDescriptionValidationMiddleware,
     postContentValidationMiddleware,
+    idValidation,
     errorsValidationMiddleware,
 
     async (req: Request, res: Response) => {
