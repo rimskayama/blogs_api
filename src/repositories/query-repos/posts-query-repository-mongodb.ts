@@ -48,14 +48,14 @@ export const postsQueryRepository = {
     async findPostsByBlogId(blogId: string, page: number, limit: number, sortDirection: SortDirection,
                             sortBy: string, skip: number) {
         const postsByBlogId = await postsCollection.find(
-            {blogId: blogId})
+            {blogId: blogId},
+            )
             .skip(skip)
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .toArray()
 
-        const total = await postsCollection.countDocuments(
-            {blogId: blogId})
+        const total = await postsCollection.countDocuments({blogId: blogId})
 
         const pagesCount = Math.ceil(total / limit)
 
