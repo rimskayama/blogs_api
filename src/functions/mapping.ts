@@ -1,7 +1,7 @@
 import {blogModelWithMongoId} from "../models/blogViewModel";
 import {postModelWithMongoId} from "../models/postViewModel";
 
-export const blogsMapping = async (array: Array<blogModelWithMongoId>) => {
+export const blogsMapping = (array: Array<blogModelWithMongoId>) => {
     return array.map((obj) => {
         return {
             id: obj._id.toString(),
@@ -13,7 +13,7 @@ export const blogsMapping = async (array: Array<blogModelWithMongoId>) => {
         }
     })
 }
-export const postsMapping = async (array: Array<postModelWithMongoId>) => {
+export const postsMapping = (array: Array<postModelWithMongoId>) => {
     return array.map((obj) => {
         return {
             id: obj._id.toString(),
