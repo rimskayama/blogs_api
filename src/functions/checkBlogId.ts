@@ -1,5 +1,4 @@
 import {body} from "express-validator";
-import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 import {ObjectId} from "mongodb";
 
