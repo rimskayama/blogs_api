@@ -4,6 +4,22 @@ import {ObjectId} from "mongodb";
 
 export const postsRepository = {
 
+    async findPostById(_id: ObjectId): Promise<postViewModelWithId | null> {
+        const post: postModelWithMongoId | null = await postsCollection.findOne({_id});
+        if (!post) {
+            return null;
+        }
+        return {
+            id: post._id.toString(),
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: post.blogId,
+            blogName: post.blogName,
+            createdAt: post.createdAt,
+        };
+    },
+
     async createPost(newPost : postModelWithMongoId): Promise<postViewModelWithId> {
 
         const result = await postsCollection.insertOne(newPost);
