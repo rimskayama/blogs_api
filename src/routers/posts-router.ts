@@ -11,7 +11,6 @@ import {postsQueryRepository} from "../repositories/query-repos/posts-query-repo
 
 export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
-import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 
 // get all
 postsRouter.get("/posts", async (req: Request, res: Response) => {
