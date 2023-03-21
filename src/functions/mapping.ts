@@ -1,3 +1,4 @@
+/*
 import {blogModelWithMongoId} from "../models/blogViewModel";
 import {postModelWithMongoId} from "../models/postViewModel";
 
@@ -26,3 +27,5 @@ export const postsMapping = (array : postModelWithMongoId[]) => {
         };
     })
 }
+
+*/

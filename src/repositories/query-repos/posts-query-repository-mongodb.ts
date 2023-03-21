@@ -1,6 +1,6 @@
 import {postModelWithMongoId, postViewModelWithId} from "../../models/postViewModel";
 import {postsCollection} from "../db";
-import {postsMapping} from "../../functions/mapping";
+//import {postsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
 
 export const postsQueryRepository = {
@@ -9,14 +9,13 @@ export const postsQueryRepository = {
     page: number, limit: number, sortDirection: SortDirection,
     sortBy: string, skip: number) {
         let allPosts = await postsCollection.find(
-            {},
-        )
+            {},{})
             .skip(skip)
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .toArray()
 
-        const total = await postsCollection.countDocuments({})
+        const total = await postsCollection.countDocuments()
 
         const pagesCount = Math.ceil(total / limit)
 
@@ -25,7 +24,7 @@ export const postsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: postsMapping(allPosts)
+            items: allPosts
         }
     },
 
@@ -64,6 +63,6 @@ export const postsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: postsMapping(postsByBlogId)
-        }
+            items: postsByBlogId
 }}
+}
