@@ -16,7 +16,7 @@ export const blogsQueryRepository = {
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .toArray();
-/*
+
         let allBlogs = await blogsCollection.find(
             {name: {$regex: searchNameTerm, $options: 'i'}},
             )
@@ -24,7 +24,7 @@ export const blogsQueryRepository = {
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .toArray()
-*/
+
         const total = await blogsCollection.countDocuments(
             { name: { $regex: searchNameTerm, $options: 'i' }})
 
