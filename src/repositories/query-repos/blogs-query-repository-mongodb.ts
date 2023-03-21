@@ -35,7 +35,7 @@ export const blogsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: blogsMapping(blogs)
+            items: blogsMapping(allBlogs)
         }
     },
 
