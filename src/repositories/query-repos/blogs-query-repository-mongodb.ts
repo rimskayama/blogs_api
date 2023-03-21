@@ -9,6 +9,9 @@ export const blogsQueryRepository = {
         page: number, limit: number, sortDirection: SortDirection,
         sortBy: string, searchNameTerm: string, skip: number)
     {
+        let blogs = await blogsCollection.find(
+            {name: {$regex: searchNameTerm, $options: 'i'}},
+        ).toArray();
 
         let allBlogs = await blogsCollection.find(
             {name: {$regex: searchNameTerm, $options: 'i'}},
@@ -28,7 +31,7 @@ export const blogsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: blogsMapping(allBlogs)
+            items: blogsMapping(blogs)
         }
     },
 
