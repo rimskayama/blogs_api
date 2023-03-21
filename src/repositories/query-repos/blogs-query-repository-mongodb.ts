@@ -11,7 +11,10 @@ export const blogsQueryRepository = {
     {
         let blogs = await blogsCollection.find(
             {name: {$regex: searchNameTerm, $options: 'i'}},
-        ).toArray();
+        )
+            .skip(skip)
+            .limit(limit)
+            .toArray();
 
         let allBlogs = await blogsCollection.find(
             {name: {$regex: searchNameTerm, $options: 'i'}},
