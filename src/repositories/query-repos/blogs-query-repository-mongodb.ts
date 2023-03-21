@@ -12,6 +12,8 @@ export const blogsQueryRepository = {
         let blogs = await blogsCollection.find(
             {name: {$regex: searchNameTerm, $options: 'i'}},
         )
+            .skip(skip)
+            .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .toArray();
 
