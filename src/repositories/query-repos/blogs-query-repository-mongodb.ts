@@ -1,7 +1,7 @@
 import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blogViewModel";
 import {blogsCollection} from "../db";
 import {ObjectId, SortDirection} from "mongodb";
-//import {blogsMapping} from "../../functions/mapping";
+import {blogsMapping} from "../../functions/mapping";
 
 
 export const blogsQueryRepository = {
@@ -27,7 +27,7 @@ export const blogsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: allBlogs
+            items: blogsMapping(allBlogs)
         }
     },
 

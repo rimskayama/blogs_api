@@ -1,6 +1,6 @@
 import {postModelWithMongoId, postViewModelWithId} from "../../models/postViewModel";
 import {postsCollection} from "../db";
-//import {postsMapping} from "../../functions/mapping";
+import {postsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
 
 export const postsQueryRepository = {
@@ -24,7 +24,7 @@ export const postsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: allPosts
+            items: postsMapping(allPosts)
         }
     },
 
@@ -63,6 +63,6 @@ export const postsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: postsByBlogId
+            items: postsMapping(postsByBlogId)
 }}
 }
