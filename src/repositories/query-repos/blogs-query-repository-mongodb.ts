@@ -2,12 +2,13 @@ import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blogViewMo
 import {blogsCollection} from "../db";
 import {ObjectId, SortDirection} from "mongodb";
 import {blogsMapping} from "../../functions/mapping";
+import {blogsPaginationViewModel} from "../../models/paginationViewModels";
 
 
 export const blogsQueryRepository = {
     async findBlogs(
         page: number, limit: number, sortDirection: SortDirection,
-        sortBy: string, searchNameTerm: string, skip: number)
+        sortBy: string, searchNameTerm: string, skip: number) : Promise<blogsPaginationViewModel>
     {
 
         let allBlogs = await blogsCollection.find(

@@ -15,7 +15,7 @@ import {getPagination} from "../functions/pagination";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 // get all
-blogsRouter.get("/blogs", async (req: Request, res: Response) => {
+blogsRouter.get("/blogs", async (req: Request, res: Response) =>  {
     const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
     const allBlogs = await blogsQueryRepository.findBlogs(page, limit, sortDirection, sortBy, searchNameTerm, skip)
     res.status(200).json(allBlogs)
