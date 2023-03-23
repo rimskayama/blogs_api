@@ -1,8 +1,8 @@
 import {Sort} from "mongodb";
 
 export const getPagination = (query: any) => {
-        let page = query.pageNumber || 1;
-        let limit = query.pageSize || 10;
+        let page: number = query.pageNumber || 1;
+        let limit: number = query.pageSize || 10;
         let sortDirection : Sort = query.sortDirection === 'asc' ? 1 : -1;
         let sortBy = query.sortBy || 'createdAt';
         let searchNameTerm = query.searchNameTerm || '';
