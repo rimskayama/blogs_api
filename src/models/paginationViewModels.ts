@@ -1,5 +1,6 @@
 import {blogViewModelWithId} from "./blogViewModel";
 import {postViewModelWithId} from "./postViewModel";
+import {userViewModelWithId} from "./userViewModel";
 
 export type blogsPaginationViewModel =
     {
@@ -19,3 +20,12 @@ export type postsPaginationViewModel = {
         items: postViewModelWithId[]
 
 }
+
+export type usersPaginationViewModel = {
+        pagesCount: number
+        page: number;
+        pageSize: number;
+        totalCount: number;
+        items: userViewModelWithId[]
+}
+
