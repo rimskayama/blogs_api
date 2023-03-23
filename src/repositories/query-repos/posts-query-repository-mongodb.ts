@@ -2,12 +2,13 @@ import {postModelWithMongoId, postViewModelWithId} from "../../models/postViewMo
 import {postsCollection} from "../db";
 import {postsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
+import {postsPaginationViewModel} from "../../models/paginationViewModels";
 
 export const postsQueryRepository = {
 
     async findPosts(
     page: number, limit: number, sortDirection: SortDirection,
-    sortBy: string, skip: number) {
+    sortBy: string, skip: number): Promise<postsPaginationViewModel> {
         let allPosts = await postsCollection.find(
             {},{})
             .skip(skip)
