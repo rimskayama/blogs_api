@@ -16,8 +16,8 @@ export const usersRouter = Router({})
 usersRouter.get("/users",
     basicAuthMiddleware,
     async (req: Request, res: Response) =>  {
-    const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
-    const allUsers = await usersQueryRepository.findUsers(page, limit, sortDirection, sortBy, searchNameTerm, skip)
+    const {page, limit, sortDirection, sortBy, skip, searchLoginTerm, searchEmailTerm} = getPagination(req.query);
+    const allUsers = await usersQueryRepository.findUsers(page, limit, sortDirection, sortBy, skip, searchLoginTerm, searchEmailTerm)
     res.status(200).json(allUsers)
 })
 

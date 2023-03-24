@@ -7,11 +7,11 @@ import {userModelWithMongoId, userViewModelWithId} from "../../models/userViewMo
 export const usersQueryRepository = {
     async findUsers(
         page: number, limit: number, sortDirection: SortDirection,
-        sortBy: string, searchNameTerm: string, skip: number) : Promise<usersPaginationViewModel>
+        sortBy: string, skip: number, searchLoginTerm: string, searchEmailTerm: string) : Promise<usersPaginationViewModel>
     {
 
         let allUsers = await usersCollection.find(
-            {login: {$regex: searchNameTerm, $options: 'i'}},
+            {login: {$regex: searchLoginTerm, $options: 'i'}, email: {$regex: searchEmailTerm, $options: 'i'}},
         )
             .skip(skip)
             .limit(limit)
@@ -19,7 +19,7 @@ export const usersQueryRepository = {
             .toArray()
 
         const total = await usersCollection.countDocuments(
-            { login: { $regex: searchNameTerm, $options: 'i' }})
+            {login: {$regex: searchLoginTerm, $options: 'i'}, email: {$regex: searchEmailTerm, $options: 'i'}})
 
         const pagesCount = Math.ceil(total / limit)
 
