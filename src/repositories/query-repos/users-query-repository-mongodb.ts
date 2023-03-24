@@ -11,7 +11,7 @@ export const usersQueryRepository = {
     {
 
         let allUsers = await usersCollection.find(
-            {name: {$regex: searchNameTerm, $options: 'i'}},
+            {login: {$regex: searchNameTerm, $options: 'i'}},
         )
             .skip(skip)
             .limit(limit)
@@ -19,7 +19,7 @@ export const usersQueryRepository = {
             .toArray()
 
         const total = await usersCollection.countDocuments(
-            { name: { $regex: searchNameTerm, $options: 'i' }})
+            { login: { $regex: searchNameTerm, $options: 'i' }})
 
         const pagesCount = Math.ceil(total / limit)
 
