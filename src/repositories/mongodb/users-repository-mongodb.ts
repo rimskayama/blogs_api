@@ -1,6 +1,6 @@
 import {userInputModel, userViewModelWithId} from "../../models/userViewModel";
 import {ObjectId} from "mongodb";
-import {blogsCollection, usersCollection} from "../db";
+import {usersCollection} from "../db";
 
 export const usersRepository = {
 
@@ -15,8 +15,8 @@ export const usersRepository = {
         }
     },
 
-    async findByLoginOrEmail(loginOrEmail: string): Promise<userInputModel| null> {
-        const user: userInputModel | null = await usersCollection.findOne({loginOrEmail});
+    async findByLoginOrEmail(loginOrEmail: string): Promise<userInputModel | null> {
+        const user: userInputModel | null = await usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]});
         if (!user) {
             return null
         }
