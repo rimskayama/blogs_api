@@ -1,7 +1,14 @@
 import {ObjectId} from "mongodb";
 
 export type userViewModel = {
-    userName: string,
+    login: string,
+    email: string,
+    createdAt: Date
+}
+
+export type userInputModel = {
+    _id: ObjectId,
+    login: string,
     email: string,
     passwordHash: string,
     passwordSalt: string,
