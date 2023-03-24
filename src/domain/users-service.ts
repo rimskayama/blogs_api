@@ -4,7 +4,7 @@ import {usersRepository} from "../repositories/mongodb/users-repository-mongodb"
 import {ObjectId} from "mongodb";
 export const usersService = {
 
-    async createUser (login: string, email: string, password: string): Promise<userViewModel> {
+    async createUser(login: string, email: string, password: string): Promise<userViewModel> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
 
@@ -38,4 +38,8 @@ export const usersService = {
     async deleteUser(_id: ObjectId) {
         return await usersRepository.deleteUser(_id);
     },
+
+    async deleteAll() {
+        return await usersRepository.deleteAll();
+    }
 }

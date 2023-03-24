@@ -1,6 +1,6 @@
 import {userInputModel, userViewModelWithId} from "../../models/userViewModel";
 import {ObjectId} from "mongodb";
-import {usersCollection} from "../db";
+import {blogsCollection, usersCollection} from "../db";
 
 export const usersRepository = {
 
@@ -32,5 +32,8 @@ export const usersRepository = {
         return null
     },
 
+    async deleteAll() {
+        return await usersCollection.deleteMany({},{});
+    }
 
 }
