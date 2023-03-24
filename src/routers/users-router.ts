@@ -22,9 +22,9 @@ usersRouter.get("/users",
 })
 
 usersRouter.get("/users/:id", async (req: Request, res: Response) => {
-    let blog = await usersQueryRepository.findUserById(new ObjectId(req.params.id))
-    if (blog) {
-        res.json(blog);
+    let user = await usersQueryRepository.findUserById(new ObjectId(req.params.id))
+    if (user) {
+        res.json(user);
     } else res.sendStatus(404)
 })
 usersRouter.post('/users',
