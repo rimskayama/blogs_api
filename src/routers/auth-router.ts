@@ -11,7 +11,6 @@ import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddlew
 export const authRouter = Router({})
 
 authRouter.post('/auth/login',
-    basicAuthMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware,
     emailValidationMiddleware,
