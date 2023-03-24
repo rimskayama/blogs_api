@@ -1,4 +1,4 @@
-import {userModelWithMongoId, userViewModel} from "../models/userViewModel";
+import {userInputModel, userModelWithMongoId, userViewModel} from "../models/userViewModel";
 import bcrypt from "bcrypt";
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {ObjectId} from "mongodb";
@@ -8,9 +8,9 @@ export const usersService = {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
 
-        const newUser: userModelWithMongoId = {
+        const newUser: userInputModel = {
             _id: new ObjectId(),
-            userName: login,
+            login: login,
             email,
             passwordHash,
             passwordSalt,
@@ -26,7 +26,6 @@ export const usersService = {
         if (user.passwordHash !== passwordHash) {
             return false
         }
-
         return true
     },
 
