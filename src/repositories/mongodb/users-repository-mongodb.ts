@@ -1,4 +1,4 @@
-import {userInputModel, userModelWithMongoId, userViewModelWithId} from "../../models/userViewModel";
+import {userInputModel, userViewModelWithId} from "../../models/userViewModel";
 import {ObjectId} from "mongodb";
 import {usersCollection} from "../db";
 

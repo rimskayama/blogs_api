@@ -1,4 +1,4 @@
-import {userInputModel, userModelWithMongoId, userViewModel} from "../models/userViewModel";
+import {userInputModel, userViewModel} from "../models/userViewModel";
 import bcrypt from "bcrypt";
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {ObjectId} from "mongodb";
