@@ -13,7 +13,9 @@ import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddlew
 
 export const usersRouter = Router({})
 
-usersRouter.get("/users", async (req: Request, res: Response) =>  {
+usersRouter.get("/users",
+    basicAuthMiddleware,
+    async (req: Request, res: Response) =>  {
     const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
     const allUsers = await usersQueryRepository.findUsers(page, limit, sortDirection, sortBy, searchNameTerm, skip)
     res.status(200).json(allUsers)
