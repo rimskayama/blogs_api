@@ -3,15 +3,6 @@ const loginPattern = /^[a-zA-Z0-9_-]*$/;
 const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
 
-export const loginOrEmailValidationMiddleware = body("loginOrEmail")
-    .exists()
-    .withMessage("login or email is required")
-    .bail()
-
-    .isString()
-    .withMessage("type of login must be string")
-    .bail()
-
 export const loginValidationMiddleware = body("login")
     .exists()
     .withMessage("login or email is required")
