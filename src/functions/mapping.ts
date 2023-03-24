@@ -33,10 +33,8 @@ export const usersMapping = (array : userModelWithMongoId[]) => {
     return array.map((obj) => {
         return {
             id: obj._id.toString(),
-            userName: obj.userName,
+            login: obj.login,
             email: obj.email,
-            passwordHash: obj.passwordHash,
-            passwordSalt: obj.passwordSalt,
             createdAt: obj.createdAt,
         };
     })
