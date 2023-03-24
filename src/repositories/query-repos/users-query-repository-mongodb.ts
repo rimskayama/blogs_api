@@ -22,7 +22,7 @@ export const usersQueryRepository = {
             { name: { $regex: searchNameTerm, $options: 'i' }})
 
         const pagesCount = Math.ceil(total / limit)
-//todo fix findUsers
+
         return {
             pagesCount: pagesCount,
             page: page,
@@ -40,10 +40,8 @@ export const usersQueryRepository = {
         }
         return {
             id: user._id.toString(),
-            userName: user.userName,
+            login: user.login,
             email: user.email,
-            passwordHash: user.passwordHash,
-            passwordSalt: user.passwordSalt,
             createdAt: user.createdAt
         }
 
