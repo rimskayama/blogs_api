@@ -1,12 +1,31 @@
 import {Request, Response, Router} from "express"
 import {usersService} from "../domain/users-service";
+import {jwtService} from "../application/jwt-service";
+import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
+import {ObjectId} from "mongodb";
+import {authBearerMiddleware} from "../middlewares/auth-bearer";
 
 export const authRouter = Router({})
 
 authRouter.post('/auth/login',
     async (req: Request, res: Response) => {
-        const checkResult = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
-        if (checkResult) {
-            res.sendStatus(204)
-        } else res.sendStatus(401)
+        const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
+        if (user) {
+            const token = await jwtService.createJWT(user)
+            res.status(200).send(token)
+        } else {
+            res.sendStatus(401)
+        }
+})
+
+authRouter.get('/auth/me',
+    authBearerMiddleware,
+    async (req: Request, res: Response) => {
+    let meUser = await usersQueryRepository.findUserById(new ObjectId(req.user!.id))
+    res.status(200).json({
+        userId: meUser?.id,
+        login: meUser?.login,
+        email: meUser?.email
+    });
+
 })
