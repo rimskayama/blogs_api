@@ -1,4 +1,4 @@
-import {postViewModel, postViewModelWithId} from "../../models/postViewModel";
+import {postViewModel, postViewModelWithId} from "../../models/post-view-model";
 import {randomNumber} from "../../functions/randomNumber";
 
 const posts : postViewModelWithId[] = []

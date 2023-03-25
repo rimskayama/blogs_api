@@ -1,4 +1,4 @@
-import {userInputModel, userViewModelWithId} from "../../models/userViewModel";
+import {userInputModel, userViewModelWithId} from "../../models/user-view-model";
 import {ObjectId} from "mongodb";
 import {usersCollection} from "../db";
 

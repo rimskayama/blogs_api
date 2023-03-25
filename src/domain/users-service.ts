@@ -1,4 +1,4 @@
-import {userInputModel, userViewModel} from "../models/userViewModel";
+import {userInputModel, userViewModel} from "../models/user-view-model";
 import bcrypt from "bcrypt";
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {ObjectId} from "mongodb";
@@ -26,7 +26,7 @@ export const usersService = {
         if (user.passwordHash !== passwordHash) {
             return false // password
         }
-        return true
+        return user
     },
 
     async _generateHash(password: string, salt: string) {

@@ -1,8 +1,8 @@
-import {postModelWithMongoId, postViewModelWithId} from "../../models/postViewModel";
+import {postModelWithMongoId, postViewModelWithId} from "../../models/post-view-model";
 import {postsCollection} from "../db";
 import {postsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
-import {postsPaginationViewModel} from "../../models/paginationViewModels";
+import {postsPaginationViewModel} from "../../models/pagination-view-models";
 
 export const postsQueryRepository = {
 

@@ -2,18 +2,18 @@ import {Request, Response, Router} from "express"
 import {usersService} from "../domain/users-service";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 import {getPagination} from "../functions/pagination";
-import {basicAuthMiddleware} from "../middlewares/basicAuth";
+import {basicAuthMiddleware} from "../middlewares/auth-basic";
 import {ObjectId} from "mongodb";
 import {
     emailValidationMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware
-} from "../middlewares/usersValidationMiddleware";
-import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
+} from "../middlewares/users-validation-input";
+import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 
 export const usersRouter = Router({})
 
-usersRouter.get("/users",
+usersRouter.get("/",
     basicAuthMiddleware,
     async (req: Request, res: Response) =>  {
     const {page, limit, sortDirection, sortBy, skip, searchLoginTerm, searchEmailTerm} = getPagination(req.query);
@@ -21,13 +21,13 @@ usersRouter.get("/users",
     res.status(200).json(allUsers)
 })
 
-usersRouter.get("/users/:id", async (req: Request, res: Response) => {
+usersRouter.get("/:id", async (req: Request, res: Response) => {
     let user = await usersQueryRepository.findUserById(new ObjectId(req.params.id))
     if (user) {
         res.json(user);
     } else res.sendStatus(404)
 })
-usersRouter.post('/users',
+usersRouter.post('/',
     basicAuthMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware,
@@ -38,7 +38,7 @@ usersRouter.post('/users',
         res.status(201).send(newProduct)
 })
 
-usersRouter.delete("/users/:id",
+usersRouter.delete("/:id",
     basicAuthMiddleware,
     async (req: Request, res: Response) => {
         const result = await usersService.deleteUser(new ObjectId(req.params.id));

@@ -1,8 +1,8 @@
 import {ObjectId, SortDirection} from "mongodb";
-import {usersPaginationViewModel} from "../../models/paginationViewModels";
+import {usersPaginationViewModel} from "../../models/pagination-view-models";
 import {usersCollection} from "../db";
 import {usersMapping} from "../../functions/mapping";
-import {userModelWithMongoId, userViewModelWithId} from "../../models/userViewModel";
+import {userModelWithMongoId, userViewModelWithId} from "../../models/user-view-model";
 
 export const usersQueryRepository = {
     async findUsers(

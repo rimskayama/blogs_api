@@ -1,11 +1,11 @@
 import {Request, Response, Router} from 'express'
 import {postsService} from "../domain/posts-service";
-import {errorsValidationMiddleware} from "../middlewares/errorsValidationMiddleware";
-import {basicAuthMiddleware} from "../middlewares/basicAuth";
+import {errorsValidationMiddleware} from "../middlewares/errors-validation";
+import {basicAuthMiddleware} from "../middlewares/auth-basic";
 import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
-} from "../middlewares/postsBodyValidationMiddleware";
+} from "../middlewares/posts-validation-input";
 import {ObjectId} from "mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
