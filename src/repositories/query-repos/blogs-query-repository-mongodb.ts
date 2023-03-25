@@ -1,8 +1,8 @@
-import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blogViewModel";
+import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blog-view-model";
 import {blogsCollection} from "../db";
 import {ObjectId, SortDirection} from "mongodb";
 import {blogsMapping} from "../../functions/mapping";
-import {blogsPaginationViewModel} from "../../models/paginationViewModels";
+import {blogsPaginationViewModel} from "../../models/pagination-view-models";
 
 
 export const blogsQueryRepository = {
