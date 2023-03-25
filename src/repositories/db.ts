@@ -1,7 +1,8 @@
 import {MongoClient} from "mongodb";
-import {blogViewModel} from "../models/blogViewModel";
-import {postViewModel} from "../models/postViewModel";
-import {userInputModel} from "../models/userViewModel";
+import {blogViewModel} from "../models/blog-view-model";
+import {postViewModel} from "../models/post-view-model";
+import {userInputModel} from "../models/user-view-model";
+import {commentViewModel} from "../models/comments-view-model";
 import dotenv from 'dotenv';
 
 dotenv.config()
@@ -17,6 +18,7 @@ const db = client.db();
 export const blogsCollection = db.collection<blogViewModel>("blogs")
 export const postsCollection = db.collection<postViewModel>("posts")
 export const usersCollection = db.collection<userInputModel>("users")
+export const commentsCollection = db.collection<commentViewModel>("comments")
 
 export async function runDB() {
     try {
