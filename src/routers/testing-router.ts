@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import {blogsService} from "../domain/blogs-service";
 import {postsService} from "../domain/posts-service";
 import {usersService} from "../domain/users-service";
+import {commentsService} from "../domain/comments-service";
 
 export const testingRouter = Router({});
 
@@ -11,6 +12,7 @@ testingRouter.delete("/testing/all-data",
     const deleteBlogs = await blogsService.deleteAll();
     const deletePosts = await postsService.deleteAll();
     const deleteUsers = await usersService.deleteAll();
+    const deleteComments = await commentsService.deleteAll();
     res.sendStatus(204);
 
 })
