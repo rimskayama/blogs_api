@@ -1,7 +1,8 @@
 
-import {blogModelWithMongoId} from "../models/blogViewModel";
-import {postModelWithMongoId} from "../models/postViewModel";
-import {userModelWithMongoId} from "../models/userViewModel";
+import {blogModelWithMongoId} from "../models/blog-view-model";
+import {postModelWithMongoId} from "../models/post-view-model";
+import {userModelWithMongoId} from "../models/user-view-model";
+import {commentModelWithMongoId} from "../models/comments-view-model";
 
 export const blogsMapping = (array: blogModelWithMongoId[]) => {
     return array.map((obj) => {
@@ -39,3 +40,15 @@ export const usersMapping = (array : userModelWithMongoId[]) => {
         };
     })
 }
+
+export const commentsMapping = (array: commentModelWithMongoId[]) => {
+    return array.map((obj) => {
+       return {
+           id: obj._id.toString(),
+           content: obj.content,
+           commentatorInfo: obj.commentatorInfo,
+           createdAt: obj.createdAt,
+       };
+    })
+}
+
