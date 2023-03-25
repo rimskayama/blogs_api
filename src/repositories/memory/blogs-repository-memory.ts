@@ -1,5 +1,5 @@
 
-import {blogViewModel, blogViewModelWithId} from "../../models/blogViewModel";
+import {blogViewModel, blogViewModelWithId} from "../../models/blog-view-model";
 import {randomNumber} from "../../functions/randomNumber";
 
 const blogs : blogViewModelWithId[] = []
