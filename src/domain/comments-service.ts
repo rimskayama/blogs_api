@@ -1,16 +1,17 @@
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
-import {commentModelWithMongoId} from "../models/comments-view-model";
+import {commentModelWithMongoId, commentModelWithPostId, withMongoId} from "../models/comments-view-model";
 import {commentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 
 export const commentsService = {
-    async createComment(content: string, userId: string) {
+    async createComment(content: string, userId: string, postId: string) {
 
         let foundUserById = await usersQueryRepository.findUserById(new ObjectId(userId))
 
         if (foundUserById) {
-            const newComment : commentModelWithMongoId = {
+            const newComment : commentModelWithPostId = {
+                postId: postId,
                 _id: new ObjectId(),
                 content: content,
                 commentatorInfo: {
