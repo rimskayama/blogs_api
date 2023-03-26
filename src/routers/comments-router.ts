@@ -1,19 +1,14 @@
 import {Request, Response, Router} from "express";
 import {authBearerMiddleware} from "../middlewares/auth-bearer";
-import {getPagination} from "../functions/pagination";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
+import {postsRouter} from "./posts-router";
+import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
+import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 
 
 export const commentsRouter = Router({})
-
-commentsRouter.get("/", async (req: Request, res: Response) => {
-    const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
-    const allComments = await commentsQueryRepository.findComments(page, limit, sortDirection, sortBy, skip)
-    res.status(200).json(allComments)
-})
-// todo поиск по postID
 
 commentsRouter.get("/:id", async (req: Request, res: Response) => {
     let comment = await commentsQueryRepository.findCommentById(new ObjectId(req.params.id));
@@ -21,9 +16,27 @@ commentsRouter.get("/:id", async (req: Request, res: Response) => {
         res.json(comment);
     } else res.sendStatus(404)
 })
-commentsRouter.post('/',
+
+commentsRouter.put("/:id",
     authBearerMiddleware,
-    async (req, res) => {
-    const newComment = await commentsService.createComment(req.body.comment, req.user!.id)
-        res.status(201).send(newComment)
+    commentContentValidationMiddleware,
+    errorsValidationMiddleware,
+
+    async (req: Request, res: Response) => {
+        const isUpdated = await commentsService.updateComment(
+            new ObjectId(req.params.id), req.body.content)
+        if (isUpdated) {
+            res.sendStatus(204);
+        } else {
+            res.status(404).send('Not found');
+        }
+
+    })
+
+// delete
+postsRouter.delete("/:id",
+    authBearerMiddleware,
+    async (req: Request, res: Response) => {
+        const isDeleted = await commentsService.deleteComment(new ObjectId(req.params.id));
+        (isDeleted) ? res.sendStatus(204) : res.sendStatus(404);
     })
