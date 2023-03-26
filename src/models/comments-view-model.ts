@@ -9,6 +9,17 @@ export type commentViewModel = {
     createdAt: string,
 }
 
+export type commentModelWithPostId = {
+    _id: ObjectId,
+    postId: string,
+    content: string;
+    commentatorInfo: {
+        userId: string,
+        userLogin: string
+    }
+    createdAt: string,
+}
+
 
 export type withMongoId = {
     _id: ObjectId
