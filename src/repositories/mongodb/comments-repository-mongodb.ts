@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
-import {commentModelWithMongoId, commentViewModel, commentViewModelWithId} from "../../models/comments-view-model";
 import {commentsCollection} from "../db";
+import {commentModelWithMongoId, commentViewModel, commentViewModelWithId} from "../../models/comments-view-model";
 
 export const commentsRepository = {
 
