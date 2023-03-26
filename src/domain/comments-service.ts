@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
-import {commentModelWithMongoId, commentModelWithPostId, withMongoId} from "../models/comments-view-model";
+import {commentModelWithMongoId, commentModelWithPostId} from "../models/comments-view-model";
 import {commentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 

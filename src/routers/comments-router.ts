@@ -3,7 +3,6 @@ import {authBearerMiddleware} from "../middlewares/auth-bearer";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
-import {postsRouter} from "./posts-router";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 
@@ -34,7 +33,7 @@ commentsRouter.put("/:id",
     })
 
 // delete
-postsRouter.delete("/:id",
+commentsRouter.delete("/:id",
     authBearerMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted = await commentsService.deleteComment(new ObjectId(req.params.id));

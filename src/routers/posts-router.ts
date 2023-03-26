@@ -53,7 +53,6 @@ postsRouter.post("/",
 
 // get comments by postId
 postsRouter.get("/:postId/comments",
-    authBearerMiddleware,
     async (req: Request, res: Response) => {
     let checkPost = await postsQueryRepository.findPostById(new ObjectId(req.params.postId));
 
