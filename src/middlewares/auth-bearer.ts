@@ -16,6 +16,6 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
         req.user = await usersQueryRepository.findUserById(userId)
         next()
         return
-    } res.sendStatus(401)
-    //return
+    }   res.sendStatus(401)
+        return
 };
