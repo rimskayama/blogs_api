@@ -12,9 +12,13 @@ import {postsQueryRepository} from "../repositories/query-repos/posts-query-repo
 export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
 import {blogIdCheck} from "../functions/checkBlogId";
+import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
+import {authBearerMiddleware} from "../middlewares/auth-bearer";
+import {commentsService} from "../domain/comments-service";
+import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 
 // get all
-postsRouter.get("/posts", async (req: Request, res: Response) => {
+postsRouter.get("/", async (req: Request, res: Response) => {
 
     const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
     const allPosts = await postsQueryRepository.findPosts(page, limit, sortDirection, sortBy, skip)
@@ -22,7 +26,7 @@ postsRouter.get("/posts", async (req: Request, res: Response) => {
 })
 
 // get with uri
-postsRouter.get("/posts/:id", async (req: Request, res: Response) => {
+postsRouter.get("/:id", async (req: Request, res: Response) => {
     let post = await postsQueryRepository.findPostById(new ObjectId(req.params.id));
     if (post) {
         res.json(post);
@@ -30,7 +34,7 @@ postsRouter.get("/posts/:id", async (req: Request, res: Response) => {
 })
 
 // create post
-postsRouter.post("/posts",
+postsRouter.post("/",
     basicAuthMiddleware,
     blogIdCheck,
     postTitleValidationMiddleware,
@@ -47,28 +51,31 @@ postsRouter.post("/posts",
         } else return res.sendStatus(404)
     })
 
-// create post for spec blog
-
-postsRouter.post("/blogs/:blogId/posts",
-    basicAuthMiddleware,
-    postTitleValidationMiddleware,
-    postDescriptionValidationMiddleware,
-    postContentValidationMiddleware,
-    errorsValidationMiddleware,
+// get comments by postId
+postsRouter.get("/:postId/comments",
+    authBearerMiddleware,
     async (req: Request, res: Response) => {
+    let checkPost = await postsQueryRepository.findPostById(new ObjectId(req.params.postId));
 
-    const newPost = await postsService.createPost(
-        req.body.title, req.body.shortDescription,
-        req.body.content,  req.params.blogId);
+    const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
+    const postId = req.params.postId;
 
-    if (newPost) {
-        res.status(201).json(newPost)
-    } else return res.sendStatus(404)
-
+    if (checkPost) {
+        let comments = await commentsQueryRepository.findCommentsByPostId(postId, page, limit, sortDirection, sortBy, skip);
+        res.status(200).json(comments);
+    } else res.sendStatus(404)
 })
+// create comment by postId
+postsRouter.post('/:postId/comments',
+    authBearerMiddleware,
+    commentContentValidationMiddleware,
+    async (req, res) => {
+        const newComment = await commentsService.createComment(req.body.content, req.user!.id, req.params.postId)
+        res.status(201).send(newComment)
+    })
 
 // update post
-postsRouter.put("/posts/:id",
+postsRouter.put("/:id",
     basicAuthMiddleware,
     blogIdCheck,
     postTitleValidationMiddleware,
@@ -89,7 +96,7 @@ postsRouter.put("/posts/:id",
     })
 
 // delete
-postsRouter.delete("/posts/:id",
+postsRouter.delete("/:id",
     basicAuthMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted = await postsService.deletePost(new ObjectId(req.params.id));
