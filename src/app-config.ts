@@ -11,9 +11,9 @@ export const app = express();
 app.use(express.json());
 
 
-app.use("/", blogsRouter);
-app.use("/", testingRouter);
-app.use("/", postsRouter);
-app.use("/", authRouter);
+app.use("/blogs", blogsRouter);
+app.use("/testing", testingRouter);
+app.use("/posts", postsRouter);
+app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/comments", commentsRouter);

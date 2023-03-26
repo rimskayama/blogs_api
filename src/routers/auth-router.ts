@@ -7,7 +7,7 @@ import {authBearerMiddleware} from "../middlewares/auth-bearer";
 
 export const authRouter = Router({})
 
-authRouter.post('/auth/login',
+authRouter.post('/login',
     async (req: Request, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {
@@ -18,7 +18,7 @@ authRouter.post('/auth/login',
         }
 })
 
-authRouter.get('/auth/me',
+authRouter.get('/me',
     authBearerMiddleware,
     async (req: Request, res: Response) => {
     let meUser = await usersQueryRepository.findUserById(new ObjectId(req.user!.id))

@@ -13,9 +13,16 @@ export const blogsRouter = Router({})
 
 import {getPagination} from "../functions/pagination";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
+import {
+    postContentValidationMiddleware,
+    postDescriptionValidationMiddleware,
+    postTitleValidationMiddleware
+} from "../middlewares/posts-validation-input";
+import {postsService} from "../domain/posts-service";
+import {postsRouter} from "./posts-router";
 
 // get all
-blogsRouter.get("/blogs", async (req: Request, res: Response) =>  {
+blogsRouter.get("/", async (req: Request, res: Response) =>  {
     const {page, limit, sortDirection, sortBy, searchNameTerm, skip} = getPagination(req.query);
     const allBlogs = await blogsQueryRepository.findBlogs(page, limit, sortDirection, sortBy, searchNameTerm, skip)
     res.status(200).json(allBlogs)
@@ -23,7 +30,7 @@ blogsRouter.get("/blogs", async (req: Request, res: Response) =>  {
 
 
 // get with uri
-blogsRouter.get("/blogs/:id", async (req: Request, res: Response) => {
+blogsRouter.get("/:id", async (req: Request, res: Response) => {
     let blog = await blogsQueryRepository.findBlogById(new ObjectId(req.params.id))
     if (blog) {
         res.json(blog);
@@ -31,7 +38,7 @@ blogsRouter.get("/blogs/:id", async (req: Request, res: Response) => {
 })
 
 // get posts with blog id
-blogsRouter.get("/blogs/:blogId/posts", async (req: Request, res: Response) => {
+blogsRouter.get("/:blogId/posts", async (req: Request, res: Response) => {
 
     let checkBlog = await blogsQueryRepository.findBlogByBlogId(req.params.blogId);
 
@@ -45,7 +52,7 @@ blogsRouter.get("/blogs/:blogId/posts", async (req: Request, res: Response) => {
 })
 
 // create blog
-blogsRouter.post("/blogs",
+blogsRouter.post("/",
     basicAuthMiddleware,
     blogNameValidationMiddleware,
     blogDescriptionValidationMiddleware,
@@ -59,8 +66,28 @@ blogsRouter.post("/blogs",
         res.status(201).json(newBlog)
 })
 
+// create post for spec blog
+
+blogsRouter.post("/:blogId/posts",
+    basicAuthMiddleware,
+    postTitleValidationMiddleware,
+    postDescriptionValidationMiddleware,
+    postContentValidationMiddleware,
+    errorsValidationMiddleware,
+    async (req: Request, res: Response) => {
+
+        const newPost = await postsService.createPost(
+            req.body.title, req.body.shortDescription,
+            req.body.content,  req.params.blogId);
+
+        if (newPost) {
+            res.status(201).json(newPost)
+        } else return res.sendStatus(404)
+
+    })
+
 // update blog
-blogsRouter.put("/blogs/:id",
+blogsRouter.put("/:id",
     basicAuthMiddleware,
     blogNameValidationMiddleware,
     blogDescriptionValidationMiddleware,
@@ -80,7 +107,7 @@ blogsRouter.put("/blogs/:id",
 })
 
 // delete
-blogsRouter.delete("/blogs/:id",
+blogsRouter.delete("/:id",
     basicAuthMiddleware,
     async (req: Request, res: Response) => {
     const result = await blogsService.deleteBlog(new ObjectId(req.params.id));
