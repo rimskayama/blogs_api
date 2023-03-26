@@ -31,9 +31,9 @@ export const commentsRepository = {
     },
 
     async deleteComment(_id: ObjectId) {
-        const post = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
-        if (post) {
-            return await commentsCollection.deleteOne(post);
+        const comment = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
+        if (comment) {
+            return await commentsCollection.deleteOne(comment );
         }
         return null
     },

@@ -1,5 +1,5 @@
 import {ObjectId, SortDirection} from "mongodb";
-import {commentsCollection, postsCollection} from "../db";
+import {commentsCollection} from "../db";
 import {commentsMapping} from "../../functions/mapping";
 import {commentModelWithMongoId, commentViewModelWithId} from "../../models/comments-view-model";
 
