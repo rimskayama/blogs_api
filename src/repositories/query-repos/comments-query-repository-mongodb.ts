@@ -28,7 +28,7 @@ export const commentsQueryRepository = {
             .sort( {[sortBy]: sortDirection})
             .toArray()
 
-        const total = await postsCollection.countDocuments({postId: postId})
+        const total = await commentsCollection.countDocuments({postId: postId})
 
         const pagesCount = Math.ceil(total / limit)
 
