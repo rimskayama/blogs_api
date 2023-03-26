@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {commentModelWithMongoId, commentViewModelWithId} from "../../models/comments-view-model";
+import {commentModelWithMongoId, commentViewModel, commentViewModelWithId} from "../../models/comments-view-model";
 import {commentsCollection} from "../db";
 
 export const commentsRepository = {
@@ -15,7 +15,21 @@ export const commentsRepository = {
         }
     },
 
-    // todo update comment
+    async updateComment(_id: ObjectId, content: string) {
+        const updatedComment = await commentsCollection.updateOne({_id}, {
+            $set:
+                {
+                    content: content
+                }
+        })
+
+        const comment: commentViewModel | null = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
+        if (comment) {
+            return true
+        } else
+            return false
+    },
+
     async deleteComment(_id: ObjectId) {
         const post = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
         if (post) {

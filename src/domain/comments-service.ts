@@ -2,6 +2,7 @@ import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 import {commentModelWithMongoId} from "../models/comments-view-model";
 import {commentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
+import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 
 export const commentsService = {
     async createComment(content: string, userId: string) {
@@ -23,7 +24,17 @@ export const commentsService = {
 
     },
 
-    async deletePost(_id: ObjectId) {
+    async updateComment(_id: ObjectId, content: string) {
+
+        let foundCommentById = await commentsQueryRepository.findCommentById(_id)
+
+        if (foundCommentById) {
+            return await commentsRepository.updateComment(_id, content);
+        }
+
+    },
+
+    async deleteComment(_id: ObjectId) {
         return await commentsRepository.deleteComment(_id);
     },
 
