@@ -6,6 +6,7 @@ import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {commentOwnerValidation} from "../middlewares/comment-owner-validation";
+import {commentIdCheck} from "../middlewares/get-by-id-comments";
 
 
 export const commentsRouter = Router({})
@@ -19,6 +20,7 @@ commentsRouter.get("/:id", async (req: Request, res: Response) => {
 
 commentsRouter.put("/:id",
     authBearerMiddleware,
+    commentIdCheck,
     commentOwnerValidation,
     commentContentValidationMiddleware,
     errorsValidationMiddleware,
@@ -34,6 +36,7 @@ commentsRouter.put("/:id",
 // delete
 commentsRouter.delete("/:id",
     authBearerMiddleware,
+    commentIdCheck,
     commentOwnerValidation,
     async (req: Request, res: Response) => {
 
