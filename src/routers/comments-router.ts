@@ -27,18 +27,19 @@ commentsRouter.put("/:id",
     const idCheck = await commentIdCheck(req.params.id)
         if (!idCheck) {
             res.sendStatus(404)
+        } else {
+            const token = req.headers.authorization!.split(' ')[1]; // token from req
+            const commentOwnerCheck = await commentsService.getCommentOwner(token, req.params.id)
+
+            if (commentOwnerCheck) {
+                const isUpdated = await commentsService.updateComment(
+                    new ObjectId(req.params.id), req.body.content);
+                if (isUpdated) {
+                    res.sendStatus(204)
+                }
+            } else res.sendStatus(403)
         }
 
-    const token = req.headers.authorization!.split(' ')[1]; // token from req
-    const commentOwnerCheck = await commentsService.getCommentOwner(token, req.params.id)
-
-    if (commentOwnerCheck) {
-        const isUpdated = await commentsService.updateComment(
-            new ObjectId(req.params.id), req.body.content);
-        if (isUpdated) {
-            res.sendStatus(204)
-        }
-    } else res.sendStatus(403)
 })
 
 // delete
