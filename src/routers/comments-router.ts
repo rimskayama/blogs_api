@@ -18,9 +18,9 @@ commentsRouter.get("/:id", async (req: Request, res: Response) => {
 })
 
 commentsRouter.put("/:id",
+    authBearerMiddleware,
     commentContentValidationMiddleware,
     errorsValidationMiddleware,
-    authBearerMiddleware,
 
     async (req: Request, res: Response) => {
 
