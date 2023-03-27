@@ -38,6 +38,7 @@ commentsRouter.delete("/:id",
     authBearerMiddleware,
     commentIdCheck,
     commentOwnerValidation,
+    errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
         const isDeleted = await commentsService.deleteComment(new ObjectId(req.params.id));
