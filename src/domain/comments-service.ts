@@ -29,12 +29,7 @@ export const commentsService = {
     },
 
     async updateComment(_id: ObjectId, content: string) {
-
-        let foundCommentById = await commentsQueryRepository.findCommentById(_id)
-
-        if (foundCommentById) {
             return await commentsRepository.updateComment(_id, content);
-        }
 
     },
 
