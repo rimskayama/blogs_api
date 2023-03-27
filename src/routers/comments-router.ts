@@ -5,6 +5,7 @@ import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
+import {jwtService} from "../application/jwt-service";
 
 
 export const commentsRouter = Router({})
@@ -22,14 +23,21 @@ commentsRouter.put("/:id",
     errorsValidationMiddleware,
 
     async (req: Request, res: Response) => {
-        const isUpdated = await commentsService.updateComment(
-            new ObjectId(req.params.id), req.body.content)
-        if (isUpdated) {
-            res.sendStatus(204);
-        } else {
-            res.status(404).send('Not found');
-        }
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1]
 
+            const checkUser = await jwtService.getUserIdByToken(token)
+
+            if (checkUser === new ObjectId(req.params.id)) {
+                const isUpdated = await commentsService.updateComment(
+                    new ObjectId(req.params.id), req.body.content)
+                if (isUpdated) {
+                    res.sendStatus(204);
+                } else {
+                    res.status(404).send('Not found');
+                }
+            } else res.sendStatus(403)
+        }
     })
 
 // delete
