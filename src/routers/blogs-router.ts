@@ -4,7 +4,7 @@ import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {blogDescriptionValidationMiddleware,
     blogNameValidationMiddleware, blogWebsiteUrlValidationMiddleware
 } from "../middlewares/blogs-validation-input";
-import {basicAuthMiddleware} from "../middlewares/auth-basic";
+import {basicAuthMiddleware} from "../middlewares/auth/auth-basic";
 import {ObjectId} from "mongodb";
 import {blogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 

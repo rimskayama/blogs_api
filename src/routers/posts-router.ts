@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {postsService} from "../domain/posts-service";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
-import {basicAuthMiddleware} from "../middlewares/auth-basic";
+import {basicAuthMiddleware} from "../middlewares/auth/auth-basic";
 import {postContentValidationMiddleware,
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
@@ -11,9 +11,9 @@ import {postsQueryRepository} from "../repositories/query-repos/posts-query-repo
 
 export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
-import {blogIdCheck} from "../functions/checkBlogId";
+import {blogIdCheck} from "../functions/check-blog-id";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
-import {authBearerMiddleware} from "../middlewares/auth-bearer";
+import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 

@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express"
 import {usersService} from "../domain/users-service";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 import {getPagination} from "../functions/pagination";
-import {basicAuthMiddleware} from "../middlewares/auth-basic";
+import {basicAuthMiddleware} from "../middlewares/auth/auth-basic";
 import {ObjectId} from "mongodb";
 import {
     emailValidationMiddleware,

@@ -3,7 +3,7 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 import {ObjectId} from "mongodb";
-import {authBearerMiddleware} from "../middlewares/auth-bearer";
+import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
 
 export const authRouter = Router({})
 
