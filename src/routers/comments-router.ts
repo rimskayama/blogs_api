@@ -5,7 +5,6 @@ import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
-import {commentOwnerValidation} from "../middlewares/comment-owner-validation";
 import {commentIdCheck} from "../middlewares/get-by-id-comments";
 
 
@@ -19,28 +18,45 @@ commentsRouter.get("/:id", async (req: Request, res: Response) => {
 })
 
 commentsRouter.put("/:id",
-    commentIdCheck,
     commentContentValidationMiddleware,
-    authBearerMiddleware,
     errorsValidationMiddleware,
-    commentOwnerValidation,
+    authBearerMiddleware,
 
     async (req: Request, res: Response) => {
 
-    const isUpdated = await commentsService.updateComment(
-        new ObjectId(req.params.id), req.body.content);
+    const idCheck = await commentIdCheck(req.params.id)
+        if (!idCheck) {
+            res.sendStatus(404)
+        }
 
-        (isUpdated) ? res.sendStatus(204) : res.sendStatus(404);
-        })
+    const token = req.headers.authorization!.split(' ')[1]; // token from req
+    const commentOwnerCheck = await commentsService.getCommentOwner(token, req.params.id)
+
+    if (commentOwnerCheck) {
+        const isUpdated = await commentsService.updateComment(
+            new ObjectId(req.params.id), req.body.content);
+        if (isUpdated) {
+            res.sendStatus(204)
+        }
+    } else res.sendStatus(403)
+})
 
 // delete
 commentsRouter.delete("/:id",
     authBearerMiddleware,
-    commentIdCheck,
-    errorsValidationMiddleware,
-    commentOwnerValidation,
     async (req: Request, res: Response) => {
+        const idCheck = await commentIdCheck(req.params.id)
+        if (!idCheck) {
+            res.sendStatus(404)
+        } else {
+            const token = req.headers.authorization!.split(' ')[1]; // token from req
+            const commentOwnerCheck = await commentsService.getCommentOwner(token, req.params.id)
 
-        const isDeleted = await commentsService.deleteComment(new ObjectId(req.params.id));
-        (isDeleted) ? res.sendStatus(204) : res.sendStatus(404);
-    })
+            if (commentOwnerCheck) {
+                const isDeleted = await commentsService.deleteComment(new ObjectId(req.params.id));
+                if (isDeleted) {
+                    res.sendStatus(204)
+                }
+            } else res.sendStatus(403)
+        }
+})
