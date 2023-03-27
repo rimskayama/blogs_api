@@ -12,7 +12,7 @@ export const commentOwnerValidation = async (req: Request, res: Response, next: 
     const getUserIdFromComment = await commentsQueryRepository.findCommentById(new ObjectId(req.params.id));
     const userId = getUserIdFromComment?.commentatorInfo.userId;
 
-    if (getUserIdByToken!.toString() === userId) {
+    if (getUserIdByToken && userId && getUserIdByToken!.toString() === userId) {
         next()
     }  else res.sendStatus(403)
 
