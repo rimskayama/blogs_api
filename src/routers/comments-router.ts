@@ -5,7 +5,6 @@ import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
-import {jwtService} from "../application/jwt-service";
 import {commentOwnerValidation} from "../middlewares/comment-owner-validation";
 
 
@@ -35,6 +34,7 @@ commentsRouter.put("/:id",
 // delete
 commentsRouter.delete("/:id",
     authBearerMiddleware,
+    commentOwnerValidation,
     async (req: Request, res: Response) => {
         const isDeleted = await commentsService.deleteComment(new ObjectId(req.params.id));
         (isDeleted) ? res.sendStatus(204) : res.sendStatus(404);
