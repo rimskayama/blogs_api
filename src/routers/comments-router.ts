@@ -1,11 +1,12 @@
 import {Request, Response, Router} from "express";
-import {authBearerMiddleware} from "../middlewares/auth-bearer";
+import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {jwtService} from "../application/jwt-service";
+import {commentOwnerValidation} from "../middlewares/comment-owner-validation";
 
 
 export const commentsRouter = Router({})
@@ -19,26 +20,17 @@ commentsRouter.get("/:id", async (req: Request, res: Response) => {
 
 commentsRouter.put("/:id",
     authBearerMiddleware,
+    commentOwnerValidation,
     commentContentValidationMiddleware,
     errorsValidationMiddleware,
 
     async (req: Request, res: Response) => {
-        if (req.headers.authorization) {
-            const token = req.headers.authorization.split(' ')[1]
 
-            const checkUser = await jwtService.getUserIdByToken(token)
+    const isUpdated = await commentsService.updateComment(
+        new ObjectId(req.params.id), req.body.content);
 
-            if (checkUser === new ObjectId(req.params.id)) {
-                const isUpdated = await commentsService.updateComment(
-                    new ObjectId(req.params.id), req.body.content)
-                if (isUpdated) {
-                    res.sendStatus(204);
-                } else {
-                    res.status(404).send('Not found');
-                }
-            } else res.sendStatus(403)
-        }
-    })
+        (isUpdated) ? res.sendStatus(204) : res.sendStatus(404);
+        })
 
 // delete
 commentsRouter.delete("/:id",
