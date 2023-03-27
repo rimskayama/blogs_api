@@ -2,7 +2,6 @@ import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 import {commentModelWithPostId} from "../models/comments-view-model";
 import {commentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
-import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 export const commentsService = {

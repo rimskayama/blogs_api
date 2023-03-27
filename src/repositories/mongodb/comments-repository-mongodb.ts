@@ -31,11 +31,12 @@ export const commentsRepository = {
     },
 
     async deleteComment(_id: ObjectId) {
+        const deletedComment = await commentsCollection.deleteOne({_id});
         const comment = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
-        if (comment) {
-            return await commentsCollection.deleteOne(comment );
+        if (!comment) {
+            return true
         }
-        return null
+        return false
     },
 
     async deleteAll() {
