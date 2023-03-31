@@ -115,7 +115,6 @@ describe("/blogs", () => {
                 content: "post content",
                 shortDescription: "short Description",
                 title: "post title",
-                blogName: (await blogsRepository.findBlogName(createdBlog1.id))?.name
             }
             const createResponse = await request(app)
                 .post("/blogs/" + createdBlog1.id + "/posts")
