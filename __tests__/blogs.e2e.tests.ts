@@ -1,6 +1,5 @@
 import request from "supertest";
 import {app} from "../src/app-config";
-import {blogsRepository} from "../src/repositories/mongodb/blogs-repository-mongodb";
 
 describe("/blogs", () => {
     beforeAll(async () => {
