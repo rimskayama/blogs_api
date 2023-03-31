@@ -28,7 +28,7 @@ describe("/users", () => {
 
 
 
-// POST posts/
+// POST
 
     let createdUser1: any = {id: 0};
 
