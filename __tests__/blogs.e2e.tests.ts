@@ -1,7 +1,5 @@
 import request from "supertest";
 import {app} from "../src/app-config";
-import {blogsCollection} from "../src/repositories/db";
-import {ObjectId} from "mongodb";
 
 describe("/blogs", () => {
     beforeAll(async () => {
@@ -66,6 +64,7 @@ describe("/blogs", () => {
             .expect(201);
 
         createdBlog1 = createResponse.body;
+        console.log(createdBlog1);
 
         const b = await request(app).get("/blogs")
             .expect(200)
@@ -92,53 +91,75 @@ describe("/blogs", () => {
 
         )
     });
+    //console.log(createdBlog1)
 
-    /*
     //PUT
 
 
-        it("should NOT update blog with incorrect input data", async () => {
+        it("should NOT update blog with incorrect name", async () => {
             const data = {
-                "name": "string",
-                "description": "string",
-                "websiteUrl": "string"
+                "name": "veryverylongname",
+                "description": "new description",
+                "websiteUrl": "https://vercel.com/"
             }
 
             await request(app)
                 .put("/blogs/" + createdBlog1.id)
                 .set("Authorization", "Basic YWRtaW46cXdlcnR5")
                 .send(data)
-                .expect(400);
+                .expect(400, {
+                    errorsMessages: [
+                        {
+                            message: 'Name length should be minimum 1 and maximum 15 symbols',
+                            field: 'name'
+                        }]
+                })
 
-            await request(app)
-                .get("/blogs/" + createdBlog1.id)
-                .expect(200, createdBlog1);
-        });
+    //console.log(createdBlog1)
+
+
+});
 
         it("should NOT update blog that not exist", async () => {
             await request(app)
-                .put("/blogs/" + -10)
+                .put("/blogs/" + "642681e8ad245fa9580960f8")
                 .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-                .send({ name: "good name" })
+                .send({
+                    "name": "new name",
+                    "description": "new description",
+                    "websiteUrl": "https://vercel.com/"
+                })
                 .expect(404);
         });
 
+        console.log(createdBlog1)
+
         it("should update blog with correct input data", async () => {
-             const data = { name: "good new name" };
+             const data = {
+                "name": "new name",
+                "description": "new description",
+                "websiteUrl": "https://vercel.com/"
+            };
+
              await request(app)
                  .put("/blogs/" + createdBlog1.id)
                  .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-                 .send({ name: "good new name" })
+                 .send(data)
                  .expect(204);
 
-             await request(app)
-                 .get("/blogs/" + createdBlog1._id)
-                 .expect(200, {
-                     name: data.name,
-                     description: createdBlog1.description,
-                     websiteUrl: createdBlog1.websiteUrl,
-                 });
-         });
+            const b = await request(app).get("/blogs/" + createdBlog1.id)
+                .expect(200)
+
+            expect(b.body).toEqual(
+                {
+                    id: expect.any(String),
+                    name: 'new name',
+                    description: 'new description',
+                    websiteUrl: 'https://vercel.com/',
+                    createdAt: expect.any(String),
+                    isMembership: false
+                })
+        });
 
     //DELETE
         it("should delete blog", async () => {
@@ -153,8 +174,13 @@ describe("/blogs", () => {
 
             await request(app)
                 .get("/blogs")
-                .expect(200, []);
+                .expect(200, {
+                    pagesCount: 0,
+                    page: 1,
+                    pageSize: 10,
+                    totalCount: 0,
+                    items: []
+                });
         });
-*/
 })
 
