@@ -62,7 +62,6 @@ blogsRouter.post("/",
 
         const newBlog = await blogsService.createBlog(new ObjectId(req.params.id), req.body.name,
             req.body.description, req.body.websiteUrl, req.body.isMembership);
-        console.log('new', newBlog)
         res.status(201).json(newBlog)
 })
 
