@@ -11,7 +11,7 @@ export const postTitleValidationMiddleware = body("title")
 
     .trim()
     .isLength({min: 1, max: 30})
-    .withMessage("name length should be minimum 1 and maximum 30 symbols")
+    .withMessage("title length should be minimum 1 and maximum 30 symbols")
 
 export const postDescriptionValidationMiddleware = body("shortDescription")
     .exists()
