@@ -19,7 +19,6 @@ import {
     postTitleValidationMiddleware
 } from "../middlewares/posts-validation-input";
 import {postsService} from "../domain/posts-service";
-import {postsRouter} from "./posts-router";
 
 // get all
 blogsRouter.get("/", async (req: Request, res: Response) =>  {
