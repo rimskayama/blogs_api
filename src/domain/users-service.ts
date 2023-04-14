@@ -1,5 +1,6 @@
 import {userInputModel, userViewModel} from "../models/user-view-model";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from 'uuid';
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {ObjectId} from "mongodb";
 export const usersService = {
@@ -14,8 +15,12 @@ export const usersService = {
             email,
             passwordHash,
             passwordSalt,
-            createdAt: new Date()
-        }
+            createdAt: new Date(),
+            emailConfirmation: {
+            confirmationCode: uuidv4(),
+                expirationDate: new Date(),
+                isConfirmed: true
+        }}
         return usersRepository.createUser(newUser)
     },
 
@@ -31,7 +36,6 @@ export const usersService = {
 
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
-        console.log('hash' + hash)
         return hash
     },
 
