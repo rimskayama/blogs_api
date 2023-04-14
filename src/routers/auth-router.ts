@@ -11,6 +11,7 @@ import {
     loginValidationMiddleware,
     passwordValidationMiddleware
 } from "../middlewares/users-validation-input";
+import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 
 export const authRouter = Router({})
 
@@ -41,13 +42,14 @@ authRouter.post('/registration',
     loginValidationMiddleware,
     emailValidationMiddleware,
     passwordValidationMiddleware,
+    errorsValidationMiddleware,
     async (req: Request, res: Response) => {
     const checkUser = await usersRepository.findByLoginOrEmail(req.body.email)
         if (checkUser) {
             res.sendStatus(400)
         } else {
             const newUser = await authService.registerUser(req.body.login, req.body.password, req.body.email)
-            res.status(201).send(newUser)
+            res.status(204).send(newUser)
         }
 });
 
@@ -62,6 +64,7 @@ authRouter.post('/registration-confirmation',
 
 authRouter.post('/registration-email-resending',
     emailValidationMiddleware,
+    errorsValidationMiddleware,
      async (req: Request, res: Response) => {
          const result = await authService.resendEmail(req.body.email)
          if (result) {
