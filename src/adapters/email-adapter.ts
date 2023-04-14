@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer"
-
 export const emailAdapter = {
 
 async sendEmail(email: string, subject: string, html: string) {
