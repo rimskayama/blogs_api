@@ -24,6 +24,23 @@ export const usersRepository = {
 
     },
 
+    async findByConfirmationCode(code: string): Promise<userInputModel | null> {
+        const user: userInputModel | null = await usersCollection.findOne({"emailConfirmation.confirmationCode": code})
+        if (!user) {
+            return null
+        } else return user
+    },
+
+    async updateConfirmation(_id: ObjectId) {
+        const updatedCode = await usersCollection.updateOne({_id}, {
+            $set:
+                {
+                    "emailConfirmation.isConfirmed": true
+                }
+        })
+        return true
+    },
+
     async deleteUser(_id: ObjectId) {
         const user = await usersCollection.findOne({_id}, {projection: {_id: 0}});
         if (user) {
