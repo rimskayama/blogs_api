@@ -8,7 +8,7 @@ import {
     emailValidationMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware
-} from "../middlewares/users-validation-input";
+} from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 
 export const usersRouter = Router({})
