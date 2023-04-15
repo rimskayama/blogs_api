@@ -66,8 +66,18 @@ export const authService = {
 
         if (foundUser) {
             if (!foundUser.emailConfirmation.isConfirmed) {
-                const result = await emailManager.sendEmail(email, foundUser.emailConfirmation.confirmationCode)
+
+                foundUser.emailConfirmation.confirmationCode = uuidv4(),
+                foundUser.emailConfirmation.expirationDate = add(new Date(),
+                    {
+                        hours: 1,
+                        minutes: 3
+                    })
+
+                const result = await emailManager.resendEmail(email, foundUser.emailConfirmation.confirmationCode)
+                await usersRepository.updateConfirmation(foundUser._id)
                 return true
+
             } else return false
         }
         else return false
