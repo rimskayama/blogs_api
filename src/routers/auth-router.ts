@@ -11,7 +11,7 @@ import {
     passwordValidationMiddleware
 } from "../middlewares/users-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
-import {emailCheck} from "../functions/check-if-email-exists";
+import {emailCheckExists, emailCheckNotExist} from "../functions/check-if-email-exists";
 
 export const authRouter = Router({})
 
@@ -44,7 +44,7 @@ authRouter.get('/me',
 
 // registration
 authRouter.post('/registration',
-    emailCheck,
+    emailCheckExists,
     loginValidationMiddleware,
     emailValidationMiddleware,
     passwordValidationMiddleware,
@@ -68,6 +68,7 @@ authRouter.post('/registration-confirmation',
 });
 
 authRouter.post('/registration-email-resending',
+    emailCheckNotExist,
     emailValidationMiddleware,
     errorsValidationMiddleware,
      async (req: Request, res: Response) => {
