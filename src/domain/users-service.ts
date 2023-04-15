@@ -23,17 +23,20 @@ export const usersService = {
                 expirationDate: new Date(),
                 isConfirmed: true
             }}
+
         return usersRepository.createUser(newUser)
     },
 
     async checkCredentials(loginOrEmail: string, password: string) {
+
         const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
         if (!user) return false // login or password
-        const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
-        if (user.accountData.passwordHash !== passwordHash) {
-            return false // password
+        if (user) {
+            const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
+            if (user.accountData.passwordHash !== passwordHash) {
+                return false // password
+            } else return user
         }
-        return user
     },
 
     async _generateHash(password: string, salt: string) {

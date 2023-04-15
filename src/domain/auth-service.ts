@@ -59,11 +59,14 @@ export const authService = {
 
         async resendEmail(email: string): Promise<boolean> {
             const foundUserConfirmation = (await usersRepository.findByLoginOrEmail(email))?.emailConfirmation
-            if (foundUserConfirmation!.isConfirmed) return false
-            if (!foundUserConfirmation!.isConfirmed) {
-                const result = await emailManager.sendEmail(email, foundUserConfirmation!.confirmationCode)
-                return true
-            }
-            return false
+            if (foundUserConfirmation) {
+                if (foundUserConfirmation.isConfirmed) return false
+
+                if (!foundUserConfirmation.isConfirmed) {
+                    const result = await emailManager.sendEmail(email, foundUserConfirmation.confirmationCode)
+                    return true
+                }
+                return false
+            } return false
         }
 }
