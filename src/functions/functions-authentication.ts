@@ -1,6 +1,6 @@
 
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
-export const checkEmailExist = async (email: string) => {
+export const checkEmailExists = async (email: string) => {
 
     const user = await usersRepository.findByLoginOrEmail(email);
 
@@ -10,7 +10,7 @@ export const checkEmailExist = async (email: string) => {
 
 };
 
-export const checkEmailNotExist = async (email: string) => {
+export const checkEmailNotExists = async (email: string) => {
 
     const user = await usersRepository.findByLoginOrEmail(email);
 
@@ -20,7 +20,16 @@ export const checkEmailNotExist = async (email: string) => {
 
 };
 
-export const checkCodeExist = async (code: string) => {
+export const checkLoginExists = async (login: string) => {
+
+    const user = await usersRepository.findByLoginOrEmail(login);
+
+    if (user) {
+        return Promise.reject("User with that login already exists");
+    }
+};
+
+export const checkCodeExists = async (code: string) => {
 
     const user = await usersRepository.findByConfirmationCode(code);
 

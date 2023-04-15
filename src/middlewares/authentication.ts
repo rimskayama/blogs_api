@@ -1,5 +1,9 @@
 import {body} from "express-validator";
-import {checkCodeExist, checkEmailExist, checkEmailNotExist} from "../functions/functions-authentication";
+import {
+    checkCodeExists,
+    checkEmailExists,
+    checkEmailNotExists, checkLoginExists
+} from "../functions/functions-authentication";
 const loginPattern = /^[a-zA-Z0-9_-]*$/;
 const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
@@ -15,6 +19,10 @@ export const loginValidationMiddleware = body("login")
 
     .matches(loginPattern)
     .withMessage("login must be in correct format")
+
+    .custom( (value) => {
+        return checkLoginExists(value)
+    })
 
 export const passwordValidationMiddleware = body("password")
 
@@ -33,18 +41,18 @@ export const emailValidationMiddleware = body("email")
     .matches(emailPattern).withMessage("email must be in correct format")
 
     .custom( (value) => {
-        return checkEmailExist(value)
+        return checkEmailExists(value)
     })
 
 export const checkEmailInDb = body("email")
     .custom( (value) => {
-        return checkEmailNotExist(value)
+        return checkEmailNotExists(value)
     })
 
 
 export const checkCodeInDb = body("code")
     .custom( (value) => {
-        return checkCodeExist(value)
+        return checkCodeExists(value)
     })
 
 
