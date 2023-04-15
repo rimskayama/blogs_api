@@ -15,13 +15,13 @@ export const authService = {
 
             const newUser: userInputModel = {
                 _id: new ObjectId(),
-                accountData: {
+                //accountData: {
                     login: login,
                     email,
                     passwordHash,
                     passwordSalt,
                     createdAt: new Date(),
-                },
+                //},
                 emailConfirmation: {
                     confirmationCode: uuidv4(),
                     expirationDate: add(new Date(), {
@@ -33,7 +33,7 @@ export const authService = {
             const createResult = usersRepository.createUser(newUser)
 
             try {
-                await emailManager.sendEmail(newUser.accountData.email, newUser.emailConfirmation.confirmationCode)
+                await emailManager.sendEmail(newUser.email, newUser.emailConfirmation.confirmationCode)
             } catch (error) {
                 console.error(error)
                 await usersRepository.deleteUser(newUser._id)

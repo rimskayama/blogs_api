@@ -8,13 +8,13 @@ export type userViewModel = {
 
 export type userInputModel = {
     _id: ObjectId,
-    accountData: {
+    //accountData: {
         login: string,
         email: string,
         passwordHash: string,
         passwordSalt: string,
         createdAt: Date,
-    },
+    //},
     emailConfirmation: {
         confirmationCode: string,
         expirationDate: Date,

@@ -34,9 +34,9 @@ export const usersMapping = (array : userInputModel[]) => {
     return array.map((obj) => {
         return {
             id: obj._id.toString(),
-            login: obj.accountData.login,
-            email: obj.accountData.email,
-            createdAt: obj.accountData.createdAt,
+            login: obj.login,
+            email: obj.email,
+            createdAt: obj.createdAt,
         };
     })
 }
