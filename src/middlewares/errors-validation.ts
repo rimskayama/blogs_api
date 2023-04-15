@@ -12,7 +12,7 @@ export const errorsValidationMiddleware = (req: Request, res: Response, next: Ne
 
     const result = validationResult(req).formatWith(errorFormatter);
     if (!result.isEmpty()) {
-        res.status(400).json({ errorsMessages: result.array() });
+        res.status(400).json({ errorsMessages: result.array({onlyFirstError:true}) });
     } else {
         next()
     }
