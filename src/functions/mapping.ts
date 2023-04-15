@@ -1,7 +1,7 @@
 
 import {blogModelWithMongoId} from "../models/blog-view-model";
 import {postModelWithMongoId} from "../models/post-view-model";
-import {userInputModel, userModelWithMongoId} from "../models/user-view-model";
+import {userInputModel} from "../models/user-view-model";
 import {commentModelWithMongoId} from "../models/comments-view-model";
 
 export const blogsMapping = (array: blogModelWithMongoId[]) => {

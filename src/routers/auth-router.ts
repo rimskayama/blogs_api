@@ -44,10 +44,10 @@ authRouter.get('/me',
 
 // registration
 authRouter.post('/registration',
+    emailCheck,
     loginValidationMiddleware,
     emailValidationMiddleware,
     passwordValidationMiddleware,
-    emailCheck,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
@@ -64,7 +64,7 @@ authRouter.post('/registration-confirmation',
         if (result) {
             res.sendStatus(204)
         } else
-            res.sendStatus(400)
+            res.status(400).json({ errorsMessages: [{ message: "Incorrect code or it was already used", field: "code" }] })
 });
 
 authRouter.post('/registration-email-resending',
@@ -74,6 +74,7 @@ authRouter.post('/registration-email-resending',
          const result = await authService.resendEmail(req.body.email)
          if (result) {
              res.sendStatus(204)
-         } else
-             res.sendStatus(400)
+         } else {
+             res.status(400).json({ errorsMessages: [{ message: "Your email was already confirmed", field: "email" }] })
+         }
 });
