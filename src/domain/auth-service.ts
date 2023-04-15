@@ -15,13 +15,11 @@ export const authService = {
 
             const newUser: userInputModel = {
                 _id: new ObjectId(),
-                //accountData: {
                     login: login,
                     email,
                     passwordHash,
                     passwordSalt,
                     createdAt: new Date(),
-                //},
                 emailConfirmation: {
                     confirmationCode: uuidv4(),
                     expirationDate: add(new Date(), {
