@@ -44,6 +44,7 @@ async sendEmail(email: string, subject: string, html: string) {
             html: html
         });
 
+        console.log(info)
         return info
 
 
