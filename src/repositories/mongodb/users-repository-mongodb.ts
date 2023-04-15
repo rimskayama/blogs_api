@@ -9,9 +9,9 @@ export const usersRepository = {
         const result = await usersCollection.insertOne(newUser)
         return {
             id: newUser._id.toString(),
-            login: newUser.login,
-            email: newUser.email,
-            createdAt: newUser.createdAt
+            login: newUser.accountData.login,
+            email: newUser.accountData.email,
+            createdAt: newUser.accountData.createdAt
         }
     },
 

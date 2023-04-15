@@ -11,11 +11,13 @@ export const usersService = {
 
         const newUser: userInputModel = {
             _id: new ObjectId(),
+            accountData: {
                 login: login,
                 email,
                 passwordHash,
                 passwordSalt,
                 createdAt: new Date(),
+            },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
                 expirationDate: new Date(),
@@ -30,8 +32,8 @@ export const usersService = {
         const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
         if (!user) return false // login or password
         if (user) {
-            const passwordHash = await this._generateHash(password, user.passwordSalt)
-            if (user.passwordHash !== passwordHash) {
+            const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
+            if (user.accountData.passwordHash !== passwordHash) {
                 return false // password
             } else return user
         }
