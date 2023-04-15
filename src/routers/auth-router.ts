@@ -6,12 +6,13 @@ import {ObjectId} from "mongodb";
 import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
 import {authService} from "../domain/auth-service";
 import {
+    checkCodeInDb,
+    checkEmailInDb,
     emailValidationMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware
-} from "../middlewares/users-validation-input";
+} from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
-import {emailCheckExists, emailCheckNotExist} from "../functions/check-if-email-exists";
 
 export const authRouter = Router({})
 
@@ -19,22 +20,24 @@ authRouter.post('/login',
     async (req: Request, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
 
-        if (!user) res.sendStatus(401)
+        if (!user) {
+            res.sendStatus(401)
+        } else
 
-        if (user) {
             if (user.emailConfirmation.isConfirmed) {
-                res.sendStatus(400)
-            } else {
                 const token = await jwtService.createJWT(user)
                 res.status(200).send(token)
+            } else {
+                res.sendStatus(400)
             }
-        }
 })
 
 authRouter.get('/me',
     authBearerMiddleware,
     async (req: Request, res: Response) => {
+
         let meUser = await usersQueryRepository.findUserById(new ObjectId(req.user!.id))
+
         res.status(200).json({
             userId: meUser?.id,
             login: meUser?.login,
@@ -44,9 +47,8 @@ authRouter.get('/me',
 
 // registration
 authRouter.post('/registration',
-    emailCheckExists,
-    loginValidationMiddleware,
     emailValidationMiddleware,
+    loginValidationMiddleware,
     passwordValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -59,23 +61,30 @@ authRouter.post('/registration',
 });
 
 authRouter.post('/registration-confirmation',
+    checkCodeInDb,
+    errorsValidationMiddleware,
     async (req: Request, res: Response) => {
+
         const result = await authService.confirmEmail(req.body.code)
+
         if (result) {
             res.sendStatus(204)
         } else
-            res.status(400).json({ errorsMessages: [{ message: "Incorrect code or it was already used", field: "code" }] })
+            res.status(400).json(
+                { errorsMessages: [
+                    { message: "Incorrect code or it was already used", field: "code" }] })
 });
 
 authRouter.post('/registration-email-resending',
-    emailCheckNotExist,
-    emailValidationMiddleware,
+    checkEmailInDb,
     errorsValidationMiddleware,
      async (req: Request, res: Response) => {
          const result = await authService.resendEmail(req.body.email)
          if (result) {
              res.sendStatus(204)
          } else {
-             res.status(400).json({ errorsMessages: [{ message: "Your email was already confirmed", field: "email" }] })
+             res.status(400).json(
+                 { errorsMessages: [
+                     { message: "Your email was already confirmed", field: "email" }] })
          }
 });
