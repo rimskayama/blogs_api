@@ -11,24 +11,26 @@ export const usersService = {
 
         const newUser: userInputModel = {
             _id: new ObjectId(),
-            login: login,
-            email,
-            passwordHash,
-            passwordSalt,
-            createdAt: new Date(),
+            accountData: {
+                login: login,
+                email,
+                passwordHash,
+                passwordSalt,
+                createdAt: new Date(),
+            },
             emailConfirmation: {
-            confirmationCode: uuidv4(),
+                confirmationCode: uuidv4(),
                 expirationDate: new Date(),
                 isConfirmed: true
-        }}
+            }}
         return usersRepository.createUser(newUser)
     },
 
     async checkCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
         if (!user) return false // login or password
-        const passwordHash = await this._generateHash(password, user.passwordSalt)
-        if (user.passwordHash !== passwordHash) {
+        const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
+        if (user.accountData.passwordHash !== passwordHash) {
             return false // password
         }
         return user

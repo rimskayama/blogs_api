@@ -4,7 +4,6 @@ import {jwtService} from "../application/jwt-service";
 import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 import {ObjectId} from "mongodb";
 import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
-import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {authService} from "../domain/auth-service";
 import {
     emailValidationMiddleware,
@@ -12,6 +11,7 @@ import {
     passwordValidationMiddleware
 } from "../middlewares/users-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
+import {emailCheck} from "../functions/check-if-email-exists";
 
 export const authRouter = Router({})
 
@@ -42,15 +42,15 @@ authRouter.post('/registration',
     loginValidationMiddleware,
     emailValidationMiddleware,
     passwordValidationMiddleware,
+    emailCheck,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
-    const checkUser = await usersRepository.findByLoginOrEmail(req.body.email)
-        if (checkUser) {
-            res.sendStatus(400)
-        } else {
-            const newUser = await authService.registerUser(req.body.login, req.body.password, req.body.email)
+
+        const newUser = await authService.registerUser(req.body.login, req.body.password, req.body.email)
+        if (newUser) {
             res.status(204).send(newUser)
-        }
+        } else
+            res.status(400).send('mail error')
 });
 
 authRouter.post('/registration-confirmation',

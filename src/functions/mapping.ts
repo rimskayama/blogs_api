@@ -1,7 +1,7 @@
 
 import {blogModelWithMongoId} from "../models/blog-view-model";
 import {postModelWithMongoId} from "../models/post-view-model";
-import {userModelWithMongoId} from "../models/user-view-model";
+import {userInputModel, userModelWithMongoId} from "../models/user-view-model";
 import {commentModelWithMongoId} from "../models/comments-view-model";
 
 export const blogsMapping = (array: blogModelWithMongoId[]) => {
@@ -30,13 +30,13 @@ export const postsMapping = (array : postModelWithMongoId[]) => {
     })
 }
 
-export const usersMapping = (array : userModelWithMongoId[]) => {
+export const usersMapping = (array : userInputModel[]) => {
     return array.map((obj) => {
         return {
             id: obj._id.toString(),
-            login: obj.login,
-            email: obj.email,
-            createdAt: obj.createdAt,
+            login: obj.accountData.login,
+            email: obj.accountData.email,
+            createdAt: obj.accountData.createdAt,
         };
     })
 }

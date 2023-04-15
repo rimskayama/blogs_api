@@ -2,7 +2,7 @@ import {ObjectId, SortDirection} from "mongodb";
 import {usersPaginationViewModel} from "../../models/pagination-view-models";
 import {usersCollection} from "../db";
 import {usersMapping} from "../../functions/mapping";
-import {userModelWithMongoId, userViewModelWithId} from "../../models/user-view-model";
+import {userInputModel, userViewModelWithId} from "../../models/user-view-model";
 
 export const usersQueryRepository = {
     async findUsers(
@@ -40,15 +40,15 @@ export const usersQueryRepository = {
 
     async findUserById (
         _id: ObjectId): Promise<userViewModelWithId | null> {
-        const user: userModelWithMongoId | null = await usersCollection.findOne({_id});
+        const user: userInputModel | null = await usersCollection.findOne({_id});
         if (!user) {
             return null
         }
         return {
             id: user._id.toString(),
-            login: user.login,
-            email: user.email,
-            createdAt: user.createdAt
+            login: user.accountData.login,
+            email: user.accountData.email,
+            createdAt: user.accountData.createdAt
         }
 
     },
