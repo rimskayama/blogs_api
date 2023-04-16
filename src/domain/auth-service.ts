@@ -47,6 +47,7 @@ export const authService = {
         const foundUserByCode = await usersRepository.findByConfirmationCode(code);
 
         if (!foundUserByCode) return false
+
         if (foundUserByCode.emailConfirmation.isConfirmed) {
             return false
         } else {
@@ -67,20 +68,15 @@ export const authService = {
         if (foundUser) {
             if (!foundUser.emailConfirmation.isConfirmed) {
 
-                foundUser.emailConfirmation.confirmationCode = uuidv4(),
-                foundUser.emailConfirmation.expirationDate = add(new Date(),
-                    {
-                        hours: 1,
-                        minutes: 3
-                    })
+                let userWithUpdatedCode = await usersRepository.updateConfirmationCode(foundUser._id)
 
-                const result = await emailManager.resendEmail(email, foundUser.emailConfirmation.confirmationCode)
-                await usersRepository.updateConfirmation(foundUser._id)
-                return true
-
-            } else return false
+                if (userWithUpdatedCode) {
+                    const result = await emailManager.resendEmail(email, userWithUpdatedCode.emailConfirmation.confirmationCode)
+                    await usersRepository.updateConfirmation(userWithUpdatedCode._id)
+                    return true
+                } return false
+            } return false
         }
-        else return false
+        return false
     }
-
 }
