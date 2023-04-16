@@ -26,7 +26,7 @@ authRouter.post('/login',
 
             if (user.emailConfirmation.isConfirmed) {
                 const token = await jwtService.createJWT(user)
-                res.status(200).send(token)
+                res.status(200).json(token)
             } else {
                 res.sendStatus(400)
             }
@@ -55,9 +55,9 @@ authRouter.post('/registration',
 
         const newUser = await authService.registerUser(req.body.login, req.body.password, req.body.email)
         if (newUser) {
-            res.status(204).send(newUser)
+            res.status(204).json(newUser)
         } else
-            res.status(400).send('mail error')
+            res.status(400).json('mail error')
 });
 
 authRouter.post('/registration-confirmation',
