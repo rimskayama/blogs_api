@@ -5,17 +5,17 @@ import {usersQueryRepository} from "../../repositories/query-repos/users-query-r
 export const authBearerMiddleware = async (req: Request, res: Response, next: NextFunction
 ) => {
     if (!req.headers.authorization) {
-        res.sendStatus(401);
-        return
+        return res.sendStatus(401);
     }
 
     const token = req.headers.authorization.split(' ')[1]
 
     const userId = await jwtService.getUserIdByToken(token)
-    if (userId) {
-        req.user = await usersQueryRepository.findUserById(userId)
-        next()
-        return
-    }   res.sendStatus(401)
-        return
+    if (!userId) {
+        return res.sendStatus(401)
+    }
+    req.user = await usersQueryRepository.findUserById(userId)
+    if (!req.user) return res.sendStatus(401)
+    next()
+
 };
