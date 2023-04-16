@@ -1,7 +1,7 @@
 import {userInputModel} from "../models/user-view-model";
 import jwt from "jsonwebtoken"
-import {ObjectId} from "mongodb";
 import {settings} from "../settings";
+import {ObjectId} from "mongodb";
 
 export const jwtService  = {
     async createJWT(user: userInputModel) {
@@ -14,8 +14,9 @@ export const jwtService  = {
     async getUserIdByToken(token: string) {
         try {
             const result: any = jwt.verify(token, settings.JWT_SECRET)
-            return new ObjectId(result.userId)
-        } catch(error) {
+            //console.log(result)
+            return result.userId
+        } catch (error) {
             return null
         }
     }
