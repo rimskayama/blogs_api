@@ -36,7 +36,7 @@ export const usersService = {
             if (user.accountData.passwordHash !== passwordHash) {
                 return false // password
             } else return user
-        }
+        } return false
     },
 
     async _generateHash(password: string, salt: string) {

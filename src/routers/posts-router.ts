@@ -74,7 +74,7 @@ postsRouter.post('/:postId/comments',
         const newComment = await commentsService.createComment(req.body.content, req.user!.id, req.params.postId)
 
         if (newComment) {
-            res.status(201).send(newComment)
+            res.status(201).json(newComment)
         } else return res.sendStatus(404)
     })
 
@@ -94,7 +94,7 @@ postsRouter.put("/:id",
         if (isUpdated) {
             res.sendStatus(204);
         } else {
-            res.status(404).send('Not found');
+            res.status(404).json('Not found');
         }
 
     })
