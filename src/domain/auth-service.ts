@@ -53,7 +53,6 @@ export const authService = {
         } else {
             if (foundUserByCode.emailConfirmation.confirmationCode === code
                 && foundUserByCode.emailConfirmation.expirationDate > new Date()) {
-
                 let result = await usersRepository.updateConfirmation(foundUserByCode._id)
                 return result
 
@@ -72,7 +71,6 @@ export const authService = {
 
                 if (userWithUpdatedCode) {
                     const result = await emailManager.resendEmail(email, userWithUpdatedCode.emailConfirmation.confirmationCode)
-                    await usersRepository.updateConfirmation(userWithUpdatedCode._id)
                     return true
                 } return false
             } return false
