@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../../application/jwt-service";
 import {usersQueryRepository} from "../../repositories/query-repos/users-query-repository-mongodb";
+import {ObjectId} from "mongodb";
 
 export const authBearerMiddleware = async (req: Request, res: Response, next: NextFunction
 ) => {
@@ -14,7 +15,7 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
     if (!userId) {
         return res.sendStatus(401)
     }
-    req.user = await usersQueryRepository.findUserById(userId)
+    req.user = await usersQueryRepository.findUserById(new ObjectId(userId))
     if (!req.user) return res.sendStatus(401)
     next()
 
