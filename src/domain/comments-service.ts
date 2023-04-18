@@ -8,7 +8,7 @@ import {commentsQueryRepository} from "../repositories/query-repos/comments-quer
 
 export const commentsService = {
 
-    async getCommentOwner(token: any, id: string) {
+    async getCommentOwner(token: string, id: string) {
 
         const getUserIdByToken = await jwtService.getUserIdByToken(token); // userId from req
 
