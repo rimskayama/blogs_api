@@ -36,7 +36,7 @@ commentsRouter.put("/:id",
                     new ObjectId(req.params.id), req.body.content);
                 if (isUpdated) {
                     res.sendStatus(204)
-                }
+                } res.sendStatus(500)
             } else res.sendStatus(403)
         }
 
