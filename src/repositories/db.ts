@@ -2,7 +2,7 @@ import {MongoClient} from "mongodb";
 import {blogViewModel} from "../models/blog-view-model";
 import {postViewModel} from "../models/post-view-model";
 import {userInputModel} from "../models/user-view-model";
-import {commentModelWithMongoId, commentModelWithPostId, commentViewModelWithId} from "../models/comments-view-model";
+import {commentModelWithMongoId} from "../models/comments-view-model";
 import dotenv from 'dotenv';
 
 dotenv.config()

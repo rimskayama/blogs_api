@@ -23,8 +23,8 @@ export const usersQueryRepository = {
 
         const total = await usersCollection.countDocuments(
             {$or:
-                    [{login: {$regex: searchLoginTerm, $options: 'i'}},
-                        {email: {$regex: searchEmailTerm, $options: 'i'}}]}
+                    [{"accountData.login": {$regex: searchLoginTerm, $options: 'i'}},
+                        {"accountData.email": {$regex: searchEmailTerm, $options: 'i'}}]}
         )
 
         const pagesCount = Math.ceil(total / limit)

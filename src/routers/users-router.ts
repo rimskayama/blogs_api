@@ -34,8 +34,8 @@ usersRouter.post('/',
     emailValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
-    const newProduct = await usersService.createUser(req.body.login, req.body.email, req.body.password)
-        res.status(201).send(newProduct)
+    const newUser = await usersService.createUser(req.body.login, req.body.email, req.body.password)
+        res.status(201).send(newUser)
 })
 
 usersRouter.delete("/:id",
