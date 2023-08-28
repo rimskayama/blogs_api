@@ -27,7 +27,7 @@ authRouter.post('/login',
             if (user.emailConfirmation.isConfirmed) {
                 const userId = user._id
                 const token = await jwtService.createJWT(new ObjectId(userId))
-                const refreshToken = jwtService.createRefreshToken(new ObjectId(userId))
+                const refreshToken = await jwtService.createRefreshToken(new ObjectId(userId))
                 res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
                 return res.status(200).json(token)
             } else {
@@ -40,7 +40,7 @@ authRouter.post('/refresh-token',
         const userIdByToken = await jwtService.getUserIdByToken(refreshToken)
         if (userIdByToken) {
             const token = await jwtService.createJWT(userIdByToken)
-            const refreshToken = jwtService.createRefreshToken(userIdByToken)
+            const refreshToken = await jwtService.createRefreshToken(userIdByToken)
             res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
             return res.status(200).json(token)
         } else {
@@ -51,10 +51,9 @@ authRouter.post('/logout',
     async (req: Request, res: Response) =>  {
         const refreshToken = req.cookies.refreshToken
         if (refreshToken) {
-            res.clearCookie("refreshToken")
-            return res.sendStatus(204)
+            res.clearCookie("refreshToken").sendStatus(204)
         } else {
-            return res.sendStatus(401)
+            res.sendStatus(401)
         }
 });
 
