@@ -6,6 +6,7 @@ import add from "date-fns/add"
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {usersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
+import {authRepository} from "../repositories/mongodb/auth-repository-mongodb";
 
 export const authService = {
 
@@ -76,5 +77,11 @@ export const authService = {
             } return false
         }
         return false
-    }
+    },
+
+    async checkIfTokenIsValid(token: string): Promise<boolean> {
+        let result = await authRepository.checkIfTokenIsValid(token)
+        return result
+    },
+
 }

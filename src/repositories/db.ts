@@ -20,6 +20,8 @@ export const postsCollection = db.collection<postViewModel>("posts")
 export const usersCollection = db.collection<userInputModel>("users")
 export const commentsCollection = db.collection<commentModelWithMongoId>("comments")
 
+export const tokensCollection = db.collection<string[]>("tokens")
+
 export async function runDB() {
     try {
         // Connect the client to the server
