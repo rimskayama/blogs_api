@@ -35,7 +35,6 @@ authRouter.post('/login',
             }
 });
 authRouter.post('/refresh-token',
-    authBearerMiddleware,
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
         const deactivateToken = await authService.deactivateToken(refreshToken)
@@ -51,7 +50,6 @@ authRouter.post('/refresh-token',
             } else res.sendStatus(401)
     });
 authRouter.post('/logout',
-    authBearerMiddleware,
     async (req: Request, res: Response) =>  {
         const refreshToken = req.cookies.refreshToken
         if (refreshToken) {
