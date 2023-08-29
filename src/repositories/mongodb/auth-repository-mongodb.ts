@@ -11,7 +11,7 @@ export const authRepository = {
     },
 
     async deactivateToken(token: tokenModel): Promise<boolean> {
-        let result = await tokensCollection.insertOne(token)
+        await tokensCollection.insertOne(token)
         return true
     }
 }

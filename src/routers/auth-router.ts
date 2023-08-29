@@ -35,11 +35,11 @@ authRouter.post('/login',
             }
 });
 authRouter.post('/refresh-token',
+    authBearerMiddleware,
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
         const deactivateToken = await authService.deactivateToken(refreshToken)
-        if (refreshToken) {
-            const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
+        const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
             if (checkIfTokenIsValid) {
                 const userIdByToken = await jwtService.getUserIdByToken(refreshToken)
                 if (userIdByToken) {
@@ -47,21 +47,20 @@ authRouter.post('/refresh-token',
                     const refreshToken = await jwtService.createRefreshToken(userIdByToken)
                     res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
                     res.status(200).json(token)
-                } else {
-                    res.sendStatus(401)
-                }
+                } else res.sendStatus(401)
             } else res.sendStatus(401)
-        } else res.sendStatus(401)
     });
 authRouter.post('/logout',
+    authBearerMiddleware,
     async (req: Request, res: Response) =>  {
         const refreshToken = req.cookies.refreshToken
         if (refreshToken) {
-            const deactivateToken = await authService.deactivateToken(refreshToken)
-            res.clearCookie("refreshToken").sendStatus(204)
-        } else {
-            res.sendStatus(401)
-        }
+            const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
+            if (checkIfTokenIsValid) {
+                const deactivateToken = await authService.deactivateToken(refreshToken)
+                res.clearCookie("refreshToken").sendStatus(204)
+            } else res.sendStatus(401)
+        } else res.sendStatus(401)
 });
 
 authRouter.get('/me',
