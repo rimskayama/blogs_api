@@ -37,6 +37,7 @@ authRouter.post('/login',
 authRouter.post('/refresh-token',
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
+        const deactivateToken = await authService.deactivateToken(refreshToken)
         if (refreshToken) {
             const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
             if (checkIfTokenIsValid) {
@@ -56,6 +57,7 @@ authRouter.post('/logout',
     async (req: Request, res: Response) =>  {
         const refreshToken = req.cookies.refreshToken
         if (refreshToken) {
+            const deactivateToken = await authService.deactivateToken(refreshToken)
             res.clearCookie("refreshToken").sendStatus(204)
         } else {
             res.sendStatus(401)
