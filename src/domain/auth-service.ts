@@ -88,8 +88,7 @@ export const authService = {
             id: new ObjectId(),
             token: token
         }
-        let result = await authRepository.deactivateToken(newToken)
-        return result
+        return await authRepository.deactivateToken(newToken)
     }
 
 }
