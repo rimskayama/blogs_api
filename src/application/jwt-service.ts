@@ -20,6 +20,6 @@ export const jwtService  = {
 
             return new ObjectId(result.userId)
         } catch (error) {
-            return null
+            return false
         }}
     }
