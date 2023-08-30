@@ -54,13 +54,11 @@ authRouter.post('/refresh-token',
 authRouter.post('/logout',
     async (req: Request, res: Response) =>  {
         const refreshToken = req.cookies.refreshToken
-        if (refreshToken) {
             const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
             if (checkIfTokenIsValid) {
                 const deactivateToken = await authService.deactivateToken(refreshToken)
                 res.clearCookie("refreshToken").sendStatus(204)
             } else res.sendStatus(401)
-        } else res.sendStatus(401)
 });
 
 authRouter.get('/me',
