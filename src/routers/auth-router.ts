@@ -37,11 +37,11 @@ authRouter.post('/login',
 authRouter.post('/refresh-token',
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
-        const deactivateToken = await authService.deactivateToken(refreshToken)
         if (refreshToken) {
             const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
             if (checkIfTokenIsValid) {
                 const userIdByToken = await jwtService.getUserIdByToken(refreshToken)
+                const deactivateToken = await authService.deactivateToken(refreshToken)
                 if (userIdByToken) {
                     const token = await jwtService.createJWT(userIdByToken)
                     const refreshToken = await jwtService.createRefreshToken(userIdByToken)
