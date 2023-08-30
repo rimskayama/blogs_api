@@ -10,7 +10,7 @@ export const commentsService = {
 
     async getCommentOwner(token: string, id: string) {
 
-        const getUserIdByToken = await jwtService.getUserIdByToken(token); // userId from req
+        const getUserIdByToken = await jwtService.getUserIdByAccessToken(token); // userId from req
 
         const foundComment = await commentsQueryRepository.findCommentById(new ObjectId(id));
         const userId = foundComment?.commentatorInfo.userId;

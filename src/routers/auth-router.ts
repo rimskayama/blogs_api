@@ -29,7 +29,7 @@ authRouter.post('/login',
                 const token = await jwtService.createJWT(new ObjectId(userId))
                 const refreshToken = await jwtService.createRefreshToken(new ObjectId(userId))
                 return res.status(200)
-                    .cookie("refreshToken", refreshToken, {httpOnly: true, secure: false})
+                    .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
                     .json(token)
             } else {
                 res.sendStatus(400)
@@ -38,18 +38,16 @@ authRouter.post('/login',
 authRouter.post('/refresh-token',
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
-        if (refreshToken) {
-            const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
-            if (checkIfTokenIsValid) {
-                const userIdByToken = await jwtService.getUserIdByToken(refreshToken)
-                const deactivateToken = await authService.deactivateToken(refreshToken)
-                if (userIdByToken) {
-                    const token = await jwtService.createJWT(userIdByToken)
-                    const refreshToken = await jwtService.createRefreshToken(userIdByToken)
-                    return res.status(200)
-                        .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
-                        .json(token)
-                } else res.sendStatus(401)
+        const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
+        if (checkIfTokenIsValid) {
+            const userIdByToken = await jwtService.getUserIdByRefreshToken(refreshToken)
+            const deactivateToken = await authService.deactivateToken(refreshToken)
+            if (userIdByToken) {
+                const token = await jwtService.createJWT(userIdByToken)
+                const refreshToken = await jwtService.createRefreshToken(userIdByToken)
+                return res.status(200)
+                    .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
+                    .json(token)
             } else res.sendStatus(401)
         } else res.sendStatus(401)
     });
