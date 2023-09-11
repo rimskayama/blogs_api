@@ -3,23 +3,21 @@ import {usersQueryRepository} from "../repositories/query-repos/users-query-repo
 import {commentModelWithPostId} from "../models/comments-view-model";
 import {commentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
 import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
-import {jwtService} from "../application/jwt-service";
-import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 
 export const commentsService = {
 
-    async getCommentOwner(token: string, id: string) {
-
-        const getUserIdByToken = await jwtService.getUserIdByAccessToken(token); // userId from req
+/*    async getCommentOwner(id: string, user: userViewModelWithId) {
 
         const foundComment = await commentsQueryRepository.findCommentById(new ObjectId(id));
+        if (!foundComment) return {data: null, error: 404}
+
         const userId = foundComment?.commentatorInfo.userId;
 
-        if (foundComment && getUserIdByToken!.toString() === userId) {
-            return true
-        }  else return false
+        if (user.id !== userId) {
+            return {data: null, error: 403}
+        }
     },
-
+*/
     async createComment(content: string, userId: string, postId: string) {
 
         let foundPostById = await postsQueryRepository.findPostById(new ObjectId(postId));
