@@ -3,7 +3,10 @@ import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 import {ObjectId} from "mongodb";
 import {commentsService} from "../domain/comments-service";
-import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
+import {
+    commentContentValidationMiddleware,
+    commentValidationMiddleware
+} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 
 
@@ -23,21 +26,17 @@ commentsRouter.put("/:id",
 
     async (req: Request, res: Response) => {
     const user = req.user;
-    const comment = await commentsQueryRepository.findCommentById(new ObjectId(req.params.id))
-        if (!comment) {
-           return res.sendStatus(404)
-        }
-        if (comment.commentatorInfo.userId !== user!.id){
-            return res.sendStatus(403);
-        }
 
-        //const commentOwnerCheck = await commentsService.getCommentOwner(req.params.id, user!)
-
+        const commentValidation = await commentValidationMiddleware(req.params.id, user!)
+        if (commentValidation) {
+            res.sendStatus(commentValidation.errorCode)
+        } else {
         const isUpdated = await commentsService.updateComment(
                     new ObjectId(req.params.id), req.body.content);
                 if (isUpdated) {
                     return res.sendStatus(204)
                 } return res.sendStatus(500)
+        }
 
 })
 

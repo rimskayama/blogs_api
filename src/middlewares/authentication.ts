@@ -51,9 +51,7 @@ export const checkEmailInDb = body("email")
 
 
 export const checkCodeInDb = body("code")
-    .custom( (value) => {
-        return checkCodeExists(value)
-    })
+    .isString()
 
 
 

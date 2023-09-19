@@ -1,9 +1,7 @@
-import {Request, Response, Router} from "express"
+import {Request, response, Response, Router} from "express"
 import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
-import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
-import {ObjectId} from "mongodb";
-import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
+import {authBearerMiddleware, refreshTokenMiddleware} from "../middlewares/auth/auth-bearer";
 import {authService} from "../domain/auth-service";
 import {
     checkCodeInDb,
@@ -13,6 +11,7 @@ import {
     passwordValidationMiddleware
 } from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
+import {ObjectId} from "mongodb";
 
 export const authRouter = Router({})
 
@@ -21,56 +20,49 @@ authRouter.post('/login',
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
 
         if (!user) {
-            res.sendStatus(401)
-        } else
+            return res.sendStatus(401)
+        }
 
-            if (user.emailConfirmation.isConfirmed) {
+        if (user.emailConfirmation.isConfirmed) {
                 const userId = user._id
+                const token = await jwtService.createJWT(userId)
+                const refreshToken = await jwtService.createRefreshToken(userId)
+                return res.status(200)
+                    .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
+                    .json(token)
+            }
+        return  res.sendStatus(400)
+
+});
+authRouter.post('/refresh-token',
+    authBearerMiddleware,
+    refreshTokenMiddleware,
+    async (req: Request, res: Response) => {
+    const userId = req.user?.id
+            if (userId) {
                 const token = await jwtService.createJWT(new ObjectId(userId))
                 const refreshToken = await jwtService.createRefreshToken(new ObjectId(userId))
                 return res.status(200)
                     .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
                     .json(token)
-            } else {
-                res.sendStatus(400)
-            }
-});
-authRouter.post('/refresh-token',
-    async (req: Request, res: Response) => {
-        const refreshToken = req.cookies.refreshToken
-        const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
-        if (checkIfTokenIsValid) {
-            const userIdByToken = await jwtService.getUserIdByRefreshToken(refreshToken)
-            const deactivateToken = await authService.deactivateToken(refreshToken)
-            if (userIdByToken) {
-                const token = await jwtService.createJWT(userIdByToken)
-                const refreshToken = await jwtService.createRefreshToken(userIdByToken)
-                return res.status(200)
-                    .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
-                    .json(token)
             } else res.sendStatus(401)
-        } else res.sendStatus(401)
     });
 authRouter.post('/logout',
+    authBearerMiddleware,
+    refreshTokenMiddleware,
     async (req: Request, res: Response) =>  {
-        const refreshToken = req.cookies.refreshToken
-            const checkIfTokenIsValid = await authService.checkIfTokenIsValid(refreshToken)
-            if (checkIfTokenIsValid) {
-                const deactivateToken = await authService.deactivateToken(refreshToken)
-                res.clearCookie("refreshToken").sendStatus(204)
-            } else res.sendStatus(401)
+    res.clearCookie("refreshToken").sendStatus(204)
 });
 
 authRouter.get('/me',
     authBearerMiddleware,
+    refreshTokenMiddleware,
     async (req: Request, res: Response) => {
 
-        let meUser = await usersQueryRepository.findUserById(new ObjectId(req.user!.id))
-
         res.status(200).json({
-            userId: meUser?.id,
-            login: meUser?.login,
-            email: meUser?.email
+            userId: req.user?.id,
+            login: req.user?.login,
+            email: req.user?.email
         })
     });
 

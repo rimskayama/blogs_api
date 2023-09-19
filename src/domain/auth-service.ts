@@ -79,10 +79,6 @@ export const authService = {
         return false
     },
 
-    async checkIfTokenIsValid(token: string): Promise<boolean> {
-        let result = await authRepository.checkIfTokenIsValid(token)
-        return result
-    },
     async deactivateToken(token: string): Promise<boolean> {
         const newToken = {
             id: new ObjectId(),

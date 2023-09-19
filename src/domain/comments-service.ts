@@ -6,18 +6,6 @@ import {postsQueryRepository} from "../repositories/query-repos/posts-query-repo
 
 export const commentsService = {
 
-/*    async getCommentOwner(id: string, user: userViewModelWithId) {
-
-        const foundComment = await commentsQueryRepository.findCommentById(new ObjectId(id));
-        if (!foundComment) return {data: null, error: 404}
-
-        const userId = foundComment?.commentatorInfo.userId;
-
-        if (user.id !== userId) {
-            return {data: null, error: 403}
-        }
-    },
-*/
     async createComment(content: string, userId: string, postId: string) {
 
         let foundPostById = await postsQueryRepository.findPostById(new ObjectId(postId));
