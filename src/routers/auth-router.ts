@@ -32,7 +32,6 @@ authRouter.post('/login',
                     .json(token)
             }
         return res.sendStatus(400)
-
 });
 authRouter.post('/refresh-token',
     refreshTokenMiddleware,
