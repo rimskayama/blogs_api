@@ -35,7 +35,6 @@ authRouter.post('/login',
 
 });
 authRouter.post('/refresh-token',
-    authBearerMiddleware,
     refreshTokenMiddleware,
     async (req: Request, res: Response) => {
     const userId = req.user?.id
@@ -60,7 +59,6 @@ authRouter.post('/logout',
 
 authRouter.get('/me',
     authBearerMiddleware,
-    refreshTokenMiddleware,
     async (req: Request, res: Response) => {
 
         res.status(200).json({
