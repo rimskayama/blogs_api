@@ -1,4 +1,4 @@
-import {Request, response, Response, Router} from "express"
+import {Request, Response, Router} from "express"
 import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authBearerMiddleware, refreshTokenMiddleware} from "../middlewares/auth/auth-bearer";
@@ -31,7 +31,7 @@ authRouter.post('/login',
                     .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
                     .json(token)
             }
-        return  res.sendStatus(400)
+        return res.sendStatus(400)
 
 });
 authRouter.post('/refresh-token',
@@ -39,6 +39,9 @@ authRouter.post('/refresh-token',
     refreshTokenMiddleware,
     async (req: Request, res: Response) => {
     const userId = req.user?.id
+    const refreshToken = req.cookies.refreshToken
+    await authService.deactivateToken(refreshToken)
+
             if (userId) {
                 const token = await jwtService.createJWT(new ObjectId(userId))
                 const refreshToken = await jwtService.createRefreshToken(new ObjectId(userId))
@@ -51,6 +54,9 @@ authRouter.post('/logout',
     authBearerMiddleware,
     refreshTokenMiddleware,
     async (req: Request, res: Response) =>  {
+        const refreshToken = req.cookies.refreshToken
+        await authService.deactivateToken(refreshToken)
+        console.log(refreshToken)
     res.clearCookie("refreshToken").sendStatus(204)
 });
 
