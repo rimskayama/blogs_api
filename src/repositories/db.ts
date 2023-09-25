@@ -1,7 +1,7 @@
 import {MongoClient} from "mongodb";
 import {blogViewModel} from "../models/blog-view-model";
 import {postViewModel} from "../models/post-view-model";
-import {userInputModel} from "../models/user-view-model";
+import {APIsModel, userInputModel} from "../models/user-view-model";
 import {commentModelWithMongoId} from "../models/comments-view-model";
 import {tokenModel} from "../models/token-model";
 import dotenv from 'dotenv';
@@ -20,8 +20,8 @@ export const blogsCollection = db.collection<blogViewModel>("blogs")
 export const postsCollection = db.collection<postViewModel>("posts")
 export const usersCollection = db.collection<userInputModel>("users")
 export const commentsCollection = db.collection<commentModelWithMongoId>("comments")
-
 export const tokensCollection = db.collection<tokenModel>("tokens")
+export const APIsCollection = db.collection<APIsModel>("APIs")
 
 export async function runDB() {
     try {

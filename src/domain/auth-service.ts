@@ -7,6 +7,7 @@ import {usersRepository} from "../repositories/mongodb/users-repository-mongodb"
 import {usersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
 import {authRepository} from "../repositories/mongodb/auth-repository-mongodb";
+import {APIsRepository} from "../repositories/mongodb/apis-repository-mongodb";
 
 export const authService = {
 
@@ -85,6 +86,16 @@ export const authService = {
             token: token
         }
         return await authRepository.deactivateToken(newToken)
+    },
+
+    async countNewAPICall(IP: string, URL: string){
+        const newAPICall = {
+            id: new ObjectId(),
+            IP: IP,
+            URL: URL,
+            date: new Date()
+        }
+        return await APIsRepository.countNewAPICall(newAPICall)
     }
 
 }

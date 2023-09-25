@@ -12,12 +12,17 @@ import {
 } from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {ObjectId} from "mongodb";
+import {rateLimitMiddleware} from "../middlewares/rate-limit-middleware";
 
 export const authRouter = Router({})
 
 authRouter.post('/login',
+    rateLimitMiddleware,
+    errorsValidationMiddleware,
     async (req: Request, res: Response) => {
-        const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
+
+        await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
+        const user = await usersService.checkCredentials (req.body.loginOrEmail, req.body.password)
 
         if (!user) {
             return res.sendStatus(401)
@@ -69,12 +74,14 @@ authRouter.get('/me',
 
 // registration
 authRouter.post('/registration',
+    rateLimitMiddleware,
     emailValidationMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
+        await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
         const newUser = await authService.registerUser(req.body.login, req.body.password, req.body.email)
         if (newUser) {
             res.status(204).json(newUser)
@@ -83,10 +90,12 @@ authRouter.post('/registration',
 });
 
 authRouter.post('/registration-confirmation',
+    rateLimitMiddleware,
     checkCodeInDb,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
+        await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
         const result = await authService.confirmEmail(req.body.code)
 
         if (result) {
@@ -98,9 +107,12 @@ authRouter.post('/registration-confirmation',
 });
 
 authRouter.post('/registration-email-resending',
+    rateLimitMiddleware,
     checkEmailInDb,
     errorsValidationMiddleware,
      async (req: Request, res: Response) => {
+
+         await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
          const result = await authService.resendEmail(req.body.email)
          if (result) {
              res.sendStatus(204)

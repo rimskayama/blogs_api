@@ -30,3 +30,9 @@ export type withViewId = {
 }
 export type userModelWithMongoId = userViewModel & withMongoId;
 export type userViewModelWithId = userViewModel & withViewId;
+
+export type APIsModel = {
+    IP: string,
+    URL: string,
+    date: Date
+}
