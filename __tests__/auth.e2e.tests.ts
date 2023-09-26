@@ -1,6 +1,5 @@
 import request from "supertest";
 import {app} from "../src/app-config";
-import {create} from "domain";
 describe("/auth", () => {
     beforeAll(async () => {
         await request(app).delete("/testing/all-data");
@@ -164,5 +163,4 @@ describe("/auth", () => {
             })
 
     })
-
 });
