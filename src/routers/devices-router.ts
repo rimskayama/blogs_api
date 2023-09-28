@@ -42,6 +42,11 @@ devicesRouter.delete('/:deviceId',
 
     const refreshToken = req.cookies.refreshToken
     const deviceIdFromReq = req.params.deviceId
+
+    if(!deviceIdFromReq) {
+        return res.sendStatus(404)
+    }
+
     const sessionFromReq = await devicesService.getSessionByDeviceId(deviceIdFromReq)
     const session = await devicesService.getSession(refreshToken)
 

@@ -1,13 +1,15 @@
-export type deviceViewModel = {
+export type deviceInputModel = {
     userId: string,
     IP: string,
     title: string,
     lastActiveDate: string,
     deviceId: string,
-}
-
-export type withExpDate = {
     expDate: string
 }
 
-export type deviceModelWithExpDate = deviceViewModel & withExpDate
+export type deviceViewModel = {
+    IP: string,
+    title: string,
+    lastActiveDate: string,
+    deviceId: string,
+}

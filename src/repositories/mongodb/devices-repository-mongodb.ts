@@ -1,9 +1,9 @@
 import {devicesCollection} from "../db";
-import {deviceModelWithExpDate} from "../../models/device-model";
+import {deviceInputModel} from "../../models/device-model";
 
 export const devicesRepository = {
 
-    async createNewSession(refreshTokenMeta: deviceModelWithExpDate) {
+    async createNewSession(refreshTokenMeta: deviceInputModel) {
         return await devicesCollection.insertOne(refreshTokenMeta)
     },
 

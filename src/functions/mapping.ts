@@ -3,7 +3,7 @@ import {blogModelWithMongoId} from "../models/blog-view-model";
 import {postModelWithMongoId} from "../models/post-view-model";
 import {userInputModel} from "../models/user-view-model";
 import {commentModelWithMongoId} from "../models/comments-view-model";
-import {deviceViewModel} from "../models/device-model";
+import {deviceInputModel} from "../models/device-model";
 
 export const blogsMapping = (array: blogModelWithMongoId[]) => {
     return array.map((obj) => {
@@ -53,10 +53,9 @@ export const commentsMapping = (array: commentModelWithMongoId[]) => {
     })
 }
 
-export const devicesMapping = (array: deviceViewModel[]) => {
+export const devicesMapping = (array: deviceInputModel[]) => {
     return array.map((obj) => {
         return {
-            userId: obj.userId,
             IP: obj.IP,
             title: obj.title,
             lastActiveDate: obj.lastActiveDate,
