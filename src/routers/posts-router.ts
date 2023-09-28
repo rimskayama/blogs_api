@@ -13,9 +13,9 @@ export const postsRouter = Router({})
 import {getPagination} from "../functions/pagination";
 import {blogIdCheck} from "../functions/check-blog-id";
 import {commentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
-import {authBearerMiddleware} from "../middlewares/auth/auth-bearer";
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
+import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
 
 // get all
 postsRouter.get("/", async (req: Request, res: Response) => {
@@ -66,7 +66,7 @@ postsRouter.get("/:postId/comments",
 })
 // create comment by postId
 postsRouter.post('/:postId/comments',
-    authBearerMiddleware,
+    authDevicesMiddleware,
     commentContentValidationMiddleware,
     errorsValidationMiddleware,
     async (req, res) => {

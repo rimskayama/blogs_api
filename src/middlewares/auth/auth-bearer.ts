@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+/*import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../../application/jwt-service";
 import {usersQueryRepository} from "../../repositories/query-repos/users-query-repository-mongodb";
 import {ObjectId} from "mongodb";
@@ -47,4 +47,4 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
         res.sendStatus(401);
     }
 
-};
+} */

@@ -6,7 +6,6 @@ import add from "date-fns/add"
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {usersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
-import {authRepository} from "../repositories/mongodb/auth-repository-mongodb";
 import {APIsRepository} from "../repositories/mongodb/apis-repository-mongodb";
 
 export const authService = {
@@ -78,14 +77,6 @@ export const authService = {
             } return false
         }
         return false
-    },
-
-    async deactivateToken(token: string): Promise<boolean> {
-        const newToken = {
-            id: new ObjectId(),
-            token: token
-        }
-        return await authRepository.deactivateToken(newToken)
     },
 
     async countNewAPICall(IP: string, URL: string){
