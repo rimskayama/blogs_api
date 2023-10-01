@@ -14,7 +14,7 @@ export const APIsRepository = {
                 URL: {$regex: URL, $options: 'i'},
                 date: {$gte: date}}
         )
-        if (allAPICalls >= 4) {
+        if (allAPICalls >= 5) {
             return false
         } return true
     }
