@@ -7,7 +7,7 @@ async sendEmail(email: string, subject: string, html: string) {
     const authPass = process.env.PASS;
 
             let transport = await nodemailer.createTransport({
-                    service: "outlook",
+                    service: "gmail",
                     auth: {
                         user: authEmail,
                         pass: authPass
@@ -30,7 +30,7 @@ async sendEmail(email: string, subject: string, html: string) {
         const authPass = process.env.PASS;
 
         let transport = await nodemailer.createTransport({
-            service: "outlook",
+            service: "gmail",
             auth: {
                 user: authEmail,
                 pass: authPass
