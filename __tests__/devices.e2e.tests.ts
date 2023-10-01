@@ -121,29 +121,25 @@ describe("/security/devices", () => {
             .expect(200)
 
         expect(createResponse.body).toEqual([{
-            userId: createdUser1.id,
-            IP: expect.any(String),
+            ip: expect.any(String),
             title: 'Chrome',
             lastActiveDate: expect.any(String),
             deviceId: expect.any(String),
         },
             {
-                userId: createdUser1.id,
-                IP: expect.any(String),
+                ip: expect.any(String),
                 title: 'Android',
                 lastActiveDate: expect.any(String),
                 deviceId: expect.any(String),
             },
             {
-                userId: createdUser1.id,
-                IP: expect.any(String),
+                ip: expect.any(String),
                 title: 'Firefox',
                 lastActiveDate: expect.any(String),
                 deviceId: expect.any(String),
             },
             {
-                userId: createdUser1.id,
-                IP: expect.any(String),
+                ip: expect.any(String),
                 title: 'iPhone',
                 lastActiveDate: expect.any(String),
                 deviceId: expect.any(String),
@@ -209,8 +205,7 @@ describe("/security/devices", () => {
             .expect(200)
 
         expect(createResponse.body).toEqual([{
-            userId: createdUser2.id,
-            IP: expect.any(String),
+            ip: expect.any(String),
             title: 'iPhone',
             lastActiveDate: expect.any(String),
             deviceId: expect.any(String),
@@ -271,22 +266,19 @@ describe("/security/devices", () => {
 
             expect(b.body).toEqual([
                 {
-                    userId: createdUser1.id,
-                    IP: expect.any(String),
+                    ip: expect.any(String),
                     title: 'Chrome',
                     lastActiveDate: expect.any(String),
                     deviceId: expect.any(String),
                 },
                 {
-                    userId: createdUser1.id,
-                    IP: expect.any(String),
+                    ip: expect.any(String),
                     title: 'Firefox',
                     lastActiveDate: expect.any(String),
                     deviceId: expect.any(String),
                 },
                 {
-                    userId: createdUser1.id,
-                    IP: expect.any(String),
+                    ip: expect.any(String),
                     title: 'iPhone',
                     lastActiveDate: expect.any(String),
                     deviceId: expect.any(String),
@@ -307,15 +299,13 @@ describe("/security/devices", () => {
 
         expect(b.body).toEqual([
             {
-                userId: createdUser1.id,
-                IP: expect.any(String),
+                ip: expect.any(String),
                 title: 'Chrome',
                 lastActiveDate: expect.any(String),
                 deviceId: expect.any(String),
             },
             {
-                userId: createdUser1.id,
-                IP: expect.any(String),
+                ip: expect.any(String),
                 title: 'iPhone',
                 lastActiveDate: expect.any(String),
                 deviceId: expect.any(String),
@@ -338,15 +328,11 @@ describe("/security/devices", () => {
 
             expect(b.body).toEqual([
                 {
-                    userId: createdUser1.id,
-                    IP: expect.any(String),
+                    ip: expect.any(String),
                     title: 'Chrome',
                     lastActiveDate: expect.any(String),
                     deviceId: expect.any(String),
                 }
             ])
         })
-// Удаляем все оставшиеся девайсы (девайсом 1).
-// Запрашиваем список девайсов. В списке должен содержаться только один (текущий) девайс
-// Пишем дополнительные тесты для проверки логика работы с девайсами
 })

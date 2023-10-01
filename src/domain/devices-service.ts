@@ -3,14 +3,14 @@ import {jwtService} from "../application/jwt-service";
 
 export const devicesService  = {
     async createNewSession
-    (refreshToken: string, deviceName: string, IP: string, userId: string, expDate: string) {
+    (refreshToken: string, deviceName: string, ip: string, userId: string, expDate: string) {
 
         const deviceId = await jwtService.getDeviceIdByRefreshToken(refreshToken)
         const lastActiveDate = await jwtService.getLastActiveDateByRefreshToken(refreshToken)
 
         const refreshTokenMeta = {
             userId: userId,
-            IP: IP,
+            ip: ip,
             title: deviceName,
             lastActiveDate: lastActiveDate,
             deviceId: deviceId,

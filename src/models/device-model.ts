@@ -1,6 +1,6 @@
 export type deviceInputModel = {
     userId: string,
-    IP: string,
+    ip: string,
     title: string,
     lastActiveDate: string,
     deviceId: string,
@@ -8,7 +8,7 @@ export type deviceInputModel = {
 }
 
 export type deviceViewModel = {
-    IP: string,
+    ip: string,
     title: string,
     lastActiveDate: string,
     deviceId: string,

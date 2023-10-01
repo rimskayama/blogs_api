@@ -56,7 +56,7 @@ export const commentsMapping = (array: commentModelWithMongoId[]) => {
 export const devicesMapping = (array: deviceInputModel[]) => {
     return array.map((obj) => {
         return {
-            IP: obj.IP,
+            ip: obj.ip,
             title: obj.title,
             lastActiveDate: obj.lastActiveDate,
             deviceId: obj.deviceId,

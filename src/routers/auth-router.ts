@@ -33,14 +33,14 @@ authRouter.post('/login',
         if (user.emailConfirmation.isConfirmed) {
                 const userId = user._id
                 const deviceName = req.headers["user-agent"] || "Device name"
-                const IP = req.socket.remoteAddress || "IP address"
+                const ip = req.socket.remoteAddress || "IP address"
                 const expDate = req.headers.expires || "expDate"
                 const deviceId = uuidv4()
 
                 const token = await jwtService.createJWT(userId)
                 const refreshToken = await jwtService.createRefreshToken(userId, deviceId)
 
-                await devicesService.createNewSession(refreshToken, deviceName, IP, userId.toString(), expDate)
+                await devicesService.createNewSession(refreshToken, deviceName, ip, userId.toString(), expDate)
 
                 return res.status(200)
                     .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
