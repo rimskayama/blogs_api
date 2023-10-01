@@ -39,8 +39,9 @@ authRouter.post('/login',
 
                 const token = await jwtService.createJWT(userId)
                 const refreshToken = await jwtService.createRefreshToken(userId, deviceId)
+                const lastActiveDate = new Date().toISOString()
 
-                await devicesService.createNewSession(refreshToken, deviceName, ip, userId.toString(), expDate)
+                await devicesService.createNewSession(refreshToken, deviceName, ip, userId.toString(), expDate, lastActiveDate)
 
                 return res.status(200)
                     .cookie("refreshToken", refreshToken, {httpOnly: true, secure: true})
@@ -65,7 +66,7 @@ authRouter.post('/refresh-token',
         const newToken = await jwtService.createJWT(new ObjectId(session.userId))
         const newRefreshToken = await jwtService.createRefreshToken(new ObjectId(session.userId), session.deviceId)
 
-        const lastActiveDate = await jwtService.getLastActiveDateByRefreshToken(newRefreshToken)
+        const lastActiveDate = new Date().toISOString()
 
         await devicesService.updateLastActiveDate(session.deviceId, lastActiveDate)
         return res.status(200)
@@ -81,7 +82,6 @@ authRouter.post('/logout',
             return res.sendStatus(401)
         }
         const session = await devicesService.getSession(refreshToken)
-        console.log(session)
 
         if (!session) {
             return res.sendStatus(401)

@@ -247,7 +247,6 @@ describe("/security/devices", () => {
             .get("/security/devices")
             .set('Cookie', refreshTokenOfSession1)
             .expect(200)
-
         expect(createResponse.body[0].lastActiveDate).not.toEqual(lastActiveDateOfUser1)
 
     })
@@ -320,7 +319,6 @@ describe("/security/devices", () => {
                 .set('Cookie', refreshTokenOfSession1)
                 .expect(204);
 
-            console.log(refreshTokenOfSession1)
             const b = await request(app)
                 .get("/security/devices")
                 .set('Cookie', refreshTokenOfSession1)

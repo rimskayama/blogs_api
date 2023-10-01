@@ -29,7 +29,7 @@ export const jwtService  = {
     async getLastActiveDateByRefreshToken(token: string) {
         try {
             const result: any = jwt.verify(token, settings.refreshTokenSecret)
-            return result.iat.toString()
+            return result.iat.toString
         } catch (error) {
             return false
         }}
