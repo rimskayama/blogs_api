@@ -10,10 +10,10 @@ export const rateLimitMiddleware =
 
     await APIsRepository.addNewAPICall(URL, ip, date)
 
-    const result = await APIsRepository.countAPICalls(URL, ip, )
+    const result = await APIsRepository.countAPICalls(URL, ip)
 
     if (result > 5) {
-        res.sendStatus(429)
+        return res.sendStatus(429)
     }
     next()
 }
