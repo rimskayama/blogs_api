@@ -6,16 +6,15 @@ import {ObjectId} from "mongodb";
 export const rateLimitMiddleware =
     async (req: Request, res: Response, next: NextFunction) => {
 
-    let URL = req.baseUrl;
-    let ip = req.socket.remoteAddress!;
-    let date = subtractSeconds(new Date, 10)//new Date()
-
+    const URL = req.baseUrl;
+    const ip = req.socket.remoteAddress!;
     const newAPICall = {
         id: new ObjectId(),
         ip: ip,
         URL: URL,
-        date: new Date()
+        date: new Date(Date.now())
     }
+    const date = subtractSeconds(newAPICall.date, 10)
     await APIsCollection.insertOne(newAPICall)
 
     const result = await APIsCollection.countDocuments(
@@ -24,10 +23,10 @@ export const rateLimitMiddleware =
             URL: {$regex: URL, $options: 'i'},
             date: {$gte: date}}
     )
-
     if (result >= 5) {
-        res.sendStatus(429)
-    } else next()
+        return res.sendStatus(429)
+    }
+    return next()
 
 
 
