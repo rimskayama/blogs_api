@@ -6,7 +6,6 @@ import add from "date-fns/add"
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {usersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
-import {APIsRepository} from "../repositories/mongodb/apis-repository-mongodb";
 
 export const authService = {
 
@@ -77,16 +76,5 @@ export const authService = {
             } return false
         }
         return false
-    },
-
-    async countNewAPICall(ip: string, URL: string){
-        const newAPICall = {
-            id: new ObjectId(),
-            ip: ip,
-            URL: URL,
-            date: new Date()
-        }
-        return await APIsRepository.countNewAPICall(newAPICall)
     }
-
 }
