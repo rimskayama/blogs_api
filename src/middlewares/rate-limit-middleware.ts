@@ -14,6 +14,5 @@ export const rateLimitMiddleware =
 
     if (result > 5) {
         return res.sendStatus(429)
-    }
-    next()
+    } else next()
 }
