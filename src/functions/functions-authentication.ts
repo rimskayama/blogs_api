@@ -37,8 +37,3 @@ export const checkCodeExists = async (code: string) => {
         return Promise.reject("Code is incorrect");
     }
 };
-
-export function subtractSeconds(date: Date, seconds: number) {
-    date.setSeconds(date.getSeconds() - seconds);
-    return date;
-}
