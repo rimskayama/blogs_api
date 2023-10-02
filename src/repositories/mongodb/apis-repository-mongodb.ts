@@ -7,10 +7,10 @@ export const APIsRepository = {
            return await APIsCollection.insertOne(newAPICall)
     },
 
-    async findAPICalls(URL: string, IP: string, date: Date) : Promise<boolean> {
+    async findAPICalls(URL: string, ip: string, date: Date) : Promise<boolean> {
         const allAPICalls = await APIsCollection.countDocuments(
             {
-                IP: {$regex: IP, $options: 'i'},
+                ip: {$regex: ip, $options: 'i'},
                 URL: {$regex: URL, $options: 'i'},
                 date: {$gte: date}}
         )

@@ -79,10 +79,10 @@ export const authService = {
         return false
     },
 
-    async countNewAPICall(IP: string, URL: string){
+    async countNewAPICall(ip: string, URL: string){
         const newAPICall = {
             id: new ObjectId(),
-            IP: IP,
+            ip: ip,
             URL: URL,
             date: new Date()
         }

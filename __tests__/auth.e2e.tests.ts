@@ -86,7 +86,7 @@ describe("/auth", () => {
         accessToken = createResponse.body.accessToken
 
         const b = await request(app).get("/auth/me")
-            .set('Authorization', `Bearer ${accessToken}`)
+            .set('Cookie', `${refreshToken}`)
             .expect(200)
 
 

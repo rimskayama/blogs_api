@@ -32,7 +32,7 @@ export type userModelWithMongoId = userViewModel & withMongoId;
 export type userViewModelWithId = userViewModel & withViewId;
 
 export type APIsModel = {
-    IP: string,
+    ip: string,
     URL: string,
     date: Date
 }

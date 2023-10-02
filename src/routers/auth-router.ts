@@ -23,10 +23,9 @@ authRouter.post('/login',
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-        await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
         const user = await usersService.checkCredentials (req.body.loginOrEmail, req.body.password)
-
         if (!user) {
+            await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
             return res.sendStatus(401)
         }
 
@@ -138,12 +137,12 @@ authRouter.post('/registration-confirmation',
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-        await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
         const result = await authService.confirmEmail(req.body.code)
 
         if (result) {
             res.sendStatus(204)
         } else
+            await authService.countNewAPICall(req.socket.remoteAddress!, req.baseUrl)
             res.status(400).json(
                 { errorsMessages: [
                     { message: "Incorrect code or it was already used", field: "code" }] })
