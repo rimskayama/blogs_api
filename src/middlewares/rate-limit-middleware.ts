@@ -4,7 +4,7 @@ import {APIsRepository} from "../repositories/mongodb/apis-repository";
 export const rateLimitMiddleware =
     async (req: Request, res: Response, next: NextFunction) => {
 
-    const URL = req.baseUrl;
+    const URL = req.originalUrl;
     const ip = req.socket.remoteAddress!;
     const date = new Date();
 
