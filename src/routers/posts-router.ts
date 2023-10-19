@@ -16,6 +16,8 @@ import {commentsQueryRepository} from "../repositories/query-repos/comments-quer
 import {commentsService} from "../domain/comments-service";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
+import {usersService} from "../domain/users-service";
+import {devicesService} from "../domain/devices-service";
 
 // get all
 postsRouter.get("/", async (req: Request, res: Response) => {
@@ -71,7 +73,16 @@ postsRouter.post('/:postId/comments',
     errorsValidationMiddleware,
     async (req, res) => {
 
-        const newComment = await commentsService.createComment(req.body.content, req.user!.id, req.params.postId)
+        const refreshToken = req.cookies.refreshToken
+        if(!refreshToken) {
+            return res.sendStatus(401)
+        }
+        const session = await devicesService.getSession(refreshToken)
+        let newComment = null
+        if (session) {
+            newComment = await commentsService.createComment
+            (req.body.content, session.userId, req.params.postId)
+        }
 
         if (newComment) {
             res.status(201).json(newComment)
