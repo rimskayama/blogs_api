@@ -8,7 +8,7 @@ import {
 } from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
-import {devicesService} from "../domain/devices-service";
+import {jwtService} from "../application/jwt-service";
 
 
 export const commentsRouter = Router({})
@@ -26,15 +26,11 @@ commentsRouter.put("/:id",
     errorsValidationMiddleware,
 
     async (req: Request, res: Response) => {
-        const refreshToken = req.cookies.refreshToken
-        if (!refreshToken) {
-            return res.sendStatus(401)
-        }
-        const session = await devicesService.getSession(refreshToken)
-        let commentValidation = null
-        if (session) {
-            commentValidation = await commentValidationMiddleware(req.params.id, session)
-        }
+
+        const token = req.headers.authorization!.split(' ')[1]
+        const userId = await jwtService.getUserIdByAccessToken(token)
+
+        const commentValidation = await commentValidationMiddleware(req.params.id, userId)
 
         if (commentValidation) {
             res.sendStatus(commentValidation.errorCode)
@@ -52,15 +48,11 @@ commentsRouter.put("/:id",
 commentsRouter.delete("/:id",
     authDevicesMiddleware,
     async (req: Request, res: Response) => {
-        const refreshToken = req.cookies.refreshToken
-        if (!refreshToken) {
-            return res.sendStatus(401)
-        }
-        const session = await devicesService.getSession(refreshToken)
-        let commentValidation = null
-        if (session) {
-            commentValidation = await commentValidationMiddleware(req.params.id, session)
-        }
+
+        const token = req.headers.authorization!.split(' ')[1]
+        const userId = await jwtService.getUserIdByAccessToken(token)
+
+        const commentValidation = await commentValidationMiddleware(req.params.id, userId)
 
         if (commentValidation) {
             res.sendStatus(commentValidation.errorCode)

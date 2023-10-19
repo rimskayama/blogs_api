@@ -26,12 +26,22 @@ export const jwtService  = {
             return false
         }},
 
+    async getUserIdByAccessToken(token: string) {
+        try {
+            const result: any = jwt.verify(token, settings.JWT_SECRET)
+            return result.userId
+        } catch (error) {
+            return false
+        }
+    },
+
     async getLastActiveDateByRefreshToken(token: string) {
         try {
             const result: any = jwt.verify(token, settings.refreshTokenSecret)
             return result.iat.toString
         } catch (error) {
             return false
-        }}
+        }
+    }
 
 }
