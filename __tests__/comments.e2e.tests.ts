@@ -1,10 +1,20 @@
 import request from "supertest";
 import {app} from "../src/app-config";
+import mongoose from "mongoose";
 
 describe("/comments", () => {
+    const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017/blogs_api'
+
     beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
         await request(app).delete("/testing/all-data");
-    });
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
 
 //POST /blogs
 
@@ -217,6 +227,7 @@ describe("/comments", () => {
                             id: expect.any(String),
                             content: "contentcontentcontent",
                             commentatorInfo: {
+                                _id: expect.any(String),
                                 userId: createdUser1.id,
                                 userLogin: createdUser1.login
                             },
@@ -230,18 +241,21 @@ describe("/comments", () => {
         //GET comments/:commentId
 
         it("should return comment by ID", async () => {
-            await request(app).get("/comments/" + createdComment1.id)
-                .expect(200, {
+            const b = await request(app).get("/comments/" + createdComment1.id)
+                .expect(200)
+
+            expect(b.body).toEqual(
+                {
                     id: createdComment1.id,
-                    content: "contentcontentcontent",
+                    content: createdComment1.content,
                     commentatorInfo: {
+                        _id: expect.any(String),
                         userId: createdComment1.commentatorInfo.userId,
                         userLogin: createdComment1.commentatorInfo.userLogin
                     },
                     createdAt: createdComment1.createdAt
                 })
         })
-
 
 //PUT comments/:commentId
 
@@ -295,6 +309,7 @@ describe("/comments", () => {
                     id: createdComment1.id,
                     content: data.content,
                     commentatorInfo: {
+                        _id: expect.any(String),
                         userId: createdComment1.commentatorInfo.userId,
                         userLogin: createdComment1.commentatorInfo.userLogin
                     },

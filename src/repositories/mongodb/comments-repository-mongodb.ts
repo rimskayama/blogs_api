@@ -1,12 +1,16 @@
 import {ObjectId} from "mongodb";
-import {commentsCollection} from "../db";
-import {commentModelWithMongoId, commentViewModel, commentViewModelWithId} from "../../models/comments-view-model";
+import {
+    commentModelWithMongoId,
+    commentViewModel,
+    commentViewModelWithId
+} from "../../models/comments-view-model";
+import {CommentModel} from "../../schemas/comment-schema";
 
 export const commentsRepository = {
 
     async createComment(newComment: commentModelWithMongoId): Promise<commentViewModelWithId> {
 
-        const result = await commentsCollection.insertOne(newComment);
+        const result = await CommentModel.insertMany([newComment]);
         return {
             id: newComment._id.toString(),
             content: newComment.content,
@@ -16,14 +20,14 @@ export const commentsRepository = {
     },
 
     async updateComment(_id: ObjectId, content: string) {
-        const updatedComment = await commentsCollection.updateOne({_id}, {
+        const updatedComment = await CommentModel.updateOne({_id}, {
             $set:
                 {
                     content: content
                 }
         })
 
-        const comment: commentViewModel | null = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
+        const comment: commentViewModel | null = await CommentModel.findOne({_id}, {projection: {_id: 0}});
         if (comment) {
             return true
         } else
@@ -31,8 +35,8 @@ export const commentsRepository = {
     },
 
     async deleteComment(_id: ObjectId) {
-        const deletedComment = await commentsCollection.deleteOne({_id});
-        const comment = await commentsCollection.findOne({_id}, {projection: {_id: 0}});
+        const deletedComment = await CommentModel.deleteOne({_id});
+        const comment = await CommentModel.findOne({_id}, {projection: {_id: 0}});
         if (!comment) {
             return true
         }
@@ -40,6 +44,6 @@ export const commentsRepository = {
     },
 
     async deleteAll() {
-        return await commentsCollection.deleteMany({}, {});
+        return CommentModel.deleteMany({}, {});
     }
 }
