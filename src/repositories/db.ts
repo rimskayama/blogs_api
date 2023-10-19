@@ -17,7 +17,6 @@ if (!mongoURI) {
 export const client = new MongoClient(mongoURI);
 
 const db = client.db();
-export const postsCollection = db.collection<postViewModel>("posts")
 export const usersCollection = db.collection<userInputModel>("users")
 export const commentsCollection = db.collection<commentModelWithMongoId>("comments")
 export const devicesCollection = db.collection<deviceInputModel>("devices")

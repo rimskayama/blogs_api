@@ -1,22 +1,22 @@
 import {postModelWithMongoId, postViewModelWithId} from "../../models/post-view-model";
-import {postsCollection} from "../db";
 import {postsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
 import {postsPaginationViewModel} from "../../models/pagination-view-models";
+import {PostModel} from "../../schemas/post-schema";
 
 export const postsQueryRepository = {
 
     async findPosts(
     page: number, limit: number, sortDirection: SortDirection,
     sortBy: string, skip: number): Promise<postsPaginationViewModel> {
-        let allPosts = await postsCollection.find(
+        let allPosts = await PostModel.find(
             {},{})
             .skip(skip)
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
-            .toArray()
+            .lean()
 
-        const total = await postsCollection.countDocuments()
+        const total = await PostModel.countDocuments()
 
         const pagesCount = Math.ceil(total / limit)
 
@@ -30,7 +30,7 @@ export const postsQueryRepository = {
     },
 
     async findPostById(_id: ObjectId): Promise<postViewModelWithId | null> {
-        const post: postModelWithMongoId | null = await postsCollection.findOne({_id});
+        const post: postModelWithMongoId | null = await PostModel.findOne({_id});
         if (!post) {
             return null;
         }
@@ -47,15 +47,15 @@ export const postsQueryRepository = {
 
     async findPostsByBlogId(blogId: string, page: number, limit: number, sortDirection: SortDirection,
                             sortBy: string, skip: number) {
-        const postsByBlogId = await postsCollection.find(
+        const postsByBlogId = await PostModel.find(
             {blogId: blogId},
             )
             .skip(skip)
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
-            .toArray()
+            .lean()
 
-        const total = await postsCollection.countDocuments({blogId: blogId})
+        const total = await PostModel.countDocuments({blogId: blogId})
 
         const pagesCount = Math.ceil(total / limit)
 
