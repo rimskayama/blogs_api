@@ -1,13 +1,12 @@
-
-import {blogsCollection} from "../db";
 import {blogModelWithMongoId, blogViewModelWithId, blogViewModel} from "../../models/blog-view-model";
 import {ObjectId} from "mongodb";
+import {BlogModel} from "../../schemas/blog-schema";
 
 export const blogsRepository  = {
 
     async findBlogName(blogId: string): Promise<blogModelWithMongoId | null> {
 
-        let foundBlogByName = await blogsCollection.findOne({_id: new ObjectId(blogId)}, {})
+        let foundBlogByName = await BlogModel.findOne({_id: new ObjectId(blogId)}, {})
 
         return foundBlogByName || null
     },
@@ -15,7 +14,7 @@ export const blogsRepository  = {
     async createBlog(
         newBlog : blogModelWithMongoId): Promise<blogViewModelWithId> {
 
-        const result = await blogsCollection.insertOne(newBlog)
+        const result = await BlogModel.insertMany([newBlog])
         return {
             id: newBlog._id.toString(),
             name: newBlog.name,
@@ -27,7 +26,7 @@ export const blogsRepository  = {
     },
     async updateBlog(_id: ObjectId, name: string, description: string, websiteUrl: string, isMembership: boolean | false): Promise<blogViewModelWithId | boolean> {
 
-        const updatedBlog = await blogsCollection.updateOne({_id}, {
+        const updatedBlog = await BlogModel.updateOne({_id}, {
             $set:
                 {
                     name: name,
@@ -37,21 +36,21 @@ export const blogsRepository  = {
                 }
         })
 
-        const blog: blogViewModel | null = await blogsCollection.findOne({_id}, {projection: {_id: 0}});
+        const blog: blogViewModel | null = await BlogModel.findOne({_id}, {projection: {_id: 0}});
         if (blog) {
             return true
         } else
             return false
     },
     async deleteBlog(_id: ObjectId) {
-        const blog = await blogsCollection.findOne({_id}, {projection: {_id: 0}});
+        const blog = await BlogModel.findOne({_id}, {projection: {_id: 0}});
         if (blog) {
-            return await blogsCollection.deleteOne(blog);
+            return BlogModel.deleteOne({_id})
         }
         return null
     },
 
     async deleteAll() {
-        return await blogsCollection.deleteMany({},{});
+        return BlogModel.deleteMany({},{});
     }
 }

@@ -1,8 +1,8 @@
 import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blog-view-model";
-import {blogsCollection} from "../db";
 import {ObjectId, SortDirection} from "mongodb";
 import {blogsMapping} from "../../functions/mapping";
 import {blogsPaginationViewModel} from "../../models/pagination-view-models";
+import {BlogModel} from "../../schemas/blog-schema";
 
 
 export const blogsQueryRepository = {
@@ -11,15 +11,15 @@ export const blogsQueryRepository = {
         sortBy: string, searchNameTerm: string, skip: number) : Promise<blogsPaginationViewModel>
     {
 
-        let allBlogs = await blogsCollection.find(
+        let allBlogs = await BlogModel.find(
             {name: {$regex: searchNameTerm, $options: 'i'}},
             )
             .skip(skip)
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
-            .toArray()
+            .lean()
 
-        const total = await blogsCollection.countDocuments(
+        const total = await BlogModel.countDocuments(
             { name: { $regex: searchNameTerm, $options: 'i' }})
 
         const pagesCount = Math.ceil(total / limit)
@@ -34,7 +34,7 @@ export const blogsQueryRepository = {
     },
 
     async findBlogById(_id: ObjectId): Promise<blogViewModelWithId | null> {
-        const blog: blogModelWithMongoId | null = await blogsCollection.findOne({_id});
+        const blog: blogModelWithMongoId | null = await BlogModel.findOne({_id});
         if (!blog) {
             return null
         }
@@ -49,7 +49,7 @@ export const blogsQueryRepository = {
     },
 
     async findBlogByBlogId(blogId: string): Promise<blogViewModelWithId | null> {
-        const blog: blogModelWithMongoId | null = await blogsCollection.findOne({_id: new ObjectId(blogId)},{});
+        const blog: blogModelWithMongoId | null = await BlogModel.findOne({_id: new ObjectId(blogId)},{});
         if (!blog) {
             return null
         }
