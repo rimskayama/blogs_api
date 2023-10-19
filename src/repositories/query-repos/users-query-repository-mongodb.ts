@@ -1,8 +1,8 @@
 import {ObjectId, SortDirection} from "mongodb";
 import {usersPaginationViewModel} from "../../models/pagination-view-models";
-import {usersCollection} from "../db";
 import {usersMapping} from "../../functions/mapping";
 import {userInputModel, userViewModelWithId} from "../../models/user-view-model";
+import {UserModel} from "../../schemas/user-schema";
 
 export const usersQueryRepository = {
     async findUsers(
@@ -10,7 +10,7 @@ export const usersQueryRepository = {
         sortBy: string, skip: number, searchLoginTerm: string, searchEmailTerm: string) : Promise<usersPaginationViewModel>
     {
 
-        let allUsers = await usersCollection.find(
+        let allUsers = await UserModel.find(
             {$or:
                     [{"accountData.login": {$regex: searchLoginTerm, $options: 'i'}},
                      {"accountData.email": {$regex: searchEmailTerm, $options: 'i'}}]}
@@ -19,9 +19,9 @@ export const usersQueryRepository = {
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .skip(skip)
-            .toArray()
+            .lean()
 
-        const total = await usersCollection.countDocuments(
+        const total = await UserModel.countDocuments(
             {$or:
                     [{"accountData.login": {$regex: searchLoginTerm, $options: 'i'}},
                         {"accountData.email": {$regex: searchEmailTerm, $options: 'i'}}]}
@@ -40,7 +40,7 @@ export const usersQueryRepository = {
 
     async findUserById (
         _id: ObjectId): Promise<userViewModelWithId | null> {
-        const user: userInputModel | null = await usersCollection.findOne({_id});
+        const user: userInputModel | null = await UserModel.findOne({_id});
         if (!user) {
             return null
         }

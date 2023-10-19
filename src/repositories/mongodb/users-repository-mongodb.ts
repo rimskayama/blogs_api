@@ -1,14 +1,14 @@
 import {userInputModel, userViewModelWithId} from "../../models/user-view-model";
 import {ObjectId} from "mongodb";
-import {usersCollection} from "../db";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
+import {UserModel} from "../../schemas/user-schema";
 
 export const usersRepository = {
 
     async createUser (newUser : userInputModel): Promise<userViewModelWithId> {
 
-        const result = await usersCollection.insertOne(newUser)
+        const result = await UserModel.insertMany([newUser])
         return {
             id: newUser._id.toString(),
             login: newUser.accountData.login,
@@ -19,7 +19,7 @@ export const usersRepository = {
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<userInputModel | null> {
 
-        const user: userInputModel | null = await usersCollection.findOne(
+        const user: userInputModel | null = await UserModel.findOne(
             {$or: [{"accountData.login": loginOrEmail}, {"accountData.email": loginOrEmail}]});
 
         if (!user) {
@@ -30,12 +30,12 @@ export const usersRepository = {
     },
 
     async findByConfirmationCode(code: string): Promise<userInputModel | null> {
-        const user: userInputModel | null = await usersCollection.findOne({"emailConfirmation.confirmationCode": code})
+        const user: userInputModel | null = await UserModel.findOne({"emailConfirmation.confirmationCode": code})
         return user || null
     },
 
     async updateConfirmation(_id: ObjectId) {
-        const updatedCode = await usersCollection.updateOne({_id}, {
+        const updatedCode = await UserModel.updateOne({_id}, {
             $set:
                 {
                     "emailConfirmation.isConfirmed": true
@@ -45,7 +45,7 @@ export const usersRepository = {
     },
 
     async updateConfirmationCode(_id: ObjectId) {
-        const updatedCode = await usersCollection.updateOne({_id}, {
+        const updatedCode = await UserModel.updateOne({_id}, {
             $set:
                 {
                     "emailConfirmation.confirmationCode": uuidv4(),
@@ -55,19 +55,19 @@ export const usersRepository = {
                     })
                 }
         })
-        return await usersCollection.findOne({_id})
+        return UserModel.findOne({_id});
     },
 
     async deleteUser(_id: ObjectId) {
-        const user = await usersCollection.findOne({_id}, {projection: {_id: 0}});
+        const user = await UserModel.findOne({_id}, {projection: {_id: 0}});
         if (user) {
-            return await usersCollection.deleteOne(user);
+            return UserModel.deleteOne({_id});
         }
         return null
     },
 
     async deleteAll() {
-        return await usersCollection.deleteMany({},{});
+        return UserModel.deleteMany({}, {});
     }
 
 }
