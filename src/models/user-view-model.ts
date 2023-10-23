@@ -27,4 +27,3 @@ export type APIsModel = {
     URL: string,
     date: Date
 }
-// todo объединить айди рефактор

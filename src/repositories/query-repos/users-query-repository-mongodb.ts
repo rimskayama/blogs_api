@@ -7,7 +7,8 @@ import {UserModel} from "../../schemas/user-schema";
 export const usersQueryRepository = {
     async findUsers(
         page: number, limit: number, sortDirection: SortDirection,
-        sortBy: string, skip: number, searchLoginTerm: string, searchEmailTerm: string) : Promise<usersPaginationViewModel>
+        sortBy: string, skip: number, searchLoginTerm: string, searchEmailTerm: string):
+        Promise<usersPaginationViewModel>
     {
 
         let allUsers = await UserModel.find(

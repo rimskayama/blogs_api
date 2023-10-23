@@ -8,7 +8,8 @@ export const devicesRepository = {
     },
 
     async getSession(deviceId: string, lastActiveDate: string) {
-        let session = await DeviceModel.findOne({deviceId: deviceId}, {lastActiveDate: lastActiveDate})
+        let session = await DeviceModel.findOne(
+            {deviceId: deviceId}, {lastActiveDate: lastActiveDate})
         if (session) {
             return session
         } return false

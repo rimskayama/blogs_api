@@ -27,7 +27,8 @@ export const commentsRepository = {
                 }
         })
 
-        const comment: commentViewModel | null = await CommentModel.findOne({_id}, {projection: {_id: 0}});
+        const comment: commentViewModel | null = await CommentModel.findOne(
+            {_id}, {projection: {_id: 0}});
         if (comment) {
             return true
         } else
