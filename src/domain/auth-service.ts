@@ -29,12 +29,19 @@ export const authService = {
                     minutes: 3
                 }),
                 isConfirmed: false
+            },
+            passwordConfirmation: {
+                passwordRecoveryCode: uuidv4(),
+                expirationDate: add(new Date(), {
+                    hours: 0,
+                    minutes: 3
+                }),
             }
         }
         const createResult = usersRepository.createUser(newUser)
 
         try {
-            await emailManager.sendEmail(newUser.accountData.email, newUser.emailConfirmation.confirmationCode)
+            await emailManager.sendRegistrationEmail(newUser.accountData.email, newUser.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
             await usersRepository.deleteUser(newUser._id)
@@ -58,7 +65,6 @@ export const authService = {
 
             } else return false
         }
-
     },
 
     async resendEmail(email: string): Promise<boolean> {
@@ -76,5 +82,38 @@ export const authService = {
             } return false
         }
         return false
-    }
+    },
+
+    async sendPasswordRecoveryEmail(email: string): Promise<boolean> {
+        const user = await usersRepository.findByLoginOrEmail(email)
+
+        if (user) {
+            let userWithUpdatedCode = await usersRepository.updatePasswordRecoveryCode(user._id)
+                try {
+                    await emailManager.sendPasswordRecoveryEmail(
+                        email, userWithUpdatedCode!.passwordConfirmation.passwordRecoveryCode)
+                    return true
+                } catch (error) {
+                    console.error('mail error')
+                    return false
+                }
+            } else return true
+    },
+
+    async confirmRecoveryCode (code: string): Promise<string | false> {
+        const userByCode = await usersRepository.findByRecoveryCode(code);
+
+        if (!userByCode) return false
+
+        if (userByCode.passwordConfirmation.passwordRecoveryCode === code
+                && userByCode.passwordConfirmation.expirationDate > new Date()) {
+                return userByCode._id.toString()
+        } else return false
+    },
+
+    async updatePassword(userId: string, password: string): Promise<boolean> {
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await usersService._generateHash(password, passwordSalt)
+        return await usersRepository.updatePassword(new ObjectId(userId), passwordHash, passwordSalt)
+    },
 }

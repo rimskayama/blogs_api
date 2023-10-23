@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
 import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {ObjectId} from "mongodb";
+import add from "date-fns/add";
 export const usersService = {
 
     async createUser(login: string, email: string, password: string): Promise<userViewModel> {
@@ -22,6 +23,13 @@ export const usersService = {
                 confirmationCode: uuidv4(),
                 expirationDate: new Date(),
                 isConfirmed: true
+            },
+            passwordConfirmation: {
+                passwordRecoveryCode: uuidv4(),
+                expirationDate: add(new Date(), {
+                    hours: 0,
+                    minutes: 3
+                }),
             }}
 
         return usersRepository.createUser(newUser)

@@ -30,7 +30,14 @@ export const usersRepository = {
     },
 
     async findByConfirmationCode(code: string): Promise<userInputModel | null> {
-        const user: userInputModel | null = await UserModel.findOne({"emailConfirmation.confirmationCode": code})
+        const user: userInputModel | null = await UserModel.findOne(
+            {"emailConfirmation.confirmationCode": code})
+        return user || null
+    },
+
+    async findByRecoveryCode(code: string): Promise<userInputModel | null> {
+        const user: userInputModel | null = await UserModel.findOne(
+            {"passwordConfirmation.passwordRecoveryCode": code})
         return user || null
     },
 
@@ -56,6 +63,31 @@ export const usersRepository = {
                 }
         })
         return UserModel.findOne({_id});
+    },
+
+    async updatePasswordRecoveryCode(_id: ObjectId) {
+        const updatedCode = await UserModel.updateOne({_id}, {
+            $set:
+                {
+                    "passwordConfirmation.passwordRecoveryCode": uuidv4(),
+                    "passwordConfirmation.expirationDate": add(new Date(),{
+                        hours: 0,
+                        minutes: 3
+                    })
+                }
+        })
+        return UserModel.findOne({_id});
+    },
+
+    async updatePassword(_id: ObjectId, passwordHash: string, passwordSalt: string) {
+        await UserModel.updateOne({_id}, {
+            $set:
+                {
+                    "accountData.passwordHash": passwordHash,
+                    "accountData.passwordSalt": passwordSalt
+                }
+        })
+        return true
     },
 
     async deleteUser(_id: ObjectId) {

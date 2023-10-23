@@ -20,7 +20,12 @@ export type userInputModel = {
         confirmationCode: string,
         expirationDate: Date,
         isConfirmed: boolean
-}}
+    },
+    passwordConfirmation: {
+        passwordRecoveryCode: string,
+        expirationDate: Date
+    }
+}
 
 export type APIsModel = {
     ip: string,

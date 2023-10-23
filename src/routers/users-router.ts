@@ -5,6 +5,7 @@ import {getPagination} from "../functions/pagination";
 import {basicAuthMiddleware} from "../middlewares/auth/auth-basic";
 import {ObjectId} from "mongodb";
 import {
+    checkEmailInDb,
     emailValidationMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware
@@ -33,6 +34,7 @@ usersRouter.post('/',
     loginValidationMiddleware,
     passwordValidationMiddleware,
     emailValidationMiddleware,
+    checkEmailInDb,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
     const newUser = await usersService.createUser(req.body.login, req.body.email, req.body.password)

@@ -117,6 +117,7 @@ authRouter.get('/me',
 authRouter.post('/registration',
     rateLimitMiddleware,
     emailValidationMiddleware,
+    checkEmailInDb,
     loginValidationMiddleware,
     passwordValidationMiddleware,
     errorsValidationMiddleware,
@@ -156,7 +157,32 @@ authRouter.post('/registration-email-resending',
              res.sendStatus(204)
          } else {
              res.status(400).json(
-                 { errorsMessages: [
-                     { message: "Your email was already confirmed", field: "email" }] })
+                 {
+                     errorsMessages: [
+                         {message: "Your email was already confirmed", field: "email"}]
+                 })
          }
 });
+authRouter.post('/password-recovery',
+    rateLimitMiddleware,
+    emailValidationMiddleware,
+    errorsValidationMiddleware,
+    async (req: Request, res: Response) => {
+
+    const result = await authService.sendPasswordRecoveryEmail(req.body.email)
+        if (result) {
+            return res.sendStatus(204)
+        } return res.sendStatus(400)
+    });
+authRouter.post('/new-password',
+    rateLimitMiddleware,
+    checkCodeInDb,
+    errorsValidationMiddleware,
+    async (req: Request, res: Response) => {
+
+    const userIdByCode = await authService.confirmRecoveryCode(req.body.code)
+        if (userIdByCode) {
+            const result = await authService.updatePassword(userIdByCode, req.body.password)
+            res.sendStatus(204)
+        } return res.sendStatus(400)
+    });
