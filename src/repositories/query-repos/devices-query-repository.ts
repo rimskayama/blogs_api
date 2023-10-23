@@ -1,13 +1,13 @@
 import {deviceViewModel} from "../../models/device-model";
-import {devicesCollection} from "../db";
 import {devicesMapping} from "../../functions/mapping";
+import {DeviceModel} from "../../schemas/device-schema";
 
 export const devicesQueryRepository = {
 
     async findDevices(userId: string): Promise<deviceViewModel[]> {
-        let allDevices = await devicesCollection.find(
+        let allDevices = await DeviceModel.find(
             {userId: userId},{})
-            .toArray()
+            .lean()
 
         return devicesMapping(allDevices)
     },

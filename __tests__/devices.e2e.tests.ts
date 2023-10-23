@@ -1,8 +1,21 @@
 import request from "supertest";
 import {app} from "../src/app-config";
+import mongoose from "mongoose";
+import dotenv from 'dotenv';
+dotenv.config()
+
 describe("/security/devices", () => {
+    const mongoURI = process.env.MONGO_URL|| 'mongodb://0.0.0.0:27017/blogs_api'
+
     beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
         await request(app).delete("/testing/all-data");
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
     })
 
     let createdUser1: any = {id: 0};
