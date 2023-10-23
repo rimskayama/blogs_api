@@ -111,9 +111,9 @@ export const authService = {
         } else return false
     },
 
-    async updatePassword(userId: string, password: string): Promise<boolean> {
+    async updatePassword(userId: string, newPassword: string): Promise<boolean> {
         const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await usersService._generateHash(password, passwordSalt)
+        const passwordHash = await usersService._generateHash(newPassword, passwordSalt)
         return await usersRepository.updatePassword(new ObjectId(userId), passwordHash, passwordSalt)
     },
 }

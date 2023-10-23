@@ -6,7 +6,7 @@ import {
     checkCodeInDb,
     checkEmailInDb, checkRecoveryCodeInDb,
     emailValidationMiddleware,
-    loginValidationMiddleware,
+    loginValidationMiddleware, newPasswordValidationMiddleware,
     passwordValidationMiddleware
 } from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
@@ -176,14 +176,14 @@ authRouter.post('/password-recovery',
     });
 authRouter.post('/new-password',
     rateLimitMiddleware,
-    passwordValidationMiddleware,
+    newPasswordValidationMiddleware,
     checkRecoveryCodeInDb,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
     const userIdByCode = await authService.confirmRecoveryCode(req.body.recoveryCode)
         if (userIdByCode) {
-            const result = await authService.updatePassword(userIdByCode, req.body.password)
-            res.sendStatus(204)
+            const result = await authService.updatePassword(userIdByCode, req.body.newPassword)
+            return res.sendStatus(204)
         } return res.sendStatus(400)
     });

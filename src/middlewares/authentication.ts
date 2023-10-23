@@ -31,6 +31,15 @@ export const passwordValidationMiddleware = body("password")
     .trim().isLength({min: 6, max: 20})
     .withMessage("password length should be minimum 6 and maximum 20 symbols")
 
+export const newPasswordValidationMiddleware = body("newPassword")
+
+    .exists().withMessage("password is required")
+
+    .isString().withMessage("type of password must be string")
+
+    .trim().isLength({min: 6, max: 20})
+    .withMessage("password length should be minimum 6 and maximum 20 symbols")
+
 export const emailValidationMiddleware = body("email")
     .exists().withMessage("email is required")
 
