@@ -1,6 +1,7 @@
 import {ObjectId} from "mongodb";
 
 export type userViewModel = {
+    id: string,
     login: string,
     email: string,
     createdAt: Date
@@ -21,18 +22,9 @@ export type userInputModel = {
         isConfirmed: boolean
 }}
 
-export type withMongoId = {
-    _id: ObjectId
-}
-
-export type withViewId = {
-    id: string
-}
-export type userModelWithMongoId = userViewModel & withMongoId;
-export type userViewModelWithId = userViewModel & withViewId;
-
 export type APIsModel = {
     ip: string,
     URL: string,
     date: Date
 }
+// todo объединить айди рефактор

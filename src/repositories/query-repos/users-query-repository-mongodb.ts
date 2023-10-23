@@ -1,7 +1,7 @@
 import {ObjectId, SortDirection} from "mongodb";
 import {usersPaginationViewModel} from "../../models/pagination-view-models";
 import {usersMapping} from "../../functions/mapping";
-import {userInputModel, userViewModelWithId} from "../../models/user-view-model";
+import {userInputModel, userViewModel} from "../../models/user-view-model";
 import {UserModel} from "../../schemas/user-schema";
 
 export const usersQueryRepository = {
@@ -39,7 +39,7 @@ export const usersQueryRepository = {
     },
 
     async findUserById (
-        _id: ObjectId): Promise<userViewModelWithId | null> {
+        _id: ObjectId): Promise<userViewModel | null> {
         const user: userInputModel | null = await UserModel.findOne({_id});
         if (!user) {
             return null

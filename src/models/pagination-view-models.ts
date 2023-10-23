@@ -1,6 +1,6 @@
 import {blogViewModelWithId} from "./blog-view-model";
 import {postViewModelWithId} from "./post-view-model";
-import {userViewModelWithId} from "./user-view-model";
+import {userViewModel} from "./user-view-model";
 import {commentViewModelWithId} from "./comments-view-model";
 
 export type blogsPaginationViewModel =
@@ -27,7 +27,7 @@ export type usersPaginationViewModel = {
         page: number;
         pageSize: number;
         totalCount: number;
-        items: userViewModelWithId[]
+        items: userViewModel[]
 }
 
 export type commentsPaginationViewModel = {

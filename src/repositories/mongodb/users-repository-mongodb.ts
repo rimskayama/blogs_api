@@ -1,4 +1,4 @@
-import {userInputModel, userViewModelWithId} from "../../models/user-view-model";
+import {userInputModel, userViewModel} from "../../models/user-view-model";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
@@ -6,7 +6,7 @@ import {UserModel} from "../../schemas/user-schema";
 
 export const usersRepository = {
 
-    async createUser (newUser : userInputModel): Promise<userViewModelWithId> {
+    async createUser (newUser : userInputModel): Promise<userViewModel> {
 
         const result = await UserModel.insertMany([newUser])
         return {
