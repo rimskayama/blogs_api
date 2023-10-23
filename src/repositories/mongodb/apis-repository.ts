@@ -1,4 +1,4 @@
-import {APIsCollection} from "../db";
+import {APIModel} from "../../schemas/api-schema";
 export const APIsRepository = {
     async addNewAPICall(URL: string, ip: string, date: Date) {
         const newAPICall = {
@@ -6,11 +6,11 @@ export const APIsRepository = {
             URL: URL,
             date: date
         }
-        return await APIsCollection.insertOne(newAPICall)
+        return await APIModel.insertMany([newAPICall])
     },
 
         async countAPICalls(URL: string, ip: string) : Promise<number> {
-            const allAPICalls = await APIsCollection.countDocuments(
+            const allAPICalls = await APIModel.countDocuments(
                 {
                     URL: URL,
                     ip: ip,

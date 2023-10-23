@@ -1,6 +1,3 @@
-import {MongoClient} from "mongodb";
-import {APIsModel} from "../models/user-view-model";
-import {deviceInputModel} from "../models/device-model";
 import mongoose from 'mongoose'
 import dotenv from 'dotenv';
 dotenv.config()
@@ -12,22 +9,14 @@ if (!mongoURI) {
     throw new Error('URL was not found')
 }
 
-export const client = new MongoClient(mongoURI);
-
-const db = client.db();
-export const devicesCollection = db.collection<deviceInputModel>("devices")
-export const APIsCollection = db.collection<APIsModel>("APIs")
-
 export async function runDB() {
     try {
         // Connect the client to the server
-        await client.connect();
         await mongoose.connect(mongoURI)
         // Establish and verity connection
         console.log("Connected successfully");
     } catch {
         console.log("Can't connect to DB")
-        await client.close();
         await mongoose.disconnect()
     }
 }

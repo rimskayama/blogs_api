@@ -9,7 +9,6 @@ import {usersRouter} from "./routers/users-router";
 import {commentsRouter} from "./routers/comments-router";
 import {devicesRouter} from "./routers/devices-router";
 
-
 export const app = express();
 app.use(express.json());
 
