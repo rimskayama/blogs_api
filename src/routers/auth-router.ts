@@ -4,7 +4,7 @@ import {jwtService} from "../application/jwt-service";
 import {authService} from "../domain/auth-service";
 import {
     checkCodeInDb,
-    checkEmailInDb,
+    checkEmailInDb, checkRecoveryCodeInDb,
     emailValidationMiddleware,
     loginValidationMiddleware,
     passwordValidationMiddleware
@@ -176,11 +176,12 @@ authRouter.post('/password-recovery',
     });
 authRouter.post('/new-password',
     rateLimitMiddleware,
-    checkCodeInDb,
+    passwordValidationMiddleware,
+    checkRecoveryCodeInDb,
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-    const userIdByCode = await authService.confirmRecoveryCode(req.body.code)
+    const userIdByCode = await authService.confirmRecoveryCode(req.body.recoveryCode)
         if (userIdByCode) {
             const result = await authService.updatePassword(userIdByCode, req.body.password)
             res.sendStatus(204)

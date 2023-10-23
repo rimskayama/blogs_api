@@ -35,9 +35,9 @@ export const usersRepository = {
         return user || null
     },
 
-    async findByRecoveryCode(code: string): Promise<userInputModel | null> {
+    async findByRecoveryCode(recoveryCode: string): Promise<userInputModel | null> {
         const user: userInputModel | null = await UserModel.findOne(
-            {"passwordConfirmation.passwordRecoveryCode": code})
+            {"passwordConfirmation.recoveryCode": recoveryCode})
         return user || null
     },
 
@@ -69,9 +69,9 @@ export const usersRepository = {
         const updatedCode = await UserModel.updateOne({_id}, {
             $set:
                 {
-                    "passwordConfirmation.passwordRecoveryCode": uuidv4(),
+                    "passwordConfirmation.recoveryCode": uuidv4(),
                     "passwordConfirmation.expirationDate": add(new Date(),{
-                        hours: 0,
+                        hours: 1,
                         minutes: 3
                     })
                 }

@@ -45,6 +45,9 @@ export const checkEmailInDb = body("email")
 
 export const checkCodeInDb = body("code")
     .isString()
+export const checkRecoveryCodeInDb = body("recoveryCode")
+    .isString()
+
 
 
 

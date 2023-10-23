@@ -23,8 +23,8 @@ export const UserSchema = new mongoose.Schema<userInputModel>({
     },
     passwordConfirmation: {
         type: {
-        passwordRecoveryCode: { type: String},
-        expirationDate: { type: Date}
+            recoveryCode: { type: String},
+            expirationDate: { type: Date}
         }
     }
 })

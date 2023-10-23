@@ -31,9 +31,9 @@ export const authService = {
                 isConfirmed: false
             },
             passwordConfirmation: {
-                passwordRecoveryCode: uuidv4(),
+                recoveryCode: uuidv4(),
                 expirationDate: add(new Date(), {
-                    hours: 0,
+                    hours: 1,
                     minutes: 3
                 }),
             }
@@ -91,7 +91,7 @@ export const authService = {
             let userWithUpdatedCode = await usersRepository.updatePasswordRecoveryCode(user._id)
                 try {
                     await emailManager.sendPasswordRecoveryEmail(
-                        email, userWithUpdatedCode!.passwordConfirmation.passwordRecoveryCode)
+                        email, userWithUpdatedCode!.passwordConfirmation.recoveryCode)
                     return true
                 } catch (error) {
                     console.error('mail error')
@@ -100,12 +100,12 @@ export const authService = {
             } else return true
     },
 
-    async confirmRecoveryCode (code: string): Promise<string | false> {
-        const userByCode = await usersRepository.findByRecoveryCode(code);
+    async confirmRecoveryCode (recoveryCode: string): Promise<string | false> {
+        const userByCode = await usersRepository.findByRecoveryCode(recoveryCode);
 
         if (!userByCode) return false
 
-        if (userByCode.passwordConfirmation.passwordRecoveryCode === code
+        if (userByCode.passwordConfirmation.recoveryCode === recoveryCode
                 && userByCode.passwordConfirmation.expirationDate > new Date()) {
                 return userByCode._id.toString()
         } else return false

@@ -22,7 +22,7 @@ export type userInputModel = {
         isConfirmed: boolean
     },
     passwordConfirmation: {
-        passwordRecoveryCode: string,
+        recoveryCode: string,
         expirationDate: Date
     }
 }
