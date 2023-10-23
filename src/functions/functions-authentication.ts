@@ -10,16 +10,6 @@ export const checkEmailExists = async (email: string) => {
 
 };
 
-export const checkEmailNotExists = async (email: string) => {
-
-    const user = await usersRepository.findByLoginOrEmail(email);
-
-    if (!user) {
-        return Promise.reject("User does not exist");
-    }
-
-};
-
 export const checkLoginExists = async (login: string) => {
 
     const user = await usersRepository.findByLoginOrEmail(login);
@@ -29,9 +19,17 @@ export const checkLoginExists = async (login: string) => {
     }
 };
 
-export const checkCodeExists = async (code: string) => {
+export const checkCodeExists = async (confirmationCode: string) => {
 
-    const user = await usersRepository.findByConfirmationCode(code);
+    const user = await usersRepository.findByConfirmationCode(confirmationCode);
+
+    if (!user) {
+        return Promise.reject("Code is incorrect");
+    }
+};
+export const checkRecoveryCodeExists = async (recoveryCode: string) => {
+
+    const user = await usersRepository.findByRecoveryCode(recoveryCode);
 
     if (!user) {
         return Promise.reject("Code is incorrect");
