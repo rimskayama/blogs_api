@@ -4,7 +4,7 @@ import {jwtService} from "../application/jwt-service";
 import {authService} from "../domain/auth-service";
 import {
     checkCodeInDb,
-    checkEmailInDb, checkRecoveryCodeInDb,
+    checkEmailInDb, checkIfEmailConfirmed, checkRecoveryCodeInDb,
     emailValidationMiddleware,
     loginValidationMiddleware, newPasswordValidationMiddleware,
     passwordValidationMiddleware
@@ -123,7 +123,8 @@ authRouter.post('/registration',
     errorsValidationMiddleware,
     async (req: Request, res: Response) => {
 
-        const newUser = await authService.registerUser(req.body.login, req.body.password, req.body.email)
+        const newUser = await authService.registerUser(
+            req.body.login, req.body.password, req.body.email)
         if (newUser) {
             res.status(204).json(newUser)
         } else
@@ -139,29 +140,22 @@ authRouter.post('/registration-confirmation',
         const result = await authService.confirmEmail(req.body.code)
 
         if (result) {
-            res.sendStatus(204)
-        } else
-            res.status(400).json(
-                { errorsMessages: [
-                    { message: "Incorrect code or it was already used", field: "code" }] })
+            return res.sendStatus(204)
+        }   return res.sendStatus(400)
 });
 
 authRouter.post('/registration-email-resending',
     rateLimitMiddleware,
-    checkEmailInDb,
+    emailValidationMiddleware,
+    checkIfEmailConfirmed,
     errorsValidationMiddleware,
      async (req: Request, res: Response) => {
 
          const result = await authService.resendEmail(req.body.email)
+
          if (result) {
-             res.sendStatus(204)
-         } else {
-             res.status(400).json(
-                 {
-                     errorsMessages: [
-                         {message: "Your email was already confirmed", field: "email"}]
-                 })
-         }
+             return res.sendStatus(204)
+         }   return res.sendStatus(400).json('mail error')
 });
 authRouter.post('/password-recovery',
     rateLimitMiddleware,

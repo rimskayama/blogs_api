@@ -71,17 +71,14 @@ export const authService = {
         const foundUser = await usersRepository.findByLoginOrEmail(email)
 
         if (foundUser) {
-            if (!foundUser.emailConfirmation.isConfirmed) {
-
-                let userWithUpdatedCode = await usersRepository.updateConfirmationCode(foundUser._id)
+            let userWithUpdatedCode = await usersRepository.updateConfirmationCode(foundUser._id)
 
                 if (userWithUpdatedCode) {
                     const result = await emailManager.resendEmail(email, userWithUpdatedCode.emailConfirmation.confirmationCode)
                     return true
                 } return false
-            } return false
         }
-        return false
+        return true
     },
 
     async sendPasswordRecoveryEmail(email: string): Promise<boolean> {

@@ -1,6 +1,6 @@
 import {body} from "express-validator";
 import {
-    checkCodeExists,
+    checkCodeExists, checkEmailConfirmed,
     checkEmailExists, checkLoginExists, checkRecoveryCodeExists
 } from "../functions/functions-authentication";
 const loginPattern = /^[a-zA-Z0-9_-]*$/;
@@ -52,6 +52,12 @@ export const checkEmailInDb = body("email")
     .custom( (value) => {
         return checkEmailExists(value)
     })
+
+export const checkIfEmailConfirmed = body("email")
+    .custom( (value) => {
+        return checkEmailConfirmed(value)
+    })
+
 
 export const checkCodeInDb = body("code")
     .isString()

@@ -10,6 +10,17 @@ export const checkEmailExists = async (email: string) => {
 
 };
 
+export const checkEmailConfirmed = async (email: string) => {
+
+    const user = await usersRepository.findByLoginOrEmail(email);
+
+    if (user) {
+        if (user.emailConfirmation.isConfirmed) {
+            return Promise.reject("Your email was already confirmed");
+        }
+    }
+};
+
 export const checkLoginExists = async (login: string) => {
 
     const user = await usersRepository.findByLoginOrEmail(login);
