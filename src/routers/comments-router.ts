@@ -12,8 +12,12 @@ import {likesService} from "../domain/likes-service";
 export const commentsRouter = Router({})
 
 commentsRouter.get("/:id", async (req: Request, res: Response) => {
-    const token = req.headers.authorization!.split(' ')[1]
-    const userId = await jwtService.getUserIdByAccessToken(token)
+    let userId: string | false = ''
+    if (req.headers.authorization) {
+        const token = req.headers.authorization!.split(' ')[1]
+        userId = await jwtService.getUserIdByAccessToken(token)
+    } else userId = false
+
     let comment = await commentsService.findCommentById(req.params.id, userId);
     if (comment) {
         res.json(comment);

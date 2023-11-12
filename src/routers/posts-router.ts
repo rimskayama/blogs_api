@@ -57,8 +57,11 @@ postsRouter.get("/:postId/comments",
     async (req: Request, res: Response) => {
     let checkPost = await postsQueryRepository.findPostById(new ObjectId(req.params.postId));
 
-    const token = req.headers.authorization!.split(' ')[1]
-    const userId = await jwtService.getUserIdByAccessToken(token)
+    let userId: string | false = ''
+    if (req.headers.authorization) {
+        const token = req.headers.authorization!.split(' ')[1]
+        userId = await jwtService.getUserIdByAccessToken(token)
+    } else userId = false
 
     const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
     const postId = req.params.postId;

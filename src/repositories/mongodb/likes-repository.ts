@@ -28,7 +28,6 @@ export const likesRepository = {
         await LikeModel.insertMany([newStatus])
         const like = await LikeModel.findOne (
             {$and: [{commentId: commentId}, {userId: userId}]})
-        console.log(like, 'when created')
         if (like) {
             return true
         } return false
