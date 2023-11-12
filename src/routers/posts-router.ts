@@ -57,14 +57,19 @@ postsRouter.get("/:postId/comments",
     async (req: Request, res: Response) => {
     let checkPost = await postsQueryRepository.findPostById(new ObjectId(req.params.postId));
 
+    const token = req.headers.authorization!.split(' ')[1]
+    const userId = await jwtService.getUserIdByAccessToken(token)
+
     const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
     const postId = req.params.postId;
 
     if (checkPost) {
-        let comments = await commentsQueryRepository.findCommentsByPostId(postId, page, limit, sortDirection, sortBy, skip);
+        let comments = await commentsQueryRepository.findCommentsByPostId(
+            postId, page, limit, sortDirection, sortBy, skip, userId);
         res.status(200).json(comments);
     } else res.sendStatus(404)
 })
+
 // create comment by postId
 postsRouter.post('/:postId/comments',
     authDevicesMiddleware,

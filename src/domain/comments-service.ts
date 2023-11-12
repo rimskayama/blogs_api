@@ -6,6 +6,10 @@ import {postsQueryRepository} from "../repositories/query-repos/posts-query-repo
 
 export const commentsService = {
 
+    async findCommentById(id: string, userId: string | false) {
+        return await commentsRepository.findCommentById(new ObjectId(id), userId)
+    },
+
     async createComment(content: string, userId: string, postId: string) {
 
         let foundPostById = await postsQueryRepository.findPostById(new ObjectId(postId));
@@ -22,19 +26,24 @@ export const commentsService = {
                 userLogin: foundUserById.login
                 },
                 createdAt: (new Date()).toISOString(),
+                likesInfo: {
+                    likesCount: 0,
+                    dislikesCount: 0,
+                    myStatus: "None"
+                }
             }
             return await commentsRepository.createComment(newComment);
         } else return null
 
     },
 
-    async updateComment(_id: ObjectId, content: string) {
-        return await commentsRepository.updateComment(_id, content);
+    async updateComment(id: string, content: string) {
+        return await commentsRepository.updateComment(new ObjectId(id), content);
 
     },
 
-    async deleteComment(_id: ObjectId) {
-        return await commentsRepository.deleteComment(_id);
+    async deleteComment(id: string) {
+        return await commentsRepository.deleteComment(new ObjectId(id));
     },
 
     async deleteAll() {

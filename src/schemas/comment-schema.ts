@@ -12,7 +12,14 @@ export const CommentSchema = new mongoose.Schema<commentModelWithPostId>({
         userId: {type: String, require: true},
         userLogin: {type: String, require: true}}
     },
-    createdAt: {type: String, require: true}
+    createdAt: {type: String, require: true},
+    likesInfo: {
+        type: {
+        likesCount: {type: Number, default: 0},
+        dislikesCount: {type: Number, default: 0},
+        myStatus: {type: String, default: "None"}
+    }
+    }
 
 })
 export const CommentModel = mongoose.model<commentModelWithPostId>('comments', CommentSchema)

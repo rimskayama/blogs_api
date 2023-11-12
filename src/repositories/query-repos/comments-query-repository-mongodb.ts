@@ -1,28 +1,12 @@
-import {ObjectId, SortDirection} from "mongodb";
+import {SortDirection} from "mongodb";
 import {commentsMapping} from "../../functions/mapping";
-import {commentModelWithMongoId, commentViewModelWithId} from "../../models/comments-view-model";
 import {CommentModel} from "../../schemas/comment-schema";
+import {likesService} from "../../domain/likes-service";
 
 export const commentsQueryRepository = {
 
-    async findCommentById(_id: ObjectId): Promise<commentViewModelWithId | null> {
-        const comment: commentModelWithMongoId | null = await CommentModel.findOne({_id});
-        if (!comment) {
-            return null;
-        }
-        return {
-            id: comment._id.toString(),
-            content: comment.content,
-            commentatorInfo: {
-                userId: comment.commentatorInfo.userId,
-                userLogin: comment.commentatorInfo.userLogin
-            },
-            createdAt: comment.createdAt,
-        };
-    },
-
     async findCommentsByPostId(postId: string, page: number, limit: number, sortDirection: SortDirection,
-                            sortBy: string, skip: number) {
+                               sortBy: string, skip: number, userId: string | false) {
         const commentsByPostId = await CommentModel.find(
             {postId: postId},
         )
@@ -30,6 +14,23 @@ export const commentsQueryRepository = {
             .limit(limit)
             .sort( {[sortBy]: sortDirection})
             .lean()
+
+        let idList = []
+        for (let i = 0; i < commentsByPostId.length; i++) {
+            idList.push(commentsByPostId[i]._id)
+            console.log(idList)
+        }
+
+        let statusList: string[] = []
+        for (let i = 0; i < commentsByPostId.length; i++) {
+            let likeStatus = await likesService.getUserLikeStatus(commentsByPostId[i]._id, userId)
+            statusList.push(likeStatus)
+            console.log(statusList)
+        }
+
+        for (let i = 0; i < commentsByPostId.length; i++) {
+            commentsByPostId.map((obj, number) => obj.likesInfo.myStatus = statusList[number])
+        }
 
         const total = await CommentModel.countDocuments({postId: postId})
 

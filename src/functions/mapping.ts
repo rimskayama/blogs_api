@@ -1,4 +1,3 @@
-
 import {blogModelWithMongoId} from "../models/blog-view-model";
 import {postModelWithMongoId} from "../models/post-view-model";
 import {userInputModel} from "../models/user-view-model";
@@ -44,15 +43,20 @@ export const usersMapping = (array : userInputModel[]) => {
 
 export const commentsMapping = (array: commentModelWithMongoId[]) => {
     return array.map((obj) => {
-       return {
-           id: obj._id.toString(),
-           content: obj.content,
-           commentatorInfo: {
-               userId: obj.commentatorInfo.userId,
-               userLogin: obj.commentatorInfo.userLogin
-           },
-           createdAt: obj.createdAt,
-       };
+        return {
+            id: obj._id.toString(),
+            content: obj.content,
+            commentatorInfo: {
+                userId: obj.commentatorInfo.userId,
+                userLogin: obj.commentatorInfo.userLogin
+            },
+            createdAt: obj.createdAt,
+            likesInfo: {
+                likesCount: obj.likesInfo.likesCount,
+                dislikesCount: obj.likesInfo.dislikesCount,
+                myStatus: obj.likesInfo.myStatus
+            }
+        };
     })
 }
 

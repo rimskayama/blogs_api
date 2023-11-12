@@ -7,6 +7,11 @@ export type commentViewModel = {
         userLogin: string
     }
     createdAt: string,
+    likesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: string
+    }
 }
 
 export type commentModelWithPostId = {
@@ -18,6 +23,11 @@ export type commentModelWithPostId = {
         userLogin: string
     }
     createdAt: string,
+    likesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: string
+    }
 }
 
 
