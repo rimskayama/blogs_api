@@ -14,7 +14,7 @@ export const commentsRepository = {
         if (!comment) {
             return null;
         }
-        const userLikeStatus = await likesService.getUserLikeStatus(comment._id, userId)
+        const userLikeStatus = await likesService.getUserLikeStatus(comment._id.toString(), userId)
         return {
             id: comment._id.toString(),
             content: comment.content,
@@ -65,7 +65,7 @@ export const commentsRepository = {
 
     async updateCommentLikes(commentId: string, likesCount: number, dislikesCount: number) {
 
-        CommentModel.updateOne({_id: commentId}, {
+        await CommentModel.updateOne({_id: new ObjectId(commentId)}, {
             $set:
                 {
                     "likesInfo.likesCount": likesCount,

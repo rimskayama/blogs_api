@@ -23,7 +23,7 @@ export const commentsQueryRepository = {
 
         let statusList: string[] = []
         for (let i = 0; i < commentsByPostId.length; i++) {
-            let likeStatus = await likesService.getUserLikeStatus(commentsByPostId[i]._id, userId)
+            let likeStatus = await likesService.getUserLikeStatus(commentsByPostId[i]._id.toString(), userId)
             statusList.push(likeStatus)
             console.log(statusList)
         }

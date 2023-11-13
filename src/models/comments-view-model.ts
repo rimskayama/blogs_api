@@ -39,5 +39,5 @@ export type withViewId = {
     id: string
 }
 
-export type commentModelWithMongoId = commentViewModel & withMongoId;
+export type commentModelWithMongoId = commentModelWithPostId & withMongoId;
 export type commentViewModelWithId = commentViewModel & withViewId;

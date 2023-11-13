@@ -8,9 +8,9 @@ export type likeViewModel = {
 
 export type likeInfoModel = {
     _id: ObjectId,
-    commentId: ObjectId,
+    commentId: string,
     status: string,
-    userId: ObjectId,
+    userId: string,
     userLogin: string,
     lastModified: string
 }

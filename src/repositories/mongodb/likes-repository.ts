@@ -1,7 +1,6 @@
 import {likeInfoModel} from "../../models/like-view-model";
 import {LikeModel} from "../../schemas/like-schema";
 import {commentsRepository} from "./comments-repository-mongodb";
-import {ObjectId} from "mongodb";
 
 export const likesRepository = {
 
@@ -33,7 +32,7 @@ export const likesRepository = {
         } return false
     },
 
-    async checkLikeInDB(commentId: ObjectId, userId: string) {
+    async checkLikeInDB(commentId: string, userId: string) {
         const like = await LikeModel.findOne(
             {$and: [{commentId: commentId}, {userId: userId}]})
         if (like) {

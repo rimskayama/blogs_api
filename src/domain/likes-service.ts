@@ -9,9 +9,9 @@ export const likesService = {
         const user = await usersQueryRepository.findUserById(new ObjectId(userId))
         const like = {
             _id: new ObjectId(),
-            commentId: new ObjectId(comment.id),
+            commentId: comment.id,
             status: likeStatus,
-            userId: new ObjectId(userId),
+            userId: userId,
             userLogin: user!.login,
             lastModified: new Date().toISOString()
         }
@@ -24,7 +24,7 @@ export const likesService = {
             return true
         } else {
             //Like or Dislike
-            const likeInDB = await likesRepository.checkLikeInDB(new ObjectId(commentId), userId)
+            const likeInDB = await likesRepository.checkLikeInDB(commentId, userId)
             if (!likeInDB) return false // can be created
             if (likeInDB) {
                 if (likeInDB.status === likeStatus) return true
@@ -36,7 +36,7 @@ export const likesService = {
         }
     },
 
-    async getUserLikeStatus (commentId: ObjectId, userId: string | false) {
+    async getUserLikeStatus (commentId: string, userId: string | false) {
         let likeStatus = "None"
         if (userId) {
             const likeInDB = await likesRepository.checkLikeInDB(commentId, userId)
