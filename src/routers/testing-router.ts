@@ -1,18 +1,31 @@
 import { Request, Response, Router } from "express";
-import {blogsService} from "../domain/blogs-service";
-import {postsService} from "../domain/posts-service";
-import {usersService} from "../domain/users-service";
-import {commentsService} from "../domain/comments-service";
+import {BlogsService} from "../domain/blogs-service";
+import {PostsService} from "../domain/posts-service";
+import {UsersService} from "../domain/users-service";
+import {CommentsService} from "../domain/comments-service";
 
 export const testingRouter = Router({});
 
-// DELETE ALL
-testingRouter.delete("/all-data",
-    async (req: Request, res: Response) => {
-    const deleteBlogs = await blogsService.deleteAll();
-    const deletePosts = await postsService.deleteAll();
-    const deleteUsers = await usersService.deleteAll();
-    const deleteComments = await commentsService.deleteAll();
-    res.sendStatus(204);
+class TestingController {
+    private blogsService: BlogsService;
+    private postsService: PostsService;
+    private usersService: UsersService;
+    private commentsService: CommentsService;
+    constructor() {
+        this.blogsService = new BlogsService()
+        this.postsService = new PostsService()
+        this.usersService = new UsersService()
+        this.commentsService = new CommentsService()
+    }
 
-})
+    async deleteAll (req: Request, res: Response) {
+        await this.blogsService.deleteAll();
+        await this.postsService.deleteAll();
+        await this.usersService.deleteAll();
+        await this.commentsService.deleteAll();
+        res.sendStatus(204);
+    }
+}
+    const testingController = new TestingController()
+
+testingRouter.delete("/all-data", testingController.deleteAll.bind(testingController))

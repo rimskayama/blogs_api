@@ -1,11 +1,11 @@
-import {deviceInputModel} from "../../models/device-model";
+import {Device} from "../../models/device-model";
 import {DeviceModel} from "../../schemas/device-schema";
 
-export const devicesRepository = {
+export class DevicesRepository {
 
-    async createNewSession(refreshTokenMeta: deviceInputModel) {
-        return await DeviceModel.insertMany([refreshTokenMeta])
-    },
+    async createNewSession(device: Device) {
+        return await DeviceModel.insertMany([device])
+    }
 
     async getSession(deviceId: string, lastActiveDate: string) {
         let session = await DeviceModel.findOne(
@@ -13,14 +13,14 @@ export const devicesRepository = {
         if (session) {
             return session
         } return false
-    },
+    }
 
     async getSessionByDeviceId(deviceId: string) {
         let session = await DeviceModel.findOne({deviceId: deviceId})
         if (session) {
             return session
         } return false
-    },
+    }
 
     async updateLastActiveDate(deviceId: string, lastActiveDate: string) {
         return DeviceModel.updateOne({deviceId: deviceId}, {
@@ -29,15 +29,14 @@ export const devicesRepository = {
                     lastActiveDate: lastActiveDate
                 }
         });
-    },
+    }
 
     async terminateAllSessions(userId: string, deviceId: string) {
         return DeviceModel.deleteMany(
             {
                 $and: [{userId}, {deviceId: {$ne: deviceId}}]
             });
-    },
-
+    }
 
     async terminateSession(deviceId: string) {
         await DeviceModel.deleteOne({deviceId: deviceId})

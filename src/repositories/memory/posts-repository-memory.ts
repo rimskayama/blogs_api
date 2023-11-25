@@ -1,12 +1,11 @@
-import {postViewModel, postViewModelWithId} from "../../models/post-view-model";
+import {postViewModel} from "../../models/post-view-model";
 import {randomNumber} from "../../functions/randomNumber";
 
-const posts : postViewModelWithId[] = []
+const posts : postViewModel[] = []
 export const postsRepository = {
     findPosts(name: string) {
         if (name) {
-            let allPosts= posts.filter(b => b.title.indexOf(name) > -1)
-            return allPosts;
+            return posts.filter(b => b.title.indexOf(name) > -1);
         } else return posts
     },
     findPostById(id: string) {
@@ -18,7 +17,7 @@ export const postsRepository = {
 
     },
     createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
-        const newPost : postViewModelWithId = {
+        const newPost : postViewModel = {
             id: randomNumber(0,999999),
             title: title,
             shortDescription: shortDescription,

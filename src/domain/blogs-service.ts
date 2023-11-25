@@ -1,35 +1,34 @@
-import {blogModelWithMongoId, blogViewModelWithId} from "../models/blog-view-model";
+import {Blog, blogViewModel} from "../models/blog-view-model";
 import {ObjectId} from "mongodb";
-import {blogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
+import {BlogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
+import {BlogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
 
-export const blogsService  = {
+export class BlogsService {
+    blogsRepository: BlogsRepository
+    blogsQueryRepository: BlogsQueryRepository
+    constructor() {
+        this.blogsRepository = new BlogsRepository()
+        this.blogsQueryRepository = new BlogsQueryRepository()
+    }
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<blogViewModel> {
 
-    async createBlog(_id: ObjectId, name: string, description: string,
-                     websiteUrl: string, isMembership: boolean): Promise<blogViewModelWithId> {
+        const newBlog = new Blog(name, description, websiteUrl)
 
-        const newBlog: blogModelWithMongoId = {
-            _id: new ObjectId(),
-            name: name,
-            description: description,
-            websiteUrl: websiteUrl,
-            createdAt: (new Date()).toISOString(),
-            isMembership: isMembership || false,
-        }
-        return await blogsRepository.createBlog(newBlog);
-    },
+        return await this.blogsRepository.createBlog(newBlog);
+    }
 
     async updateBlog(_id: ObjectId, name: string, description: string, websiteUrl: string, isMembership: boolean | false):
-        Promise<blogViewModelWithId | boolean> {
+        Promise<blogViewModel | boolean> {
 
-        return await blogsRepository.updateBlog(_id, name, description, websiteUrl, isMembership);
+        return await this.blogsRepository.updateBlog(_id, name, description, websiteUrl, isMembership);
 
-    },
+    }
 
     async deleteBlog(_id: ObjectId) {
-        return await blogsRepository.deleteBlog(_id);
-    },
+        return await this.blogsRepository.deleteBlog(_id);
+    }
 
     async deleteAll() {
-        return await blogsRepository.deleteAll();
+        return await this.blogsRepository.deleteAll();
     }
 }

@@ -1,20 +1,37 @@
 import {ObjectId} from "mongodb";
 
-export type blogViewModel =
-    {
-        name: string;
-        description: string;
-        websiteUrl: string;
-        createdAt?: string;
-        isMembership: boolean | false;
+export class Blog {
+    _id: ObjectId;
+    isMembership: boolean;
+    createdAt?: string
+    constructor(
+        public name: string,
+        public description: string,
+        public websiteUrl: string
+
+    ) {
+       this._id = new ObjectId();
+       this.isMembership = false;
+       this.createdAt = new Date().toISOString()
+    }
+
+    static getViewBlog(blogFromDb: Blog): blogViewModel {
+        return {
+            id: blogFromDb._id.toString(),
+            name: blogFromDb.name,
+            description: blogFromDb.description,
+            websiteUrl: blogFromDb.websiteUrl,
+            isMembership: blogFromDb.isMembership,
+            createdAt: blogFromDb.createdAt,
+        }
+    }
 }
 
-export type withMongoId = {
-    _id: ObjectId
+export type blogViewModel = {
+        id: string
+        name: string,
+        description: string,
+        websiteUrl: string,
+        isMembership: boolean | false,
+        createdAt?: string
 }
-
-export type withViewId = {
-    id: string
-}
-export type blogModelWithMongoId = blogViewModel & withMongoId;
-export type blogViewModelWithId = blogViewModel & withViewId;

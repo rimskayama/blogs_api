@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
-import {userInputModel} from "../models/user-view-model";
+import {User} from "../models/user-view-model";
 import {ObjectId} from "mongodb";
 
-export const UserSchema = new mongoose.Schema<userInputModel>({
+export const UserSchema = new mongoose.Schema<User>({
 
     _id: { type: ObjectId, require: true },
     accountData: {
@@ -28,4 +28,4 @@ export const UserSchema = new mongoose.Schema<userInputModel>({
         }
     }
 })
-export const UserModel = mongoose.model<userInputModel>('users', UserSchema)
+export const UserModel = mongoose.model<User>('users', UserSchema)

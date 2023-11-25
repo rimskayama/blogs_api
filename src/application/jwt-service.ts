@@ -2,21 +2,21 @@ import jwt from "jsonwebtoken"
 import {settings} from "../settings";
 import {ObjectId} from "mongodb";
 
-export const jwtService  = {
+export class JwtService {
     async createJWT(userId: ObjectId) {
         const token = jwt.sign({userId: userId}, settings.JWT_SECRET,
             {expiresIn: '5m'})
         return {
             "accessToken": token
-            }
-    },
+        }
+    }
+
     async createRefreshToken(userId: ObjectId, deviceId: string) {
         const refreshToken = jwt.sign(
             {userId: userId, deviceId: deviceId}, settings.refreshTokenSecret,
             {expiresIn: '10m'})
         return refreshToken
-    },
-
+    }
 
     async getDeviceIdByRefreshToken(token: string) {
         try {
@@ -24,7 +24,8 @@ export const jwtService  = {
             return result.deviceId.toString()
         } catch (error) {
             return false
-        }},
+        }
+    }
 
     async getUserIdByAccessToken(token: string) {
         try {
@@ -33,7 +34,7 @@ export const jwtService  = {
         } catch (error) {
             return false
         }
-    },
+    }
 
     async getLastActiveDateByRefreshToken(token: string) {
         try {
@@ -43,5 +44,4 @@ export const jwtService  = {
             return false
         }
     }
-
 }

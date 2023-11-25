@@ -1,5 +1,7 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtService} from "../../application/jwt-service";
+import {JwtService} from "../../application/jwt-service";
+
+const jwtService = new JwtService();
 
 export const authDevicesMiddleware = async (req: Request, res: Response, next: NextFunction
 ) => {

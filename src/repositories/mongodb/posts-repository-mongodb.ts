@@ -1,26 +1,18 @@
-import {postModelWithMongoId, postViewModel, postViewModelWithId} from "../../models/post-view-model";
+import {Post, postViewModel} from "../../models/post-view-model";
 import {ObjectId} from "mongodb";
 import {PostModel} from "../../schemas/post-schema";
 
-export const postsRepository = {
+export class PostsRepository {
 
-    async createPost(newPost : postModelWithMongoId): Promise<postViewModelWithId> {
+    async createPost(newPost : Post): Promise<postViewModel> {
 
-        const result = await PostModel.insertMany([newPost]);
-        return {
-            id: newPost._id.toString(),
-            title: newPost.title,
-            shortDescription: newPost.shortDescription,
-            content: newPost.content,
-            blogId: newPost.blogId,
-            blogName: newPost.blogName,
-            createdAt: newPost.createdAt,
-        }
-    },
+        await PostModel.insertMany([newPost]);
+        return Post.getViewPost(newPost)
+    }
 
     async updatePost(_id: ObjectId, title: string, shortDescription: string,
                      content: string, blogId: string) {
-        const updatedPost = await PostModel.updateOne({_id}, {
+        await PostModel.updateOne({_id}, {
             $set:
                 {
                     title: title,
@@ -35,7 +27,7 @@ export const postsRepository = {
             return true
         } else
             return false
-    },
+    }
 
     async deletePost(_id: ObjectId) {
         const post = await PostModel.findOne({_id},{projection: {_id: 0}});
@@ -43,7 +35,7 @@ export const postsRepository = {
             return PostModel.deleteOne({_id});
         }
         return null
-    },
+    }
 
     async deleteAll() {
         return PostModel.deleteMany({}, {});

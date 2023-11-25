@@ -6,11 +6,18 @@ export type likeViewModel = {
     myStatus: string
 }
 
-export type likeInfoModel = {
-    _id: ObjectId,
-    commentId: string,
-    status: string,
-    userId: string,
-    userLogin: string,
-    lastModified: string
+export class Like {
+    _id: ObjectId;
+    lastModified: string;
+    constructor(
+        public commentId: string,
+        public status: string,
+        public userId: string,
+        public userLogin: string,
+    ) {
+        this._id = new ObjectId();
+        this.lastModified = new Date().toISOString()
+    }
+
+
 }

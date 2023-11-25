@@ -1,9 +1,7 @@
-import {likeInfoModel} from "../../models/like-view-model";
+import {Like} from "../../models/like-view-model";
 import {LikeModel} from "../../schemas/like-schema";
-import {commentsRepository} from "./comments-repository-mongodb";
 
-export const likesRepository = {
-
+export class LikesRepository {
     async countLikes(commentId: string) {
         const likesCount = await LikeModel.countDocuments(
             {
@@ -17,10 +15,12 @@ export const likesRepository = {
                 commentId: commentId,
             }
         )
-        return await commentsRepository.updateCommentLikes(commentId, likesCount, dislikesCount)
-    },
+        return {
+            likesCount: likesCount,
+            dislikesCount: dislikesCount}
+    }
 
-    async setLikeStatus(newStatus: likeInfoModel) {
+    async setLikeStatus(newStatus: Like) {
 
         const commentId = newStatus.commentId
         const userId = newStatus.userId
@@ -30,7 +30,7 @@ export const likesRepository = {
         if (like) {
             return true
         } return false
-    },
+    }
 
     async checkLikeInDB(commentId: string, userId: string) {
         const like = await LikeModel.findOne(
@@ -38,7 +38,7 @@ export const likesRepository = {
         if (like) {
             return like
         } return false
-    },
+    }
 
     async updateLikeStatus(likeStatus: string, commentId: string, userId: string) {
         return LikeModel.findOneAndUpdate({$and: [{commentId: commentId}, {userId: userId}]}, {
@@ -48,7 +48,7 @@ export const likesRepository = {
                     lastModified: new Date().toISOString()
                 }
         });
-    },
+    }
 
     async removeLike(commentId: string, userId: string) {
         await LikeModel.deleteOne({$and: [{commentId: commentId}, {userId: userId}]});
@@ -57,7 +57,7 @@ export const likesRepository = {
             return true
         }
         return false
-    },
+    }
 
     // async getCommentLikes(commentId: string) {
     //     const commentLikes = await LikeModel.find({commentId: commentId}).lean()

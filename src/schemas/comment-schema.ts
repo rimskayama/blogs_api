@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
-import {commentModelWithMongoId} from "../models/comments-view-model";
+import {Comment} from "../models/comments-view-model";
 import {ObjectId} from "mongodb";
 
-export const CommentSchema = new mongoose.Schema<commentModelWithMongoId>({
+export const CommentSchema = new mongoose.Schema<Comment>({
 
     _id: { type: ObjectId, require: true },
     postId: {type: String, require: true},
@@ -22,4 +22,4 @@ export const CommentSchema = new mongoose.Schema<commentModelWithMongoId>({
     }
 
 })
-export const CommentModel = mongoose.model<commentModelWithMongoId>('comments', CommentSchema)
+export const CommentModel = mongoose.model<Comment>('comments', CommentSchema)

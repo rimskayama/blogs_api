@@ -25,7 +25,6 @@ export const postDescriptionValidationMiddleware = body("shortDescription")
     .trim()
     .isLength({min: 1, max: 100})
     .withMessage("short description length should be minimum 1 and maximum 100 symbols")
-
 export const postContentValidationMiddleware = body("content")
     .exists()
     .withMessage('content is required')

@@ -1,7 +1,7 @@
-import {blogViewModelWithId} from "./blog-view-model";
-import {postViewModelWithId} from "./post-view-model";
+import {blogViewModel} from "./blog-view-model";
+import {postViewModel} from "./post-view-model";
 import {userViewModel} from "./user-view-model";
-import {commentViewModelWithId} from "./comments-view-model";
+import {commentViewModel} from "./comments-view-model";
 
 export type blogsPaginationViewModel =
     {
@@ -9,7 +9,7 @@ export type blogsPaginationViewModel =
         page: number;
         pageSize: number;
         totalCount: number;
-        items: blogViewModelWithId[]
+        items: blogViewModel[]
 
     }
 
@@ -18,7 +18,7 @@ export type postsPaginationViewModel = {
         page: number;
         pageSize: number;
         totalCount: number;
-        items: postViewModelWithId[]
+        items: postViewModel[]
 
 }
 
@@ -35,6 +35,6 @@ export type commentsPaginationViewModel = {
         page: number;
         pageSize: number;
         totalCount: number;
-        items: commentViewModelWithId[]
+        items: commentViewModel[]
 }
 

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import {postViewModel} from "../models/post-view-model";
+import {Post} from "../models/post-view-model";
 
-export const PostSchema = new mongoose.Schema<postViewModel>({
+export const PostSchema = new mongoose.Schema<Post>({
     title: { type: String, require: true },
     shortDescription: { type: String, require: true },
     content: { type: String, require: true },
@@ -9,4 +9,4 @@ export const PostSchema = new mongoose.Schema<postViewModel>({
     blogName: { type: String, require: true },
     createdAt: { type: String, default: Date.now.toString() },
 })
-export const PostModel = mongoose.model<postViewModel>('posts', PostSchema)
+export const PostModel = mongoose.model<Post>('posts', PostSchema)

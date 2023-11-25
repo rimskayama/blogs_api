@@ -1,43 +1,37 @@
-import {userInputModel, userViewModel} from "../models/user-view-model";
+import {User, userViewModel} from "../models/user-view-model";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
-import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {ObjectId} from "mongodb";
 import add from "date-fns/add";
-export const usersService = {
+import {UsersRepository} from "../repositories/mongodb/users-repository-mongodb";
+import {UsersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
+
+export class UsersService {
+    usersRepository: UsersRepository
+    usersQueryRepository: UsersQueryRepository
+    constructor() {
+        this.usersRepository = new UsersRepository()
+        this.usersQueryRepository = new UsersQueryRepository()
+    }
 
     async createUser(login: string, email: string, password: string): Promise<userViewModel> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
 
-        const newUser: userInputModel = {
-            _id: new ObjectId(),
-            accountData: {
-                login: login,
-                email,
-                passwordHash,
-                passwordSalt,
-                createdAt: new Date(),
-            },
-            emailConfirmation: {
-                confirmationCode: uuidv4(),
-                expirationDate: new Date(),
-                isConfirmed: true
-            },
-            passwordConfirmation: {
-                recoveryCode: uuidv4(),
-                expirationDate: add(new Date(), {
+        const newUser = new User({login, email, passwordHash, passwordSalt, createdAt: new Date()},
+            {confirmationCode: uuidv4(), expirationDate: new Date(), isConfirmed: true},
+            {recoveryCode: uuidv4(), expirationDate: add(new Date(), {
                     hours: 1,
                     minutes: 3
-                }),
-            }}
+                })
+            })
 
-        return usersRepository.createUser(newUser)
-    },
+        return this.usersRepository.createUser(newUser)
+    }
 
     async checkCredentials(loginOrEmail: string, password: string) {
 
-        const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
+        const user = await this.usersRepository.findByLoginOrEmail(loginOrEmail)
         if (!user) return false // login or password
         if (user) {
             const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
@@ -45,18 +39,17 @@ export const usersService = {
                 return false // password
             } else return user
         } return false
-    },
+    }
 
     async _generateHash(password: string, salt: string) {
-        const hash = await bcrypt.hash(password, salt)
-        return hash
-    },
+        return await bcrypt.hash(password, salt)
+    }
 
     async deleteUser(_id: ObjectId) {
-        return await usersRepository.deleteUser(_id);
-    },
+        return await this.usersRepository.deleteUser(_id);
+    }
 
     async deleteAll() {
-        return await usersRepository.deleteAll();
+        return await this.usersRepository.deleteAll();
     }
 }

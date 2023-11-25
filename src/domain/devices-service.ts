@@ -1,34 +1,34 @@
-import {devicesRepository} from "../repositories/mongodb/devices-repository-mongodb";
-import {jwtService} from "../application/jwt-service";
+import {DevicesRepository} from "../repositories/mongodb/devices-repository-mongodb";
+import {JwtService} from "../application/jwt-service";
+import {Device} from "../models/device-model";
 
-export const devicesService  = {
+export class DevicesService {
+    jwtService: JwtService
+    devicesRepository: DevicesRepository
+    constructor() {
+        this.jwtService = new JwtService()
+        this.devicesRepository = new DevicesRepository()
+    }
     async createNewSession
-    (refreshToken: string, deviceName: string, ip: string, userId: string, expDate: string, lastActiveDate: string) {
+    (refreshToken: string, deviceName: string, ip: string, userId: string, expDate: string) {
 
-        const deviceId = await jwtService.getDeviceIdByRefreshToken(refreshToken)
+        const deviceId = await this.jwtService.getDeviceIdByRefreshToken(refreshToken)
 
-        const refreshTokenMeta = {
-            userId: userId,
-            ip: ip,
-            title: deviceName,
-            lastActiveDate: lastActiveDate,
-            deviceId: deviceId,
-            expDate: expDate
-        }
-        return await devicesRepository.createNewSession(refreshTokenMeta)
-    },
+        const device = new Device(deviceId, userId, ip, deviceName, expDate)
+        return await this.devicesRepository.createNewSession(device)
+    }
 
     async getSession(refreshToken: string) {
 
-        const deviceId = await jwtService.getDeviceIdByRefreshToken(refreshToken)
-        const lastActiveDate = await jwtService.getLastActiveDateByRefreshToken(refreshToken)
+        const deviceId = await this.jwtService.getDeviceIdByRefreshToken(refreshToken)
+        const lastActiveDate = await this.jwtService.getLastActiveDateByRefreshToken(refreshToken)
 
-        return await devicesRepository.getSession(deviceId, lastActiveDate)
+        return await this.devicesRepository.getSession(deviceId, lastActiveDate)
 
-    },
+    }
 
     async getSessionByDeviceId(deviceId: string) {
-        let session = await devicesRepository.getSessionByDeviceId(deviceId)
+        let session = await this.devicesRepository.getSessionByDeviceId(deviceId)
 
         if (session) {
             return session
@@ -36,24 +36,23 @@ export const devicesService  = {
             return false
         }
 
-    },
-
+    }
 
     async updateLastActiveDate(deviceId: string, lastActiveDate: string) {
 
-        return await devicesRepository.updateLastActiveDate(deviceId, lastActiveDate)
+        return await this.devicesRepository.updateLastActiveDate(deviceId, lastActiveDate)
 
-    },
+    }
 
     async terminateAllSessions(userId: string, deviceId: string) {
 
-        return await devicesRepository.terminateAllSessions(userId, deviceId)
+        return await this.devicesRepository.terminateAllSessions(userId, deviceId)
 
-    },
+    }
 
     async terminateSession(deviceId: string) {
 
-        return await devicesRepository.terminateSession(deviceId)
+        return await this.devicesRepository.terminateSession(deviceId)
     }
 
 }

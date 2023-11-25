@@ -1,25 +1,20 @@
-import {userInputModel, userViewModel} from "../../models/user-view-model";
+import {User, userViewModel} from "../../models/user-view-model";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {UserModel} from "../../schemas/user-schema";
 
-export const usersRepository = {
+export class UsersRepository {
 
-    async createUser (newUser : userInputModel): Promise<userViewModel> {
+    async createUser (newUser : User): Promise<userViewModel> {
 
-        const result = await UserModel.insertMany([newUser])
-        return {
-            id: newUser._id.toString(),
-            login: newUser.accountData.login,
-            email: newUser.accountData.email,
-            createdAt: newUser.accountData.createdAt
-        }
-    },
+        await UserModel.insertMany([newUser])
+        return User.getViewUser(newUser)
+    }
 
-    async findByLoginOrEmail(loginOrEmail: string): Promise<userInputModel | null> {
+    async findByLoginOrEmail(loginOrEmail: string): Promise<User | null> {
 
-        const user: userInputModel | null = await UserModel.findOne(
+        const user: User | null = await UserModel.findOne(
             {$or: [{"accountData.login": loginOrEmail}, {"accountData.email": loginOrEmail}]});
 
         if (!user) {
@@ -27,32 +22,32 @@ export const usersRepository = {
         }
         return user
 
-    },
+    }
 
-    async findByConfirmationCode(code: string): Promise<userInputModel | null> {
-        const user: userInputModel | null = await UserModel.findOne(
+    async findByConfirmationCode(code: string): Promise<User | null> {
+        const user: User | null = await UserModel.findOne(
             {"emailConfirmation.confirmationCode": code})
         return user || null
-    },
+    }
 
-    async findByRecoveryCode(recoveryCode: string): Promise<userInputModel | null> {
-        const user: userInputModel | null = await UserModel.findOne(
+    async findByRecoveryCode(recoveryCode: string): Promise<User | null> {
+        const user: User | null = await UserModel.findOne(
             {"passwordConfirmation.recoveryCode": recoveryCode})
         return user || null
-    },
+    }
 
     async updateConfirmation(_id: ObjectId) {
-        const updatedCode = await UserModel.updateOne({_id}, {
+        await UserModel.updateOne({_id}, {
             $set:
                 {
                     "emailConfirmation.isConfirmed": true
                 }
         })
         return true
-    },
+    }
 
     async updateConfirmationCode(_id: ObjectId) {
-        const updatedCode = await UserModel.updateOne({_id}, {
+        await UserModel.updateOne({_id}, {
             $set:
                 {
                     "emailConfirmation.confirmationCode": uuidv4(),
@@ -63,10 +58,10 @@ export const usersRepository = {
                 }
         })
         return UserModel.findOne({_id});
-    },
+    }
 
     async updatePasswordRecoveryCode(_id: ObjectId) {
-        const updatedCode = await UserModel.updateOne({_id}, {
+        await UserModel.updateOne({_id}, {
             $set:
                 {
                     "passwordConfirmation.recoveryCode": uuidv4(),
@@ -77,7 +72,7 @@ export const usersRepository = {
                 }
         })
         return UserModel.findOne({_id});
-    },
+    }
 
     async updatePassword(_id: ObjectId, passwordHash: string, passwordSalt: string) {
         await UserModel.updateOne({_id}, {
@@ -88,7 +83,7 @@ export const usersRepository = {
                 }
         })
         return true
-    },
+    }
 
     async deleteUser(_id: ObjectId) {
         const user = await UserModel.findOne({_id}, {projection: {_id: 0}});
@@ -96,7 +91,7 @@ export const usersRepository = {
             return UserModel.deleteOne({_id});
         }
         return null
-    },
+    }
 
     async deleteAll() {
         return UserModel.deleteMany({}, {});

@@ -1,5 +1,7 @@
 
-import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
+import {UsersRepository} from "../repositories/mongodb/users-repository-mongodb";
+
+const usersRepository = new UsersRepository()
 export const checkEmailExists = async (email: string) => {
 
     const user = await usersRepository.findByLoginOrEmail(email);

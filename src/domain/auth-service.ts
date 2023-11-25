@@ -1,57 +1,51 @@
-import {userInputModel, userViewModel} from "../models/user-view-model";
+import {User, userViewModel} from "../models/user-view-model";
 import bcrypt from "bcrypt";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add"
-import {usersRepository} from "../repositories/mongodb/users-repository-mongodb";
-import {usersService} from "./users-service";
+import {UsersRepository} from "../repositories/mongodb/users-repository-mongodb";
+import {UsersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
 
-export const authService = {
+export class AuthService {
+    usersService: UsersService
+    usersRepository: UsersRepository
+    constructor() {
+        this.usersService = new UsersService()
+        this.usersRepository = new UsersRepository()
+    }
 
     async registerUser(login: string, password: string, email: string): Promise<userViewModel | boolean> {
         const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await usersService._generateHash(password, passwordSalt)
+        const passwordHash = await this.usersService._generateHash(password, passwordSalt)
 
-        const newUser: userInputModel = {
-            _id: new ObjectId(),
-            accountData: {
-                login: login,
-                email,
-                passwordHash,
-                passwordSalt,
-                createdAt: new Date(),
-            },
-            emailConfirmation: {
+        const newUser = new User({login, email, passwordHash, passwordSalt, createdAt: new Date()},
+            {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {
                     hours: 1,
                     minutes: 3
                 }),
-                isConfirmed: false
-            },
-            passwordConfirmation: {
-                recoveryCode: uuidv4(),
-                expirationDate: add(new Date(), {
+                isConfirmed: false},
+            {recoveryCode: uuidv4(), expirationDate: add(new Date(), {
                     hours: 1,
                     minutes: 3
-                }),
-            }
-        }
-        const createResult = usersRepository.createUser(newUser)
+                })
+            })
+        const createResult = this.usersRepository.createUser(newUser)
 
         try {
             await emailManager.sendRegistrationEmail(newUser.accountData.email, newUser.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
-            await usersRepository.deleteUser(newUser._id)
+            await this.usersRepository.deleteUser(newUser._id)
             return false
         }
         return createResult
-    },
+    }
 
     async confirmEmail(code: string): Promise<boolean> {
-        const foundUserByCode = await usersRepository.findByConfirmationCode(code);
+        const foundUserByCode = await this.usersRepository.findByConfirmationCode(code);
 
         if (!foundUserByCode) return false
 
@@ -60,32 +54,31 @@ export const authService = {
         } else {
             if (foundUserByCode.emailConfirmation.confirmationCode === code
                 && foundUserByCode.emailConfirmation.expirationDate > new Date()) {
-                let result = await usersRepository.updateConfirmation(foundUserByCode._id)
-                return result
+                return await this.usersRepository.updateConfirmation(foundUserByCode._id)
 
             } else return false
         }
-    },
+    }
 
     async resendEmail(email: string): Promise<boolean> {
-        const foundUser = await usersRepository.findByLoginOrEmail(email)
+        const foundUser = await this.usersRepository.findByLoginOrEmail(email)
 
         if (foundUser) {
-            let userWithUpdatedCode = await usersRepository.updateConfirmationCode(foundUser._id)
+            let userWithUpdatedCode = await this.usersRepository.updateConfirmationCode(foundUser._id)
 
                 if (userWithUpdatedCode) {
-                    const result = await emailManager.resendEmail(email, userWithUpdatedCode.emailConfirmation.confirmationCode)
+                    await emailManager.resendEmail(email, userWithUpdatedCode.emailConfirmation.confirmationCode)
                     return true
                 } return false
         }
         return true
-    },
+    }
 
     async sendPasswordRecoveryEmail(email: string): Promise<boolean> {
-        const user = await usersRepository.findByLoginOrEmail(email)
+        const user = await this.usersRepository.findByLoginOrEmail(email)
 
         if (user) {
-            let userWithUpdatedCode = await usersRepository.updatePasswordRecoveryCode(user._id)
+            let userWithUpdatedCode = await this.usersRepository.updatePasswordRecoveryCode(user._id)
                 try {
                     await emailManager.sendPasswordRecoveryEmail(
                         email, userWithUpdatedCode!.passwordConfirmation.recoveryCode)
@@ -95,10 +88,10 @@ export const authService = {
                     return false
                 }
             } else return true
-    },
+    }
 
     async confirmRecoveryCode (recoveryCode: string): Promise<string | false> {
-        const userByCode = await usersRepository.findByRecoveryCode(recoveryCode);
+        const userByCode = await this.usersRepository.findByRecoveryCode(recoveryCode);
 
         if (!userByCode) return false
 
@@ -106,11 +99,11 @@ export const authService = {
                 && userByCode.passwordConfirmation.expirationDate > new Date()) {
                 return userByCode._id.toString()
         } else return false
-    },
+    }
 
     async updatePassword(userId: string, newPassword: string): Promise<boolean> {
         const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await usersService._generateHash(newPassword, passwordSalt)
-        return await usersRepository.updatePassword(new ObjectId(userId), passwordHash, passwordSalt)
-    },
+        const passwordHash = await this.usersService._generateHash(newPassword, passwordSalt)
+        return await this.usersRepository.updatePassword(new ObjectId(userId), passwordHash, passwordSalt)
+    }
 }

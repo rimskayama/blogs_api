@@ -1,52 +1,56 @@
 import {ObjectId} from "mongodb";
-import {usersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
-import {commentModelWithPostId} from "../models/comments-view-model";
-import {commentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
-import {postsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
+import {UsersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
+import {Comment} from "../models/comments-view-model";
+import {CommentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
+import {PostsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
+import {CommentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 
-export const commentsService = {
+export class CommentsService {
+
+    commentsRepository: CommentsRepository
+    commentsQueryRepository: CommentsQueryRepository
+    postsQueryRepository: PostsQueryRepository
+    usersQueryRepository: UsersQueryRepository
+    constructor() {
+        this.commentsRepository = new CommentsRepository()
+        this.commentsQueryRepository = new CommentsQueryRepository()
+        this.postsQueryRepository = new PostsQueryRepository()
+        this.usersQueryRepository = new UsersQueryRepository()
+    }
 
     async findCommentById(id: string, userId: string | false) {
-        return await commentsRepository.findCommentById(new ObjectId(id), userId)
-    },
+        return await this.commentsRepository.findCommentById(new ObjectId(id), userId)
+    }
 
     async createComment(content: string, userId: string, postId: string) {
 
-        let foundPostById = await postsQueryRepository.findPostById(new ObjectId(postId));
+        let foundPostById = await this.postsQueryRepository.findPostById(new ObjectId(postId));
 
-        let foundUserById = await usersQueryRepository.findUserById(new ObjectId(userId))
+        let foundUserById = await this.usersQueryRepository.findUserById(new ObjectId(userId))
 
         if (foundUserById && foundPostById) {
-            const newComment : commentModelWithPostId = {
-                postId: postId,
-                _id: new ObjectId(),
-                content: content,
-                commentatorInfo: {
-                userId: foundUserById.id,
-                userLogin: foundUserById.login
-                },
-                createdAt: (new Date()).toISOString(),
-                likesInfo: {
+            const newComment = new Comment(postId, content,
+                {userId: foundUserById.id, userLogin: foundUserById.login},
+                {
                     likesCount: 0,
                     dislikesCount: 0,
                     myStatus: "None"
-                }
-            }
-            return await commentsRepository.createComment(newComment);
+                })
+            return await this.commentsRepository.createComment(newComment);
         } else return null
 
-    },
+    }
 
     async updateComment(id: string, content: string) {
-        return await commentsRepository.updateComment(new ObjectId(id), content);
+        return await this.commentsRepository.updateComment(new ObjectId(id), content);
 
-    },
+    }
 
     async deleteComment(id: string) {
-        return await commentsRepository.deleteComment(new ObjectId(id));
-    },
+        return await this.commentsRepository.deleteComment(new ObjectId(id));
+    }
 
     async deleteAll() {
-        return await commentsRepository.deleteAll();
+        return await this.commentsRepository.deleteAll();
     }
 }

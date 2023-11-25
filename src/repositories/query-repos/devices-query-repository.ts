@@ -2,7 +2,7 @@ import {deviceViewModel} from "../../models/device-model";
 import {devicesMapping} from "../../functions/mapping";
 import {DeviceModel} from "../../schemas/device-schema";
 
-export const devicesQueryRepository = {
+export class DevicesQueryRepository {
 
     async findDevices(userId: string): Promise<deviceViewModel[]> {
         let allDevices = await DeviceModel.find(
@@ -10,7 +10,7 @@ export const devicesQueryRepository = {
             .lean()
 
         return devicesMapping(allDevices)
-    },
+    }
 
 }
 

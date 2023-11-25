@@ -1,11 +1,11 @@
-import {blogModelWithMongoId, blogViewModelWithId} from "../../models/blog-view-model";
+import {Blog, blogViewModel} from "../../models/blog-view-model";
 import {ObjectId, SortDirection} from "mongodb";
 import {blogsMapping} from "../../functions/mapping";
 import {blogsPaginationViewModel} from "../../models/pagination-view-models";
 import {BlogModel} from "../../schemas/blog-schema";
 
 
-export const blogsQueryRepository = {
+export class BlogsQueryRepository {
     async findBlogs(
         page: number, limit: number, sortDirection: SortDirection,
         sortBy: string, searchNameTerm: string, skip: number) : Promise<blogsPaginationViewModel>
@@ -29,37 +29,21 @@ export const blogsQueryRepository = {
             page: page,
             pageSize: limit,
             totalCount: total,
-            items: blogsMapping(allBlogs)
+            items: blogsMapping(allBlogs)//allBlogs.map((b: Blog) => b.getViewBlog())
         }
-    },
-
-    async findBlogById(_id: ObjectId): Promise<blogViewModelWithId | null> {
-        const blog: blogModelWithMongoId | null = await BlogModel.findOne({_id});
+    }
+    async findBlogById(_id: ObjectId): Promise<blogViewModel | null> {
+        const blog: Blog | null = await BlogModel.findOne({_id});
         if (!blog) {
             return null
         }
-        return {
-            id: blog._id.toString(),
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt,
-            isMembership: blog.isMembership
-        }
-    },
-
-    async findBlogByBlogId(blogId: string): Promise<blogViewModelWithId | null> {
-        const blog: blogModelWithMongoId | null = await BlogModel.findOne({_id: new ObjectId(blogId)},{});
+        return Blog.getViewBlog(blog)
+    }
+    async findBlogByBlogId(blogId: string): Promise<blogViewModel | null> {
+        const blog: Blog | null = await BlogModel.findOne({_id: new ObjectId(blogId)},{});
         if (!blog) {
             return null
         }
-        return {
-            id: blog._id.toString(),
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt,
-            isMembership: blog.isMembership
-        }
-    },
+        return Blog.getViewBlog(blog)
+    }
 }

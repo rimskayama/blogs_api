@@ -1,6 +1,7 @@
 import {ObjectId} from "mongodb";
 
 export type commentViewModel = {
+    id: string,
     content: string;
     commentatorInfo: {
         userId: string,
@@ -14,30 +15,38 @@ export type commentViewModel = {
     }
 }
 
-export type commentModelWithPostId = {
-    _id: ObjectId,
-    postId: string,
-    content: string;
-    commentatorInfo: {
+export class Comment {
+    _id: ObjectId;
+    createdAt: string
+    constructor(
+    public postId: string,
+    public content: string,
+    public commentatorInfo: {
         userId: string,
         userLogin: string
-    }
-    createdAt: string,
-    likesInfo: {
+    },
+    public likesInfo: {
         likesCount: number,
         dislikesCount: number,
         myStatus: string
+    }) {
+        this._id = new ObjectId();
+        this.createdAt = new Date().toISOString()
+    }
+    static getViewComment(commentFromDb: Comment): commentViewModel {
+        return {
+            id: commentFromDb._id.toString(),
+            content: commentFromDb.content,
+            commentatorInfo: {
+                userId: commentFromDb.commentatorInfo.userId,
+                userLogin: commentFromDb.commentatorInfo.userLogin
+            },
+            createdAt: commentFromDb.createdAt,
+            likesInfo: {
+                likesCount: commentFromDb.likesInfo.likesCount,
+                dislikesCount: commentFromDb.likesInfo.dislikesCount,
+                myStatus: commentFromDb.likesInfo.myStatus
+            }
+        }
     }
 }
-
-
-export type withMongoId = {
-    _id: ObjectId
-}
-
-export type withViewId = {
-    id: string
-}
-
-export type commentModelWithMongoId = commentModelWithPostId & withMongoId;
-export type commentViewModelWithId = commentViewModel & withViewId;

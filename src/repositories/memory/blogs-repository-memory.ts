@@ -1,18 +1,18 @@
 
-import {blogViewModelWithId} from "../../models/blog-view-model";
+import {blogViewModel} from "../../models/blog-view-model";
 import {randomNumber} from "../../functions/randomNumber";
 
-const blogs : blogViewModelWithId[] = []
+const blogs : blogViewModel[] = []
 
 export const blogsRepository  = {
-    async findBlogs() : Promise<blogViewModelWithId[]> {
+    async findBlogs() : Promise<blogViewModel[]> {
         return blogs
     },
-    async findBlogById(id: string) : Promise<blogViewModelWithId | undefined> {
+    async findBlogById(id: string) : Promise<blogViewModel | undefined> {
         return blogs.find(b => b?.id === id);
     },
-    async createBlog(name: string, description: string, websiteUrl: string, createdAt: string, isMembership: boolean) : Promise<blogViewModelWithId> {
-        const newBlog : blogViewModelWithId = {
+    async createBlog(name: string, description: string, websiteUrl: string) : Promise<blogViewModel> {
+        const newBlog : blogViewModel = {
             id: randomNumber(0,999999),
             name: name,
             description: description,
@@ -23,7 +23,7 @@ export const blogsRepository  = {
         blogs.push(newBlog);
         return newBlog
     },
-    async updateBlog(id: string, name: string, description: string, websiteUrl: string) : Promise<blogViewModelWithId | undefined> {
+    async updateBlog(id: string, name: string, description: string, websiteUrl: string) : Promise<blogViewModel | undefined> {
         let updatedBlog = blogs.find(b => b?.id === id);
         if (updatedBlog) {
             updatedBlog.name = name;

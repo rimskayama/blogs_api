@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import {deviceInputModel} from "../models/device-model";
+import {Device} from "../models/device-model";
 
-export const DeviceSchema = new mongoose.Schema<deviceInputModel>({
+export const DeviceSchema = new mongoose.Schema<Device>({
     userId: { type: String, require: true },
     ip: { type: String, require: true },
     title: { type: String, require: true },
@@ -9,4 +9,4 @@ export const DeviceSchema = new mongoose.Schema<deviceInputModel>({
     deviceId: { type: String, require: true },
     expDate: { type: String, require: true },
 })
-export const DeviceModel = mongoose.model<deviceInputModel>('devices', DeviceSchema)
+export const DeviceModel = mongoose.model<Device>('devices', DeviceSchema)

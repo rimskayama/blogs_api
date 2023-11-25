@@ -1,9 +1,9 @@
 import {SortDirection} from "mongodb";
 import {commentsMapping} from "../../functions/mapping";
 import {CommentModel} from "../../schemas/comment-schema";
-import {likesService} from "../../domain/likes-service";
+import {LikeModel} from "../../schemas/like-schema";
 
-export const commentsQueryRepository = {
+export class CommentsQueryRepository {
 
     async findCommentsByPostId(postId: string, page: number, limit: number, sortDirection: SortDirection,
                                sortBy: string, skip: number, userId: string | false) {
@@ -23,7 +23,15 @@ export const commentsQueryRepository = {
 
         let statusList: string[] = []
         for (let i = 0; i < commentsByPostId.length; i++) {
-            let likeStatus = await likesService.getUserLikeStatus(commentsByPostId[i]._id.toString(), userId)
+
+            let likeStatus = "None"
+            if (userId) {
+                const likeInDB = await LikeModel.findOne(
+                    {$and: [{commentId: commentsByPostId[i]._id}, {userId: userId}]})
+                if (likeInDB) {
+                    likeStatus = likeInDB.status.toString()
+                }
+            }
             statusList.push(likeStatus)
             console.log(statusList)
         }

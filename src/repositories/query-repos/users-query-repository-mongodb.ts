@@ -1,10 +1,10 @@
 import {ObjectId, SortDirection} from "mongodb";
 import {usersPaginationViewModel} from "../../models/pagination-view-models";
 import {usersMapping} from "../../functions/mapping";
-import {userInputModel, userViewModel} from "../../models/user-view-model";
+import {User, userViewModel} from "../../models/user-view-model";
 import {UserModel} from "../../schemas/user-schema";
 
-export const usersQueryRepository = {
+export class UsersQueryRepository {
     async findUsers(
         page: number, limit: number, sortDirection: SortDirection,
         sortBy: string, skip: number, searchLoginTerm: string, searchEmailTerm: string):
@@ -37,11 +37,11 @@ export const usersQueryRepository = {
             totalCount: total,
             items: usersMapping(allUsers)
         }
-    },
+    }
 
     async findUserById (
         _id: ObjectId): Promise<userViewModel | null> {
-        const user: userInputModel | null = await UserModel.findOne({_id});
+        const user: User | null = await UserModel.findOne({_id});
         if (!user) {
             return null
         }
@@ -52,5 +52,5 @@ export const usersQueryRepository = {
             createdAt: user.accountData.createdAt
         }
 
-    },
+    }
 }

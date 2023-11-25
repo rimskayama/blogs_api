@@ -7,23 +7,36 @@ export type userViewModel = {
     createdAt: Date
 }
 
-export type userInputModel = {
-    _id: ObjectId,
-    accountData: {
+export class User {
+    _id: ObjectId;
+    constructor(
+    public accountData: {
         login: string,
         email: string,
         passwordHash: string,
         passwordSalt: string,
-        createdAt: Date,
+        createdAt: Date;
     },
-    emailConfirmation: {
+    public emailConfirmation: {
         confirmationCode: string,
         expirationDate: Date,
         isConfirmed: boolean
     },
-    passwordConfirmation: {
+    public passwordConfirmation: {
         recoveryCode: string,
         expirationDate: Date
+    }
+    )
+    {
+        this._id = new ObjectId();
+    }
+    static getViewUser(userFromDb: User) {
+        return {
+            id: userFromDb._id.toString(),
+            login: userFromDb.accountData.login,
+            email: userFromDb.accountData.email,
+            createdAt: userFromDb.accountData.createdAt,
+        }
     }
 }
 
