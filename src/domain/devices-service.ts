@@ -3,11 +3,11 @@ import {JwtService} from "../application/jwt-service";
 import {Device} from "../models/device-model";
 
 export class DevicesService {
-    jwtService: JwtService
-    devicesRepository: DevicesRepository
-    constructor() {
-        this.jwtService = new JwtService()
-        this.devicesRepository = new DevicesRepository()
+
+    constructor(
+        protected jwtService: JwtService,
+        protected devicesRepository: DevicesRepository
+    ) {
     }
     async createNewSession
     (refreshToken: string, deviceName: string, ip: string, userId: string, expDate: string) {

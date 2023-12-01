@@ -5,11 +5,10 @@ import {UsersQueryRepository} from "../repositories/query-repos/users-query-repo
 import {Like} from "../models/like-view-model";
 
 export class LikesService {
-    likesRepository: LikesRepository
-    usersQueryRepository: UsersQueryRepository
-    constructor() {
-        this.likesRepository = new LikesRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
+    constructor(
+        protected likesRepository: LikesRepository,
+        protected usersQueryRepository: UsersQueryRepository
+    ) {
     }
 
     async setLikeStatus(likeStatus: string, comment: commentViewModel, userId: string) {

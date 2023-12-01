@@ -1,8 +1,6 @@
 import {body} from "express-validator";
 import {checkLikeStatus} from "../functions/check-like-status";
-import {CommentsService} from "../domain/comments-service";
-
-const commentsService  = new CommentsService()
+import {commentsService} from "../composition-root";
 
 class Error{
     data = null;

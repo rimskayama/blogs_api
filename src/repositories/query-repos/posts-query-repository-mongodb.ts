@@ -6,7 +6,6 @@ import {PostModel} from "../../schemas/post-schema";
 
 export class PostsQueryRepository {
 
-
     async findPosts(
     page: number, limit: number, sortDirection: SortDirection,
     sortBy: string, skip: number): Promise<postsPaginationViewModel> {
@@ -36,15 +35,7 @@ export class PostsQueryRepository {
         if (!post) {
             return null;
         }
-        return {
-            id: post._id.toString(),
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            blogId: post.blogId,
-            blogName: post.blogName,
-            createdAt: post.createdAt,
-        };
+        return Post.getViewPost(post)
     }
 
     async findPostsByBlogId(blogId: string, page: number, limit: number, sortDirection: SortDirection,

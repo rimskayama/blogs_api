@@ -18,7 +18,6 @@ export class CommentsQueryRepository {
         let idList = []
         for (let i = 0; i < commentsByPostId.length; i++) {
             idList.push(commentsByPostId[i]._id)
-            console.log(idList)
         }
 
         let statusList: string[] = []
@@ -33,7 +32,6 @@ export class CommentsQueryRepository {
                 }
             }
             statusList.push(likeStatus)
-            console.log(statusList)
         }
 
         for (let i = 0; i < commentsByPostId.length; i++) {

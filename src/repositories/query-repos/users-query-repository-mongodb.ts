@@ -45,12 +45,7 @@ export class UsersQueryRepository {
         if (!user) {
             return null
         }
-        return {
-            id: user._id.toString(),
-            login: user.accountData.login,
-            email: user.accountData.email,
-            createdAt: user.accountData.createdAt
-        }
+        return User.getViewUser(user)
 
     }
 }

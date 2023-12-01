@@ -4,14 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import {ObjectId} from "mongodb";
 import add from "date-fns/add";
 import {UsersRepository} from "../repositories/mongodb/users-repository-mongodb";
-import {UsersQueryRepository} from "../repositories/query-repos/users-query-repository-mongodb";
 
 export class UsersService {
-    usersRepository: UsersRepository
-    usersQueryRepository: UsersQueryRepository
-    constructor() {
-        this.usersRepository = new UsersRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
+     constructor(protected usersRepository: UsersRepository) {
     }
 
     async createUser(login: string, email: string, password: string): Promise<userViewModel> {

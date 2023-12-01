@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
 import {Comment} from "../models/comments-view-model";
-import {ObjectId} from "mongodb";
 
 export const CommentSchema = new mongoose.Schema<Comment>({
 
-    _id: { type: ObjectId, require: true },
+    _id: { type: mongoose.Schema.Types.ObjectId, require: true },
     postId: {type: String, require: true},
     content: {type: String, require: true},
     commentatorInfo: {

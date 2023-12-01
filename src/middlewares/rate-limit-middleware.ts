@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {APIsRepository} from "../repositories/mongodb/apis-repository";
+import {apisRepository} from "../composition-root";
 
 export const rateLimitMiddleware =
     async (req: Request, res: Response, next: NextFunction) => {
@@ -8,9 +8,9 @@ export const rateLimitMiddleware =
     const ip = req.socket.remoteAddress!;
     const date = new Date();
 
-    await APIsRepository.addNewAPICall(URL, ip, date)
+    await apisRepository.addNewAPICall(URL, ip, date)
 
-    const result = await APIsRepository.countAPICalls(URL, ip)
+    const result = await apisRepository.countAPICalls(URL, ip)
 
     if (result > 5) {
         return res.sendStatus(429)

@@ -8,11 +8,9 @@ import {UsersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
 
 export class AuthService {
-    usersService: UsersService
-    usersRepository: UsersRepository
-    constructor() {
-        this.usersService = new UsersService()
-        this.usersRepository = new UsersRepository()
+    constructor(
+        protected usersRepository: UsersRepository,
+        protected usersService: UsersService) {
     }
 
     async registerUser(login: string, password: string, email: string): Promise<userViewModel | boolean> {

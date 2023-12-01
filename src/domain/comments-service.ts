@@ -6,17 +6,13 @@ import {PostsQueryRepository} from "../repositories/query-repos/posts-query-repo
 import {CommentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 
 export class CommentsService {
-
-    commentsRepository: CommentsRepository
-    commentsQueryRepository: CommentsQueryRepository
-    postsQueryRepository: PostsQueryRepository
-    usersQueryRepository: UsersQueryRepository
-    constructor() {
-        this.commentsRepository = new CommentsRepository()
-        this.commentsQueryRepository = new CommentsQueryRepository()
-        this.postsQueryRepository = new PostsQueryRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
-    }
+    constructor(
+        protected commentsRepository: CommentsRepository,
+        protected commentsQueryRepository: CommentsQueryRepository,
+        protected postsQueryRepository: PostsQueryRepository,
+        protected usersQueryRepository: UsersQueryRepository
+    ) {
+}
 
     async findCommentById(id: string, userId: string | false) {
         return await this.commentsRepository.findCommentById(new ObjectId(id), userId)

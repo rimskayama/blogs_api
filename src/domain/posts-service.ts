@@ -5,14 +5,11 @@ import {BlogsRepository} from "../repositories/mongodb/blogs-repository-mongodb"
 import {PostsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 
 export class PostsService {
-
-    blogsRepository: BlogsRepository
-    postsRepository: PostsRepository
-    postsQueryRepository: PostsQueryRepository
-    constructor() {
-        this.blogsRepository = new BlogsRepository()
-        this.postsRepository = new PostsRepository()
-        this.postsQueryRepository = new PostsQueryRepository()
+    constructor(
+        protected blogsRepository: BlogsRepository,
+        protected postsRepository: PostsRepository,
+        protected postsQueryRepository: PostsQueryRepository
+    ) {
     }
 
     async createPost (title: string, shortDescription: string,

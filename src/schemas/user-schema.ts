@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
 import {User} from "../models/user-view-model";
-import {ObjectId} from "mongodb";
 
 export const UserSchema = new mongoose.Schema<User>({
 
-    _id: { type: ObjectId, require: true },
+    _id: { type: mongoose.Schema.Types.ObjectId, require: true },
     accountData: {
         type: {
             login: {type: String, require: true},
