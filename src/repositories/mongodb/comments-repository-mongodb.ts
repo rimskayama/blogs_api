@@ -5,7 +5,9 @@ import {
 } from "../../models/comments-view-model";
 import {CommentModel} from "../../schemas/comment-schema";
 import {LikeModel} from "../../schemas/like-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepository {
     async findCommentById(_id: ObjectId, userId: string | false): Promise<commentViewModel | null> {
         const comment: Comment | null = await CommentModel.findOne({_id});

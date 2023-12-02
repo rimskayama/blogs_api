@@ -1,9 +1,10 @@
 import {Post, postViewModel} from "../../models/post-view-model";
 import {ObjectId} from "mongodb";
 import {PostModel} from "../../schemas/post-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostsRepository {
-
     async createPost(newPost : Post): Promise<postViewModel> {
 
         await PostModel.insertMany([newPost]);

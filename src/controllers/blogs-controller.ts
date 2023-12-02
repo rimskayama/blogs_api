@@ -5,13 +5,15 @@ import {PostsQueryRepository} from "../repositories/query-repos/posts-query-repo
 import {Request, Response} from "express";
 import {getPagination} from "../functions/pagination";
 import {ObjectId} from "mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BlogsController {
     constructor(
-        protected blogsService: BlogsService,
-        protected postsService: PostsService,
-        protected blogsQueryRepository: BlogsQueryRepository,
-        protected postsQueryRepository: PostsQueryRepository
+        @inject(BlogsService) protected blogsService: BlogsService,
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository,
+        @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository,
     ) {
     }
     async getBlogs (req: Request, res: Response) {

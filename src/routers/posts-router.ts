@@ -8,7 +8,10 @@ import {postContentValidationMiddleware,
 import {blogIdCheck} from "../functions/check-blog-id";
 import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
 import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
-import {postsController} from "../composition-root";
+import {container} from "../composition-root";
+import {PostsController} from "../controllers/posts-controller";
+
+const postsController = container.resolve(PostsController)
 export const postsRouter = Router({})
 
 postsRouter.get("/", postsController.getPosts.bind(postsController))

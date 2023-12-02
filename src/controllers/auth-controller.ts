@@ -6,14 +6,16 @@ import {AuthService} from "../domain/auth-service";
 import {Request, Response} from "express";
 import {v4 as uuidv4} from "uuid";
 import {ObjectId} from "mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class AuthController {
     constructor(
-        protected usersService: UsersService,
-        protected authService: AuthService,
-        protected devicesService: DevicesService,
-        protected jwtService: JwtService,
-        protected usersQueryRepository: UsersQueryRepository) {
+        @inject(UsersService) protected usersService: UsersService,
+        @inject(AuthService) protected authService: AuthService,
+        @inject(DevicesService) protected devicesService: DevicesService,
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(UsersQueryRepository) protected usersQueryRepository: UsersQueryRepository) {
     }
     async loginUser (req: Request, res: Response) {
         const user = await this.usersService.checkCredentials (req.body.loginOrEmail, req.body.password)

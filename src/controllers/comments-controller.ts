@@ -5,14 +5,16 @@ import {CommentsQueryRepository} from "../repositories/query-repos/comments-quer
 import {JwtService} from "../application/jwt-service";
 import {Request, Response} from "express";
 import {commentValidationMiddleware} from "../middlewares/comments-validation-input";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class CommentsController {
     constructor(
-        protected commentsService: CommentsService,
-        protected likesService: LikesService,
-        protected commentsRepository: CommentsRepository,
-        protected commentsQueryRepository: CommentsQueryRepository,
-        protected jwtService: JwtService
+        @inject(CommentsService) protected commentsService: CommentsService,
+        @inject(LikesService) protected likesService: LikesService,
+        @inject(CommentsRepository) protected commentsRepository: CommentsRepository,
+        @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository,
+        @inject(JwtService) protected jwtService: JwtService
     ) {
     }
     async getComment (req: Request, res: Response) {
@@ -30,7 +32,9 @@ export class CommentsController {
     async updateComment (req: Request, res: Response) {
         const token = req.headers.authorization!.split(' ')[1]
         const userId = await this.jwtService.getUserIdByAccessToken(token)
-        const commentValidation = await commentValidationMiddleware(req.params.id, userId)
+        const commentInDb = await this.commentsService.findCommentById(req.params.id, userId)
+        const commentValidation = await commentValidationMiddleware(commentInDb, userId)
+
         if (commentValidation) {
             res.sendStatus(commentValidation.errorCode)
         } else {
@@ -73,7 +77,8 @@ export class CommentsController {
         const token = req.headers.authorization!.split(' ')[1]
         const userId = await this.jwtService.getUserIdByAccessToken(token)
 
-        const commentValidation = await commentValidationMiddleware(req.params.id, userId)
+        const commentInDb = await this.commentsService.findCommentById(req.params.id, userId)
+        const commentValidation = await commentValidationMiddleware(commentInDb, userId)
 
         if (commentValidation) {
             res.sendStatus(commentValidation.errorCode)

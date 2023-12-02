@@ -3,10 +3,12 @@ import {UsersQueryRepository} from "../repositories/query-repos/users-query-repo
 import {Request, Response} from "express";
 import {getPagination} from "../functions/pagination";
 import {ObjectId} from "mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class UsersController {
-    constructor(protected usersService: UsersService,
-                protected usersQueryRepository: UsersQueryRepository) {
+    constructor(@inject(UsersService) protected usersService: UsersService,
+                @inject(UsersQueryRepository) protected usersQueryRepository: UsersQueryRepository) {
     }
     async getUsers (req: Request, res: Response) {
         const {page, limit, sortDirection, sortBy, skip, searchLoginTerm, searchEmailTerm} = getPagination(req.query);

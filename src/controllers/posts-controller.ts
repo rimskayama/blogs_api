@@ -6,14 +6,17 @@ import {CommentsQueryRepository} from "../repositories/query-repos/comments-quer
 import {Request, Response} from "express";
 import {getPagination} from "../functions/pagination";
 import {ObjectId} from "mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsController {
     constructor(
-        protected postsService: PostsService,
-        protected commentsService: CommentsService,
-        protected jwtService: JwtService,
-        protected postsQueryRepository: PostsQueryRepository,
-        protected commentsQueryRepository: CommentsQueryRepository) {
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(CommentsService) protected commentsService: CommentsService,
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository,
+        @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository) {
+
     }
     async getPosts (req: Request, res: Response) {
         const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);

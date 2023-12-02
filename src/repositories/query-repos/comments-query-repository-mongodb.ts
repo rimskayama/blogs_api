@@ -2,7 +2,9 @@ import {SortDirection} from "mongodb";
 import {commentsMapping} from "../../functions/mapping";
 import {CommentModel} from "../../schemas/comment-schema";
 import {LikeModel} from "../../schemas/like-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsQueryRepository {
 
     async findCommentsByPostId(postId: string, page: number, limit: number, sortDirection: SortDirection,

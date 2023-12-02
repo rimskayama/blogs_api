@@ -8,8 +8,10 @@ import {
 } from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {rateLimitMiddleware} from "../middlewares/rate-limit-middleware";
-import {authController} from "../composition-root";
+import {container} from "../composition-root";
+import {AuthController} from "../controllers/auth-controller";
 
+const authController = container.resolve(AuthController)
 export const authRouter = Router({})
 
 authRouter.post('/login',

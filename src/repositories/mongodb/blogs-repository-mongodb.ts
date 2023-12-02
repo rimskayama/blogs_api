@@ -1,9 +1,10 @@
 import {blogViewModel, Blog} from "../../models/blog-view-model";
 import {ObjectId} from "mongodb";
 import {BlogModel} from "../../schemas/blog-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class BlogsRepository {
-
     async findBlogName(blogId: string): Promise<Blog | null> {
 
         let foundBlogByName = await BlogModel.findOne({_id: new ObjectId(blogId)}, {})

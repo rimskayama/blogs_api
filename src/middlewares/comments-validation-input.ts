@@ -1,6 +1,7 @@
+import "reflect-metadata";
 import {body} from "express-validator";
 import {checkLikeStatus} from "../functions/check-like-status";
-import {commentsService} from "../composition-root";
+import {commentViewModel} from "../models/comments-view-model";
 
 class Error{
     data = null;
@@ -31,11 +32,11 @@ export const commentLikeValidationMiddleware = body("likeStatus")
     })
 
 export const commentValidationMiddleware =
-    async (id: string, userId: string): Promise<Error | null> => {
-        const foundComment = await commentsService.findCommentById(id, userId);
-        if (!foundComment) return new Error(null, 404)
+    async (comment: commentViewModel | null, userId: string): Promise<Error | null> => {
 
-        const userIdFromReq = foundComment?.commentatorInfo.userId;
+        if (!comment) return new Error(null, 404)
+
+        const userIdFromReq = comment?.commentatorInfo.userId;
 
         if (userId !== userIdFromReq) {
             return new Error(null, 403)

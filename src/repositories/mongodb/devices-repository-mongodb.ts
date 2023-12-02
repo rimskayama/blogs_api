@@ -1,8 +1,9 @@
 import {Device} from "../../models/device-model";
 import {DeviceModel} from "../../schemas/device-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class DevicesRepository {
-
     async createNewSession(device: Device) {
         return await DeviceModel.insertMany([device])
     }

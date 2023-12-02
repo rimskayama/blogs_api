@@ -1,4 +1,7 @@
 import {APIModel} from "../../schemas/api-schema";
+import {injectable} from "inversify";
+
+@injectable()
 export class APIsRepository {
     async addNewAPICall(URL: string, ip: string, date: Date) {
         const newAPICall = {

@@ -2,10 +2,12 @@ import {Blog, blogViewModel} from "../models/blog-view-model";
 import {ObjectId} from "mongodb";
 import {BlogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 import {BlogsQueryRepository} from "../repositories/query-repos/blogs-query-repository-mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BlogsService {
-    constructor(protected blogsRepository: BlogsRepository,
-                protected blogsQueryRepository: BlogsQueryRepository) {
+    constructor(@inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+                @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository) {
     }
     async createBlog(name: string, description: string, websiteUrl: string): Promise<blogViewModel> {
 

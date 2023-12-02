@@ -4,13 +4,15 @@ import {Comment} from "../models/comments-view-model";
 import {CommentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
 import {PostsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
 import {CommentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class CommentsService {
     constructor(
-        protected commentsRepository: CommentsRepository,
-        protected commentsQueryRepository: CommentsQueryRepository,
-        protected postsQueryRepository: PostsQueryRepository,
-        protected usersQueryRepository: UsersQueryRepository
+        @inject(CommentsRepository) protected commentsRepository: CommentsRepository,
+        @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository,
+        @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository,
+        @inject(UsersQueryRepository) protected usersQueryRepository: UsersQueryRepository
     ) {
 }
 

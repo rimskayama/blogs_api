@@ -1,6 +1,8 @@
 import {Like} from "../../models/like-view-model";
 import {LikeModel} from "../../schemas/like-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class LikesRepository {
     async countLikes(commentId: string) {
         const likesCount = await LikeModel.countDocuments(

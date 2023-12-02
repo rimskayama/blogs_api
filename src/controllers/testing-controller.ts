@@ -3,12 +3,15 @@ import {PostsService} from "../domain/posts-service";
 import {UsersService} from "../domain/users-service";
 import {CommentsService} from "../domain/comments-service";
 import {Request, Response} from "express";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class TestingController {
-    constructor(protected blogsService: BlogsService,
-                protected postsService: PostsService,
-                protected usersService: UsersService,
-                protected commentsService: CommentsService) {
+    constructor(
+        @inject(BlogsService) protected blogsService: BlogsService,
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(UsersService) protected usersService: UsersService,
+        @inject(CommentsService) protected commentsService: CommentsService) {
     }
 
     async deleteAll (req: Request, res: Response) {

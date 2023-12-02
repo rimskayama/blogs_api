@@ -1,11 +1,13 @@
 import {DevicesService} from "../domain/devices-service";
 import {DevicesQueryRepository} from "../repositories/query-repos/devices-query-repository";
 import {Request, Response} from "express";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class DevicesController {
     constructor(
-        protected devicesService: DevicesService,
-        protected devicesQueryRepository: DevicesQueryRepository) {
+        @inject(DevicesService) protected devicesService: DevicesService,
+        @inject(DevicesQueryRepository) protected devicesQueryRepository: DevicesQueryRepository) {
     }
     async getDevices (req: Request, res: Response) {
         const refreshToken = req.cookies.refreshToken

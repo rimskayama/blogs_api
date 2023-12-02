@@ -3,9 +3,10 @@ import {postsMapping} from "../../functions/mapping";
 import {ObjectId, SortDirection} from "mongodb";
 import {postsPaginationViewModel} from "../../models/pagination-view-models";
 import {PostModel} from "../../schemas/post-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostsQueryRepository {
-
     async findPosts(
     page: number, limit: number, sortDirection: SortDirection,
     sortBy: string, skip: number): Promise<postsPaginationViewModel> {

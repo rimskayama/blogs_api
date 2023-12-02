@@ -3,6 +3,9 @@ import {ObjectId, SortDirection} from "mongodb";
 import {blogsMapping} from "../../functions/mapping";
 import {blogsPaginationViewModel} from "../../models/pagination-view-models";
 import {BlogModel} from "../../schemas/blog-schema";
+import {injectable} from "inversify";
+
+@injectable()
 export class BlogsQueryRepository {
     async findBlogs(
         page: number, limit: number, sortDirection: SortDirection,

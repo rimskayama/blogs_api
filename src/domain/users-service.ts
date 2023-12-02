@@ -4,9 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import {ObjectId} from "mongodb";
 import add from "date-fns/add";
 import {UsersRepository} from "../repositories/mongodb/users-repository-mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class UsersService {
-     constructor(protected usersRepository: UsersRepository) {
+     constructor(@inject(UsersRepository) protected usersRepository: UsersRepository) {
     }
 
     async createUser(login: string, email: string, password: string): Promise<userViewModel> {

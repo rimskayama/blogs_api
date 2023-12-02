@@ -18,6 +18,4 @@ export class Like {
         this._id = new ObjectId();
         this.lastModified = new Date().toISOString()
     }
-
-
 }

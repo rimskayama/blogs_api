@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import {Container} from "inversify";
 import {UsersRepository} from "./repositories/mongodb/users-repository-mongodb";
 import {UsersService} from "./domain/users-service";
 import {AuthService} from "./domain/auth-service";
@@ -7,7 +9,6 @@ import {UsersQueryRepository} from "./repositories/query-repos/users-query-repos
 import {TestingController} from "./controllers/testing-controller";
 import {BlogsController} from "./controllers/blogs-controller";
 import {BlogsRepository} from "./repositories/mongodb/blogs-repository-mongodb";
-import {BlogsQueryRepository} from "./repositories/query-repos/blogs-query-repository-mongodb";
 import {PostsRepository} from "./repositories/mongodb/posts-repository-mongodb";
 import {PostsQueryRepository} from "./repositories/query-repos/posts-query-repository-mongodb";
 import {CommentsRepository} from "./repositories/mongodb/comments-repository-mongodb";
@@ -25,49 +26,40 @@ import {LikesService} from "./domain/likes-service";
 import {DevicesController} from "./controllers/devices-controller";
 import {DevicesQueryRepository} from "./repositories/query-repos/devices-query-repository";
 import {APIsRepository} from "./repositories/mongodb/apis-repository";
+import {BlogsQueryRepository} from "./repositories/query-repos/blogs-query-repository-mongodb";
+export const container = new Container()
 
+container.bind(TestingController).to(TestingController)
 
-const blogsRepository = new BlogsRepository()
-const blogsQueryRepository = new BlogsQueryRepository()
+container.bind(BlogsController).to(BlogsController)
+container.bind(BlogsService).to(BlogsService)
+container.bind(BlogsRepository).to(BlogsRepository)
+container.bind(BlogsQueryRepository).to(BlogsQueryRepository)
 
-const postsRepository = new PostsRepository()
-const postsQueryRepository = new PostsQueryRepository()
+container.bind(PostsController).to(PostsController)
+container.bind(PostsService).to(PostsService)
+container.bind(PostsRepository).to(PostsRepository)
+container.bind(PostsQueryRepository).to(PostsQueryRepository)
 
-const usersRepository = new UsersRepository()
-const usersQueryRepository = new UsersQueryRepository()
+container.bind(UsersController).to(UsersController)
+container.bind(UsersService).to(UsersService)
+container.bind(UsersRepository).to(UsersRepository)
+container.bind(UsersQueryRepository).to(UsersQueryRepository)
 
-const commentsRepository = new CommentsRepository()
-const commentsQueryRepository = new CommentsQueryRepository()
+container.bind(AuthController).to(AuthController)
+container.bind(AuthService).to(AuthService)
+container.bind(JwtService).to(JwtService)
+container.bind(APIsRepository).to(APIsRepository)
 
-const likesRepository = new LikesRepository()
+container.bind(CommentsController).to(CommentsController)
+container.bind(CommentsService).to(CommentsService)
+container.bind(CommentsRepository).to(CommentsRepository)
+container.bind(CommentsQueryRepository).to(CommentsQueryRepository)
 
-const devicesRepository = new DevicesRepository()
-const devicesQueryRepository = new DevicesQueryRepository()
+container.bind(LikesService).to(LikesService)
+container.bind(LikesRepository).to(LikesRepository)
 
-export const apisRepository = new APIsRepository()
-
-const blogsService = new BlogsService(blogsRepository, blogsQueryRepository)
-const postService = new PostsService(blogsRepository, postsRepository, postsQueryRepository)
-const usersService = new UsersService(usersRepository)
-const jwtService = new JwtService()
-export const commentsService = new CommentsService(
-    commentsRepository, commentsQueryRepository, postsQueryRepository, usersQueryRepository)
-const authService = new AuthService(usersRepository, usersService)
-const devicesService = new DevicesService(jwtService, devicesRepository)
-const likesService = new LikesService(likesRepository, usersQueryRepository)
-
-export const blogsController = new BlogsController(
-    blogsService, postService, blogsQueryRepository, postsQueryRepository)
-
-export const postsController = new PostsController(
-    postService, commentsService, jwtService, postsQueryRepository, commentsQueryRepository)
-export const authController = new AuthController(
-    usersService, authService, devicesService, jwtService, usersQueryRepository)
-export const usersController = new UsersController(usersService, usersQueryRepository)
-
-export const commentsController = new CommentsController(
-    commentsService, likesService, commentsRepository, commentsQueryRepository, jwtService)
-
-export const devicesController = new DevicesController(devicesService, devicesQueryRepository)
-
-export const testingController = new TestingController(blogsService, postService, usersService, commentsService)
+container.bind(DevicesController).to(DevicesController)
+container.bind(DevicesService).to(DevicesService)
+container.bind(DevicesRepository).to(DevicesRepository)
+container.bind(DevicesQueryRepository).to(DevicesQueryRepository)

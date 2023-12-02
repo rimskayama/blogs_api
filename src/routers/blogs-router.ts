@@ -9,8 +9,10 @@ import {
     postDescriptionValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/posts-validation-input";
-import {blogsController} from "../composition-root";
+import {container} from "../composition-root";
+import {BlogsController} from "../controllers/blogs-controller";
 
+const blogsController = container.resolve(BlogsController)
 export const blogsRouter = Router({})
 
 blogsRouter.get("/", blogsController.getBlogs.bind(blogsController))

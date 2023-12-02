@@ -3,7 +3,9 @@ import {usersPaginationViewModel} from "../../models/pagination-view-models";
 import {usersMapping} from "../../functions/mapping";
 import {User, userViewModel} from "../../models/user-view-model";
 import {UserModel} from "../../schemas/user-schema";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersQueryRepository {
     async findUsers(
         page: number, limit: number, sortDirection: SortDirection,

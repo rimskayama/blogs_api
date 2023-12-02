@@ -1,12 +1,13 @@
 import {DevicesRepository} from "../repositories/mongodb/devices-repository-mongodb";
 import {JwtService} from "../application/jwt-service";
 import {Device} from "../models/device-model";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class DevicesService {
-
     constructor(
-        protected jwtService: JwtService,
-        protected devicesRepository: DevicesRepository
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(DevicesRepository) protected devicesRepository: DevicesRepository
     ) {
     }
     async createNewSession

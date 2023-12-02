@@ -3,9 +3,9 @@ import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {UserModel} from "../../schemas/user-schema";
-
+import {injectable} from "inversify";
+@injectable()
 export class UsersRepository {
-
     async createUser (newUser : User): Promise<userViewModel> {
 
         await UserModel.insertMany([newUser])

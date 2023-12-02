@@ -1,5 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {apisRepository} from "../composition-root";
+import {container} from "../composition-root";
+import {APIsRepository} from "../repositories/mongodb/apis-repository";
+
+const apisRepository = container.resolve(APIsRepository)
 
 export const rateLimitMiddleware =
     async (req: Request, res: Response, next: NextFunction) => {

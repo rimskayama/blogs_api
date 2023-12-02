@@ -7,8 +7,10 @@ import {
     passwordValidationMiddleware
 } from "../middlewares/authentication";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
-import {usersController} from "../composition-root";
+import {container} from "../composition-root";
+import {UsersController} from "../controllers/users-controller";
 
+const usersController = container.resolve(UsersController)
 export const usersRouter = Router({})
 
 usersRouter.get("/",

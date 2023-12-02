@@ -3,8 +3,10 @@ import {commentContentValidationMiddleware,
     commentLikeValidationMiddleware} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
-import {commentsController} from "../composition-root";
+import {container} from "../composition-root";
+import {CommentsController} from "../controllers/comments-controller";
 
+const commentsController = container.resolve(CommentsController)
 export const commentsRouter = Router({})
 
 commentsRouter.get("/:id", commentsController.getComment.bind(commentsController))

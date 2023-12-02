@@ -6,11 +6,13 @@ import add from "date-fns/add"
 import {UsersRepository} from "../repositories/mongodb/users-repository-mongodb";
 import {UsersService} from "./users-service";
 import {emailManager} from "../managers/email-manager";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class AuthService {
     constructor(
-        protected usersRepository: UsersRepository,
-        protected usersService: UsersService) {
+        @inject(UsersRepository) protected usersRepository: UsersRepository,
+        @inject(UsersService) protected usersService: UsersService) {
     }
 
     async registerUser(login: string, password: string, email: string): Promise<userViewModel | boolean> {

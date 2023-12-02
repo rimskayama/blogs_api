@@ -3,12 +3,14 @@ import {PostsRepository} from "../repositories/mongodb/posts-repository-mongodb"
 import {ObjectId} from "mongodb";
 import {BlogsRepository} from "../repositories/mongodb/blogs-repository-mongodb";
 import {PostsQueryRepository} from "../repositories/query-repos/posts-query-repository-mongodb";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsService {
     constructor(
-        protected blogsRepository: BlogsRepository,
-        protected postsRepository: PostsRepository,
-        protected postsQueryRepository: PostsQueryRepository
+        @inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+        @inject(PostsRepository) protected postsRepository: PostsRepository,
+        @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository
     ) {
     }
 
