@@ -1,4 +1,6 @@
 import {ObjectId} from "mongodb";
+import {likeDetails, likeDetailsViewModel} from "./like-view-model";
+import {likeDetailsMapping} from "../functions/mapping";
 
 export class Post {
     _id: ObjectId;
@@ -8,7 +10,13 @@ export class Post {
         public shortDescription: string,
         public content: string,
         public blogId: string,
-        public blogName: string
+        public blogName: string,
+        public extendedLikesInfo: {
+            likesCount: number,
+            dislikesCount: number,
+            myStatus: string,
+            newestLikes: likeDetails[]
+    }
     ) {
        this._id = new ObjectId();
        this.createdAt = new Date().toISOString()
@@ -22,6 +30,13 @@ export class Post {
             blogId: postFromDb.blogId,
             blogName: postFromDb.blogName,
             createdAt: postFromDb.createdAt,
+            extendedLikesInfo: {
+                likesCount: postFromDb.extendedLikesInfo.likesCount,
+                dislikesCount: postFromDb.extendedLikesInfo.dislikesCount,
+                myStatus: postFromDb.extendedLikesInfo.myStatus,
+                newestLikes: likeDetailsMapping(postFromDb.extendedLikesInfo.newestLikes)
+            }
+
         }
     }
 }
@@ -34,4 +49,10 @@ export type postViewModel = {
     blogId: string;
     blogName: string;
     createdAt: string;
+    extendedLikesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: string,
+        newestLikes: likeDetailsViewModel[]
+    }
 }

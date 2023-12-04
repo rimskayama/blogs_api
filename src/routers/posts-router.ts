@@ -6,7 +6,8 @@ import {postContentValidationMiddleware,
     postTitleValidationMiddleware
 } from "../middlewares/posts-validation-input";
 import {blogIdCheck} from "../functions/check-blog-id";
-import {commentContentValidationMiddleware} from "../middlewares/comments-validation-input";
+import {commentContentValidationMiddleware, likeValidationMiddleware
+} from "../middlewares/comments-validation-input";
 import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
 import {container} from "../composition-root";
 import {PostsController} from "../controllers/posts-controller";
@@ -15,7 +16,8 @@ const postsController = container.resolve(PostsController)
 export const postsRouter = Router({})
 
 postsRouter.get("/", postsController.getPosts.bind(postsController))
-postsRouter.get("/:id", postsController.getPost.bind(postsController))
+postsRouter.get("/:id",
+    postsController.getPost.bind(postsController))
 postsRouter.post("/",
     basicAuthMiddleware,
     blogIdCheck,
@@ -24,6 +26,13 @@ postsRouter.post("/",
     postContentValidationMiddleware,
     errorsValidationMiddleware,
     postsController.createPost.bind(postsController))
+
+postsRouter.put("/:id/like-status",
+    authDevicesMiddleware,
+    likeValidationMiddleware,
+    errorsValidationMiddleware,
+    postsController.updateLikeStatus.bind(postsController))
+
 postsRouter.get("/:postId/comments", postsController.getCommentsOfPost.bind(postsController))
 
 postsRouter.post('/:postId/comments',

@@ -1,17 +1,17 @@
-import {Like} from "../../models/like-view-model";
-import {LikeModel} from "../../schemas/like-schema";
+import {CommentLikeModel} from "../../schemas/like-schema";
 import {injectable} from "inversify";
+import {CommentLike} from "../../models/like-view-model";
 
 @injectable()
-export class LikesRepository {
+export class CommentLikesRepository {
     async countLikes(commentId: string) {
-        const likesCount = await LikeModel.countDocuments(
+        const likesCount = await CommentLikeModel.countDocuments(
             {
                 status: "Like",
                 commentId: commentId,
             }
         )
-        const dislikesCount = await LikeModel.countDocuments(
+        const dislikesCount = await CommentLikeModel.countDocuments(
             {
                 status: "Dislike",
                 commentId: commentId,
@@ -22,12 +22,12 @@ export class LikesRepository {
             dislikesCount: dislikesCount}
     }
 
-    async setLikeStatus(newStatus: Like) {
+    async setLikeStatus(newStatus: CommentLike) {
 
         const commentId = newStatus.commentId
         const userId = newStatus.userId
-        await LikeModel.insertMany([newStatus])
-        const like = await LikeModel.findOne (
+        await CommentLikeModel.insertMany([newStatus])
+        const like = await CommentLikeModel.findOne (
             {$and: [{commentId: commentId}, {userId: userId}]})
         if (like) {
             return true
@@ -35,7 +35,7 @@ export class LikesRepository {
     }
 
     async checkLikeInDB(commentId: string, userId: string) {
-        const like = await LikeModel.findOne(
+        const like = await CommentLikeModel.findOne(
             {$and: [{commentId: commentId}, {userId: userId}]})
         if (like) {
             return like
@@ -43,18 +43,19 @@ export class LikesRepository {
     }
 
     async updateLikeStatus(likeStatus: string, commentId: string, userId: string) {
-        return LikeModel.findOneAndUpdate({$and: [{commentId: commentId}, {userId: userId}]}, {
+        return CommentLikeModel.findOneAndUpdate(
+            {$and: [{commentId: commentId}, {userId: userId}]}, {
             $set:
                 {
                     status: likeStatus,
-                    lastModified: new Date().toISOString()
+                    addedAt: new Date().toISOString()
                 }
         });
     }
 
     async removeLike(commentId: string, userId: string) {
-        await LikeModel.deleteOne({$and: [{commentId: commentId}, {userId: userId}]});
-        const like = await LikeModel.findOne({$and: [{commentId: commentId}, {userId: userId}]});
+        await CommentLikeModel.deleteOne({$and: [{commentId: commentId}, {userId: userId}]});
+        const like = await CommentLikeModel.findOne({$and: [{commentId: commentId}, {userId: userId}]});
         if (!like) {
             return true
         }

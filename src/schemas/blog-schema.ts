@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import {Blog} from "../models/blog-view-model";
 
 export const BlogSchema = new mongoose.Schema<Blog>({
-
     name: { type: String, require: true },
     description: { type: String, require: true },
     websiteUrl: { type: String, require: true },

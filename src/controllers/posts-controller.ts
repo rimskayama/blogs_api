@@ -7,6 +7,7 @@ import {Request, Response} from "express";
 import {getPagination} from "../functions/pagination";
 import {ObjectId} from "mongodb";
 import {inject, injectable} from "inversify";
+import {LikesService} from "../domain/likes-service";
 
 @injectable()
 export class PostsController {
@@ -14,21 +15,36 @@ export class PostsController {
         @inject(PostsService) protected postsService: PostsService,
         @inject(CommentsService) protected commentsService: CommentsService,
         @inject(JwtService) protected jwtService: JwtService,
+        @inject(LikesService) protected likesService: LikesService,
         @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository,
         @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository) {
 
     }
     async getPosts (req: Request, res: Response) {
         const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
-        const allPosts = await this.postsQueryRepository.findPosts(page, limit, sortDirection, sortBy, skip)
+        let token: string
+        let userId: false | string
+        if (req.headers.authorization) {
+            token = req.headers.authorization!.split(' ')[1]
+            userId = await this.jwtService.getUserIdByAccessToken(token)
+        } else userId = false
+        const allPosts = await this.postsQueryRepository.findPosts(
+            page, limit, sortDirection, sortBy, skip, userId)
         res.status(200).json(allPosts)
     }
     async getPost (req: Request, res: Response) {
-        let post = await this.postsQueryRepository.findPostById(new ObjectId(req.params.id));
+        let token: string
+        let userId: false | string
+        if (req.headers.authorization) {
+        const token = req.headers.authorization!.split(' ')[1]
+        userId = await this.jwtService.getUserIdByAccessToken(token)
+        } else userId = false
+        let post = await this.postsQueryRepository.findPostById(req.params.id, userId);
         if (post) {
             res.json(post);
         } else res.sendStatus(404)
     }
+
     async createPost (req: Request, res: Response) {
         const newPost = await this.postsService.createPost(req.body.title, req.body.shortDescription,
             req.body.content, req.body.blogId);
@@ -37,12 +53,14 @@ export class PostsController {
         } else return res.sendStatus(404)
     }
     async getCommentsOfPost (req: Request, res: Response) {
-        let checkPost = await this.postsQueryRepository.findPostById(new ObjectId(req.params.postId));
-        let userId: string | false
+        let token: string
+        let userId: false | string
         if (req.headers.authorization) {
-            const token = req.headers.authorization!.split(' ')[1]
+            token = req.headers.authorization!.split(' ')[1]
             userId = await this.jwtService.getUserIdByAccessToken(token)
         } else userId = false
+
+        let checkPost = await this.postsQueryRepository.findPostById(req.params.postId, userId);
 
         const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
         const postId = req.params.postId;
@@ -73,6 +91,34 @@ export class PostsController {
             res.sendStatus(204);
         } else {
             res.status(404).json('Not found');
+        }
+    }
+
+    async updateLikeStatus (req: Request, res: Response) {
+        const likeStatus = req.body.likeStatus
+
+        const token = req.headers.authorization!.split(' ')[1]
+        const userId = await this.jwtService.getUserIdByAccessToken(token)
+        const post = await this.postsQueryRepository.findPostById(req.params.id, userId);
+
+        if (!post) {
+            res.sendStatus(404)
+        } else {
+            const checkLikeStatus = await this.likesService.checkPostLikeStatus(likeStatus, post.id, userId)
+            if (checkLikeStatus) {
+                const likesInfo = await this.likesService.countPostLikes(post.id)
+                await this.postsQueryRepository.updatePostLikes(post.id,
+                    likesInfo.likesCount, likesInfo.dislikesCount)
+                return res.sendStatus(204)
+            } else {
+                const isCreated = await this.likesService.setPostLikeStatus(likeStatus, post, userId)
+                if (isCreated) {
+                    const likesInfo = await this.likesService.countPostLikes(post.id)
+                    await this.postsQueryRepository.updatePostLikes(post.id,
+                        likesInfo.likesCount, likesInfo.dislikesCount)
+                    return res.sendStatus(204)
+                } return res.sendStatus(500)
+            }
         }
     }
     async deletePost (req: Request, res: Response) {

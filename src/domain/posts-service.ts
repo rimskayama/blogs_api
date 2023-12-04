@@ -14,13 +14,20 @@ export class PostsService {
     ) {
     }
 
-    async createPost (title: string, shortDescription: string,
+    async  createPost (title: string, shortDescription: string,
                      content: string, blogId: string) {
 
         let foundBlogByName = await this.blogsRepository.findBlogName(blogId.toString())
 
         if (foundBlogByName) {
-            const newPost = new Post(title, shortDescription, content, blogId, foundBlogByName.name)
+            const newPost = new Post(
+                title, shortDescription, content, blogId, foundBlogByName.name,
+                {
+                    likesCount: 0,
+                    dislikesCount: 0,
+                    myStatus: "None",
+                    newestLikes: []
+                })
             return await this.postsRepository.createPost(newPost);
         } else return null
 

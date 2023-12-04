@@ -1,6 +1,7 @@
 import {Router} from "express";
-import {commentContentValidationMiddleware,
-    commentLikeValidationMiddleware} from "../middlewares/comments-validation-input";
+import {
+    commentContentValidationMiddleware, likeValidationMiddleware
+} from "../middlewares/comments-validation-input";
 import {errorsValidationMiddleware} from "../middlewares/errors-validation";
 import {authDevicesMiddleware} from "../middlewares/auth/auth-devices";
 import {container} from "../composition-root";
@@ -19,7 +20,7 @@ commentsRouter.put("/:id",
 
 commentsRouter.put("/:id/like-status",
     authDevicesMiddleware,
-    commentLikeValidationMiddleware,
+    likeValidationMiddleware,
     errorsValidationMiddleware,
     commentsController.updateLikeStatus.bind(commentsController))
 

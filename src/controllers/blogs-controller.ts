@@ -6,12 +6,14 @@ import {Request, Response} from "express";
 import {getPagination} from "../functions/pagination";
 import {ObjectId} from "mongodb";
 import {inject, injectable} from "inversify";
+import {JwtService} from "../application/jwt-service";
 
 @injectable()
 export class BlogsController {
     constructor(
         @inject(BlogsService) protected blogsService: BlogsService,
         @inject(PostsService) protected postsService: PostsService,
+        @inject(JwtService) protected  jwtService: JwtService,
         @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository,
         @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository,
     ) {
@@ -31,9 +33,16 @@ export class BlogsController {
         let checkBlog = await this.blogsQueryRepository.findBlogByBlogId(req.params.blogId);
         const {page, limit, sortDirection, sortBy, skip} = getPagination(req.query);
         const blogId = req.params.blogId;
+        let token: string
+        let userId: false | string
+        if (req.headers.authorization) {
+            token = req.headers.authorization!.split(' ')[1]
+            userId = await this.jwtService.getUserIdByAccessToken(token)
+        } else userId = false
+
         if (checkBlog) {
             let posts = await this.postsQueryRepository.findPostsByBlogId(
-                blogId, page, limit, sortDirection, sortBy, skip);
+                blogId, page, limit, sortDirection, sortBy, skip, userId);
             res.status(200).json(posts);
         } else res.sendStatus(404)
     }

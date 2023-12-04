@@ -21,7 +21,7 @@ export const commentContentValidationMiddleware = body("content")
     .trim().isLength({min: 20, max: 300})
     .withMessage("content length should be minimum 20 and maximum 300 symbols")
 
-export const commentLikeValidationMiddleware = body("likeStatus")
+export const likeValidationMiddleware = body("likeStatus")
 
     .exists().withMessage("likeStatus is required")
 

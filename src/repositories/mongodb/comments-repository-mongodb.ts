@@ -4,7 +4,7 @@ import {
     commentViewModel
 } from "../../models/comments-view-model";
 import {CommentModel} from "../../schemas/comment-schema";
-import {LikeModel} from "../../schemas/like-schema";
+import {CommentLikeModel} from "../../schemas/like-schema";
 import {injectable} from "inversify";
 
 @injectable()
@@ -17,7 +17,7 @@ export class CommentsRepository {
 
         comment.likesInfo.myStatus = "None"
         if (userId) {
-            const likeInDB = await LikeModel.findOne(
+            const likeInDB = await CommentLikeModel.findOne(
                 {$and: [{commentId: comment._id}, {userId: userId}]})
             if (likeInDB) {
                 comment.likesInfo.myStatus = likeInDB.status.toString()
@@ -45,18 +45,6 @@ export class CommentsRepository {
             return true
         } else
             return false
-    }
-
-    async updateCommentLikes(commentId: string, likesCount: number, dislikesCount: number) {
-
-        await CommentModel.updateOne({_id: new ObjectId(commentId)}, {
-            $set:
-                {
-                    "likesInfo.likesCount": likesCount,
-                    "likesInfo.dislikesCount": dislikesCount,
-                }
-
-        });
     }
 
     async deleteComment(_id: ObjectId) {

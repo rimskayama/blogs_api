@@ -22,7 +22,7 @@ export class CommentsService {
 
     async createComment(content: string, userId: string, postId: string) {
 
-        let foundPostById = await this.postsQueryRepository.findPostById(new ObjectId(postId));
+        let foundPostById = await this.postsQueryRepository.findPostById(postId, false);
 
         let foundUserById = await this.usersQueryRepository.findUserById(new ObjectId(userId))
 

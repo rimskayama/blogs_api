@@ -14,7 +14,7 @@ import {PostsQueryRepository} from "./repositories/query-repos/posts-query-repos
 import {CommentsRepository} from "./repositories/mongodb/comments-repository-mongodb";
 import {BlogsService} from "./domain/blogs-service";
 import {PostsService} from "./domain/posts-service";
-import {LikesRepository} from "./repositories/mongodb/likes-repository";
+import {CommentLikesRepository} from "./repositories/mongodb/comment-likes-repository";
 import {DevicesRepository} from "./repositories/mongodb/devices-repository-mongodb";
 import {PostsController} from "./controllers/posts-controller";
 import {JwtService} from "./application/jwt-service";
@@ -27,6 +27,7 @@ import {DevicesController} from "./controllers/devices-controller";
 import {DevicesQueryRepository} from "./repositories/query-repos/devices-query-repository";
 import {APIsRepository} from "./repositories/mongodb/apis-repository";
 import {BlogsQueryRepository} from "./repositories/query-repos/blogs-query-repository-mongodb";
+import {PostLikesRepository} from "./repositories/mongodb/post-likes-repository";
 export const container = new Container()
 
 container.bind(TestingController).to(TestingController)
@@ -57,7 +58,8 @@ container.bind(CommentsRepository).to(CommentsRepository)
 container.bind(CommentsQueryRepository).to(CommentsQueryRepository)
 
 container.bind(LikesService).to(LikesService)
-container.bind(LikesRepository).to(LikesRepository)
+container.bind(CommentLikesRepository).to(CommentLikesRepository)
+container.bind(PostLikesRepository).to(PostLikesRepository)
 
 container.bind(DevicesController).to(DevicesController)
 container.bind(DevicesService).to(DevicesService)

@@ -1,7 +1,7 @@
-import {SortDirection} from "mongodb";
+import {ObjectId, SortDirection} from "mongodb";
 import {commentsMapping} from "../../functions/mapping";
 import {CommentModel} from "../../schemas/comment-schema";
-import {LikeModel} from "../../schemas/like-schema";
+import {CommentLikeModel} from "../../schemas/like-schema";
 import {injectable} from "inversify";
 
 @injectable()
@@ -27,7 +27,7 @@ export class CommentsQueryRepository {
 
             let likeStatus = "None"
             if (userId) {
-                const likeInDB = await LikeModel.findOne(
+                const likeInDB = await CommentLikeModel.findOne(
                     {$and: [{commentId: commentsByPostId[i]._id}, {userId: userId}]})
                 if (likeInDB) {
                     likeStatus = likeInDB.status.toString()
@@ -51,4 +51,16 @@ export class CommentsQueryRepository {
             totalCount: total,
             items: commentsMapping(commentsByPostId)
         }}
+
+    async updateCommentLikes(commentId: string, likesCount: number, dislikesCount: number) {
+
+        await CommentModel.updateOne({_id: new ObjectId(commentId)}, {
+            $set:
+                {
+                    "likesInfo.likesCount": likesCount,
+                    "likesInfo.dislikesCount": dislikesCount,
+                }
+
+        });
+    }
 }

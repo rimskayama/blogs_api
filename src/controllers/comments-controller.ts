@@ -1,6 +1,5 @@
 import {CommentsService} from "../domain/comments-service";
 import {LikesService} from "../domain/likes-service";
-import {CommentsRepository} from "../repositories/mongodb/comments-repository-mongodb";
 import {CommentsQueryRepository} from "../repositories/query-repos/comments-query-repository-mongodb";
 import {JwtService} from "../application/jwt-service";
 import {Request, Response} from "express";
@@ -12,7 +11,6 @@ export class CommentsController {
     constructor(
         @inject(CommentsService) protected commentsService: CommentsService,
         @inject(LikesService) protected likesService: LikesService,
-        @inject(CommentsRepository) protected commentsRepository: CommentsRepository,
         @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository,
         @inject(JwtService) protected jwtService: JwtService
     ) {
@@ -55,17 +53,17 @@ export class CommentsController {
         if (!comment) {
             res.sendStatus(404)
         } else {
-            const checkLikeStatus = await this.likesService.checkLikeStatus(likeStatus, comment.id, userId)
+            const checkLikeStatus = await this.likesService.checkCommentLikeStatus(likeStatus, comment.id, userId)
             if (checkLikeStatus) {
-                const likesInfo = await this.likesService.countLikes(comment.id)//likesCount, dislikesCount
-                await this.commentsRepository.updateCommentLikes(comment.id,
+                const likesInfo = await this.likesService.countCommentLikes(comment.id)
+                await this.commentsQueryRepository.updateCommentLikes(comment.id,
                     likesInfo.likesCount, likesInfo.dislikesCount)
                 return res.sendStatus(204)
             } else {
-                const isCreated = await this.likesService.setLikeStatus(likeStatus, comment, userId)
+                const isCreated = await this.likesService.setCommentLikeStatus(likeStatus, comment, userId)
                 if (isCreated) {
-                    const likesInfo = await this.likesService.countLikes(comment.id)
-                    await this.commentsRepository.updateCommentLikes(comment.id,
+                    const likesInfo = await this.likesService.countCommentLikes(comment.id)
+                    await this.commentsQueryRepository.updateCommentLikes(comment.id,
                         likesInfo.likesCount, likesInfo.dislikesCount)
                     return res.sendStatus(204)
                 } return res.sendStatus(500)

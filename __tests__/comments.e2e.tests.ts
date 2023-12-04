@@ -78,6 +78,12 @@ describe("/comments", () => {
                         blogId: createdBlog1.id,
                         blogName: createdPost1.blogName,
                         createdAt: expect.any(String),
+                        extendedLikesInfo: {
+                            dislikesCount: 0,
+                            likesCount: 0,
+                            myStatus: "None",
+                            newestLikes: []
+                        },
                     }
                 ]
             }
@@ -334,8 +340,8 @@ describe("/comments", () => {
 
 //LIKES
 
-    it("should return status None without authorization", async () => {
-        const b = await request(app).get("/comments/" + createdComment1.id)
+        it("should return status None without authorization", async () => {
+            const b = await request(app).get("/comments/" + createdComment1.id)
             .expect(200)
 
         expect(b.body).toEqual(
