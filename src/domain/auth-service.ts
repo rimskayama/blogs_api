@@ -37,9 +37,7 @@ export class AuthService {
         try {
             await emailManager.sendRegistrationEmail(newUser.accountData.email, newUser.emailConfirmation.confirmationCode)
         } catch (error) {
-            console.error(error)
-            await this.usersRepository.deleteUser(newUser._id)
-            return false
+            console.error('error in send email:', error)
         }
         return createResult
     }

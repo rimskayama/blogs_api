@@ -103,8 +103,7 @@ export class AuthController {
             req.body.login, req.body.password, req.body.email)
         if (newUser) {
             res.status(204).json(newUser)
-        } else
-            res.status(400).json('mail error')
+        }
     }
 
     async confirmRegistration (req: Request, res: Response) {
